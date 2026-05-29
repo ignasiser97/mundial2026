@@ -1,5 +1,5 @@
 const NEWS_SOURCES = [
-  { id:'marca', name:'Marca',           url:'https://www.marca.com/rss/futbol.xml' },
+  { id:'marca', name:'Marca',           url:'https://www.marca.com/rss/futbol/mundial-2026.xml' },
   { id:'as',    name:'AS',              url:'https://as.com/rss/tags/mundial_2026.xml' },
   { id:'sport', name:'Sport',           url:'https://www.sport.es/rss/futbol/mundial-2026.xml' },
   { id:'md',    name:'Mundo Deportivo', url:'https://www.mundodeportivo.com/rss/futbol/mundial.xml' },
@@ -23,7 +23,6 @@ async function fetchSource(src) {
     const data = await res.json();
     if (data.status !== 'ok') return [];
     return data.items
-      .filter(i => /mundial/i.test((i.title||'') + ' ' + (i.description||'')))
       .map(i => ({
         title:     i.title || '',
         link:      i.link  || '#',
