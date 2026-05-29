@@ -140,7 +140,7 @@ async function qnlPickFriend(name) {
   } else {
     const { data, error } = await db.from('users').insert({ name }).select().maybeSingle();
     if (error || !data) {
-      if (errEl) errEl.textContent = 'Error al registrar. Inténtalo de nuevo.';
+      if (errEl) errEl.textContent = error?.message || error?.code || 'Error desconocido';
       document.querySelectorAll('.qnl-picker-btn').forEach(b => b.disabled = false);
       return;
     }
