@@ -24,6 +24,9 @@
 - [ ] Notificaciones push antes de cada partido de España
 - [ ] Comparador de estadísticas entre jugadores
 
+### Analytics
+- [ ] Cloudflare Web Analytics — tráfico de visitas solo visible para el owner (crear cuenta, obtener snippet y añadir a index.html)
+
 ## Ideas a valorar
 - [ ] Predictor/simulador de grupos (quién pasa)
 - [ ] Widget de "próximo partido de España" para compartir como imagen
