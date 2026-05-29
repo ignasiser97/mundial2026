@@ -1,0 +1,59 @@
+// ── Pull to refresh ────────────────────────────────────────────
+(function(){
+  const el = document.createElement('div');
+  el.id = 'ptr-indicator';
+  el.textContent = '↓ Tira para actualizar';
+  document.body.prepend(el);
+
+  const H = 52, THRESHOLD = 72;
+  let startY = 0, pulling = false, triggered = false;
+
+  document.addEventListener('touchstart', e => {
+    if (window.scrollY === 0) {
+      startY = e.touches[0].clientY;
+      pulling = true;
+      triggered = false;
+      el.classList.remove('snap');
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchmove', e => {
+    if (!pulling) return;
+    const dy = Math.max(0, e.touches[0].clientY - startY);
+    const travel = Math.min(dy * 0.5, H + 20);
+    el.style.transform = `translateY(${travel - H}px)`;
+    triggered = dy > THRESHOLD;
+    el.textContent = triggered ? '↑ Suelta para actualizar' : '↓ Tira para actualizar';
+  }, { passive: true });
+
+  document.addEventListener('touchend', () => {
+    if (!pulling) return;
+    pulling = false;
+    el.classList.add('snap');
+    el.style.transform = `translateY(-${H}px)`;
+    if (!triggered) return;
+    const tab = document.querySelector('.tab-btn.active')?.dataset.tab;
+    if      (tab === 'grp') { grpLoaded=false; loadGroups(); }
+    else if (tab === 'sts') { stsLoaded=false; loadStats(); }
+    else if (tab === 'nws') { loadNews(true); }
+    else if (tab === 'qnl') { qnlLoaded=false; loadQuiniela(); }
+    else                    { renderCalendar(); }
+  });
+})();
+
+// ── Tabs ───────────────────────────────────────────────────────
+let grpLoaded=false, stsLoaded=false, nwsLoaded=false;
+
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  ['cal','grp','sts','nws','qnl'].forEach(t=>document.getElementById(t+'-tab').classList.toggle('hidden',t!==tab));
+  if(tab==='grp' && !grpLoaded){ grpLoaded=true; loadGroups(); }
+  if(tab==='sts' && !stsLoaded){ stsLoaded=true; loadStats(); }
+  if(tab==='nws' && !nwsLoaded){ nwsLoaded=true; loadNews(); }
+  if(tab==='qnl'){ loadQuiniela(); }
+}
+
+// ── Init ───────────────────────────────────────────────────────
+tsInit();
+cpRender();
+renderCalendar();
