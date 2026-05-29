@@ -14,25 +14,39 @@ function matchId(m) {
   return `${m[0]}_${m[1]}_${label}`;
 }
 
+// Devuelve la fecha de hoy en hora española ('YYYY-MM-DD')
+function spainToday() {
+  return new Intl.DateTimeFormat('sv', { timeZone:'Europe/Madrid' }).format(new Date());
+}
+
+// Convierte fecha+hora española a milisegundos UTC (respeta CET/CEST)
+function spainToUTC(dateStr, timeStr) {
+  const [y,mo,d] = dateStr.split('-').map(Number);
+  const [h,mn]   = timeStr.split(':').map(Number);
+  // Calcular offset de Madrid en esa fecha usando un mediodía de referencia
+  const refUTC   = Date.UTC(y, mo-1, d, 12);
+  const refSpain = new Date(refUTC).toLocaleString('sv', { timeZone:'Europe/Madrid' });
+  const offsetH  = parseInt(refSpain.split('T')[1]) - 12; // +1 CET o +2 CEST
+  return Date.UTC(y, mo-1, d, h - offsetH, mn);
+}
+
 function isBetOpen(m) {
-  const now = new Date();
-  const todayCEST = new Date(now.getTime() + 2*3600*1000).toISOString().slice(0,10);
-  if (m[0] !== todayCEST) return false;
-  const [h,mn] = m[1].split(':').map(Number);
-  const [y,mo,d] = m[0].split('-').map(Number);
-  return now.getTime() < Date.UTC(y, mo-1, d, h-2, mn) - 5*60*1000;
+  if (m[0] !== spainToday()) return false;
+  return Date.now() < spainToUTC(m[0], m[1]) - 5*60*1000;
 }
 
 function isMatchStarted(m) {
-  const now = new Date();
-  const [h,mn] = m[1].split(':').map(Number);
-  const [y,mo,d] = m[0].split('-').map(Number);
-  return now.getTime() >= Date.UTC(y, mo-1, d, h-2, mn);
+  return Date.now() >= spainToUTC(m[0], m[1]);
 }
 
 function todayMatchesCEST() {
-  const todayCEST = new Date(Date.now() + 2*3600*1000).toISOString().slice(0,10);
-  return MATCHES.filter(m => m[0] === todayCEST);
+  const today = spainToday();
+  return MATCHES.filter(m => m[0] === today);
+}
+
+function nextUpcomingMatch() {
+  const now = Date.now();
+  return MATCHES.find(m => spainToUTC(m[0], m[1]) > now);
 }
 
 // 3 pts resultado exacto · 1 pt ganador correcto · 0 pts fallo
@@ -42,6 +56,17 @@ function calcPoints(bet, result) {
   const bOut = Math.sign(bet.home_score - bet.away_score);
   const rOut = Math.sign(result.home_score - result.away_score);
   return bOut === rOut ? 1 : 0;
+}
+
+function showToast(msg) {
+  const existing = document.getElementById('qnl-toast');
+  if (existing) existing.remove();
+  const t = document.createElement('div');
+  t.id = 'qnl-toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 2500);
 }
 
 function ptsLabel(pts) {
@@ -230,7 +255,19 @@ async function renderQnlSubTab() {
 function renderApostar(el) {
   const today = todayMatchesCEST();
   if (!today.length) {
-    el.innerHTML = '<div class="empty">No hay partidos hoy.<br>Las apuestas abren el día del partido.</div>';
+    const next = nextUpcomingMatch();
+    let nextHtml = '';
+    if (next) {
+      const parts = next[2].split('·')[0].split(' vs ');
+      const home = parts[0]?.trim() || '';
+      const away = parts[1]?.trim() || '';
+      nextHtml = `<div class="bet-card" style="margin-top:16px;border-color:rgba(232,200,74,.3)">
+        <div style="font-size:10px;color:var(--accent);font-family:'Bebas Neue',sans-serif;letter-spacing:1px;margin-bottom:8px">Próximo partido</div>
+        <div class="bet-match-name">${home} vs ${away}</div>
+        <div class="bet-meta">${fmtDate(next[0])} · ${next[1]}</div>
+      </div>`;
+    }
+    el.innerHTML = `<div class="empty">No hay partidos hoy.<br>Las apuestas abren el día del partido.</div>${nextHtml}`;
     return;
   }
 
@@ -380,6 +417,7 @@ async function submitBet(mid) {
   );
   if (error) { alert('Error al guardar. Inténtalo de nuevo.'); return; }
   qnlBets[mid] = { match_id: mid, home_score, away_score };
+  showToast('✓ Apuesta guardada');
   const el = document.getElementById('qnl-subcontent');
   if (el) renderApostar(el);
 }
@@ -417,6 +455,13 @@ async function renderMisApuestas(el) {
         ${ptsLabel(pts)}
       </div>` : '';
 
+    const started = isMatchStarted(m);
+    const verGrupo = started ? `
+      <div class="bet-actions" style="margin-top:10px">
+        <button class="bet-toggle-bets" onclick="toggleGroupBets('${b.match_id}',this)">Ver apuestas del grupo</button>
+      </div>
+      <div id="gbets-${b.match_id}" class="hidden"></div>` : '';
+
     return `
       <div class="bet-card">
         <div class="bet-match-name">${home} vs ${away}</div>
@@ -428,7 +473,7 @@ async function renderMisApuestas(el) {
           <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${b.away_score}</span>
           <span class="bet-team">${away}</span>
         </div>
-        ${resultSection}
+        ${resultSection}${verGrupo}
       </div>`;
   }).filter(Boolean).join('');
 

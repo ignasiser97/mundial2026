@@ -272,6 +272,19 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .bkt-solo.r { padding-left:8px; position:relative; }
 .bkt-solo.r::after { content:''; position:absolute; left:-1px; top:calc(50% - .5px); width:9px; height:1px; background:rgba(255,255,255,.16); }
 .bkt-center-conn { width:10px; height:1px; background:rgba(255,255,255,.16); align-self:center; }
+.bkt-scroll-hint { font-size:10px; color:var(--muted); text-align:center; padding:4px 0 2px; letter-spacing:.5px; }
+
+/* Toast de confirmación */
+#qnl-toast {
+  position:fixed; bottom:calc(74px + env(safe-area-inset-bottom)); left:50%;
+  transform:translateX(-50%) translateY(6px);
+  background:var(--pos); color:#000;
+  padding:8px 18px; border-radius:20px;
+  font-size:12px; font-weight:700;
+  opacity:0; transition:opacity .2s,transform .2s;
+  z-index:201; pointer-events:none; white-space:nowrap;
+}
+#qnl-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
 /* ESTADÍSTICAS */
 .stats-wrap { max-width:700px; margin:0 auto; padding:14px 12px 24px; }
@@ -556,13 +569,8 @@ html,body { overscroll-behavior-y: contain; }
   &nbsp;·&nbsp;
   <a href="mailto:ignasiser97@gmail.com">ignasiser97@gmail.com</a>
   <div class="footer-divider"></div>
-  Proyecto de desarrollo personal sin ánimo de lucro.<br>
-  Todas las marcas, nombres y derechos audiovisuales pertenecen a sus respectivos propietarios (FIFA, DAZN, RTVE).<br>
-  Para cualquier consulta o reclamación, contacta en
-  <a href="mailto:ignasiser97@gmail.com">ignasiser97@gmail.com</a>
-  <div class="footer-divider"></div>
-  Copa Mundial FIFA 2026 · Horarios en hora peninsular española (CEST)<br>
-  DAZN = suscripción · La 1 = emisión en abierto · Sujeto a cambios oficiales
+  Proyecto personal sin ánimo de lucro · Marcas y derechos © sus propietarios (FIFA · DAZN · RTVE)<br>
+  Copa Mundial FIFA 2026 · Horarios en hora peninsular española (CEST) · Sujeto a cambios oficiales
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

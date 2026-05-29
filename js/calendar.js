@@ -23,11 +23,13 @@ function cpToggle(e) {
 }
 function cpPrev(e) {
   e.stopPropagation();
+  if (cpYear===2026 && cpMonth===5) return; // límite: junio 2026
   cpMonth--; if(cpMonth<0){cpMonth=11;cpYear--;}
   cpRender();
 }
 function cpNext(e) {
   e.stopPropagation();
+  if (cpYear===2026 && cpMonth===6) return; // límite: julio 2026
   cpMonth++; if(cpMonth>11){cpMonth=0;cpYear++;}
   cpRender();
 }

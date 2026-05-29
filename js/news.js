@@ -8,6 +8,10 @@ const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
 let newsFilter = '';
 let allNews    = [];
 
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 function timeAgo(date) {
   const s = (Date.now() - date.getTime()) / 1000;
   if (s < 60)    return 'ahora mismo';
@@ -76,12 +80,12 @@ function renderNews() {
     return;
   }
   const html = items.map(n => `
-    <a class="news-card" href="${n.link}" target="_blank" rel="noopener">
-      ${n.thumb ? `<img class="news-thumb" src="${n.thumb}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''}
+    <a class="news-card" href="${escHtml(n.link)}" target="_blank" rel="noopener">
+      ${n.thumb ? `<img class="news-thumb" src="${escHtml(n.thumb)}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''}
       <div class="news-body">
-        <div class="news-title">${n.title}</div>
+        <div class="news-title">${escHtml(n.title)}</div>
         <div class="news-meta">
-          <span class="news-source">${n.sourceName}</span>
+          <span class="news-source">${escHtml(n.sourceName)}</span>
           <span>${timeAgo(n.date)}</span>
         </div>
       </div>

@@ -43,8 +43,9 @@ async function loadGroups() {
 
 function renderGroup(letter, teams) {
   const rows=teams.map(t=>{
-    const dgCls=t.dg>0?'pos':t.dg<0?'neg':'';
-    const dg=t.dg>0?'+'+t.dg:t.dg;
+    const dgVal=t.dg??0;
+    const dgCls=dgVal>0?'pos':dgVal<0?'neg':'';
+    const dg=dgVal>0?'+'+dgVal:dgVal;
     const isSpain=t.team==='España';
     return `<tr${isSpain?' class="spain-row"':''}>
       <td class="tnm">${t.flag||''} ${t.team}</td>
@@ -153,7 +154,8 @@ function renderBracket() {
 
   el.innerHTML = `
     <div class="bkt-scroll"><div class="bkt-tree">${leftHTML}${sf1}${center}${sf2}${rightHTML}</div></div>
-    <p style="font-size:11px;color:var(--muted);padding:8px 14px 20px;line-height:1.6">
+    <p class="bkt-scroll-hint">← desliza para ver el cuadro completo →</p>
+    <p style="font-size:11px;color:var(--muted);padding:4px 14px 20px;line-height:1.6">
       * <strong style="color:var(--text)">3º</strong> = uno de los 8 mejores terceros entre los 12 grupos.
       FIFA asigna qué tercero va a cada cruce una vez terminada la fase de grupos.
     </p>`;
