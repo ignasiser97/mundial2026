@@ -151,5 +151,10 @@ function renderBracket() {
     </div>
   </div>`;
 
-  el.innerHTML = `<div class="bkt-scroll"><div class="bkt-tree">${leftHTML}${sf1}${center}${sf2}${rightHTML}</div></div>`;
+  el.innerHTML = `
+    <div class="bkt-scroll"><div class="bkt-tree">${leftHTML}${sf1}${center}${sf2}${rightHTML}</div></div>
+    <p style="font-size:11px;color:var(--muted);padding:8px 14px 20px;line-height:1.6">
+      * <strong style="color:var(--text)">3º</strong> = uno de los 8 mejores terceros entre los 12 grupos.
+      FIFA asigna qué tercero va a cada cruce una vez terminada la fase de grupos.
+    </p>`;
 }
