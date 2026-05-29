@@ -2,7 +2,18 @@ const SUPABASE_URL = 'https://zdghmnaiuqcqoezvaxum.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkZ2htbmFpdXFjcW9lenZheHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNDkxMDEsImV4cCI6MjA5NTYyNTEwMX0.o9Y_dKF2fqVkjROW4iOMQ5rE_FH3TXZJPWctkALPbw0';
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+const GROUPS = [
+  {
+    id:      'cachorros',
+    name:    'Cachorros',
+    salt:    'mundial26',
+    hash:    '211939a94e7efb9ad5a16c120f91e23a03976b898395e49a5cd26cc40b65fb7e',
+    members: ['Nacho','Sergio','Edu','Alex','Javi','Jorge','Martín','Martinez','Ghobas','Portero','Gonza'],
+  },
+];
+
 let qnlUser    = null;
+let qnlGroup   = null;
 let qnlSubTab  = 'apostar';
 let qnlBets    = {};
 let qnlLoaded  = false;
@@ -78,10 +89,6 @@ function ptsLabel(pts) {
 
 // ── Auth ───────────────────────────────────────────────────────
 
-const FRIENDS    = ['Nacho','Sergio','Edu','Alex','Javi','Jorge','Martín','Martinez','Ghobas','Portero','Gonza'];
-const GROUP_SALT = 'mundial26';
-const GROUP_HASH = '211939a94e7efb9ad5a16c120f91e23a03976b898395e49a5cd26cc40b65fb7e';
-
 async function hashStr(s) {
   const data = new TextEncoder().encode(s);
   const buf  = await crypto.subtle.digest('SHA-256', data);
@@ -94,17 +101,47 @@ async function loadQuiniela() {
   if (qnlLoaded && qnlUser) { renderQnlContainer(); return; }
   wrap.innerHTML = '<div class="empty">Cargando…</div>';
   const uid = localStorage.getItem('qnl_uid');
-  if (uid) {
-    const { data } = await db.from('users').select('*').eq('id', uid).maybeSingle();
-    if (data) {
-      qnlUser = data;
-      await loadMyBets();
-      qnlLoaded = true;
-      renderQnlContainer();
-      return;
+  const gid = localStorage.getItem('qnl_gid');
+  if (uid && gid) {
+    const group = GROUPS.find(g => g.id === gid);
+    if (group) {
+      const { data } = await db.from('users').select('*').eq('id', uid).maybeSingle();
+      if (data) {
+        qnlUser  = data;
+        qnlGroup = group;
+        await loadMyBets();
+        qnlLoaded = true;
+        renderQnlContainer();
+        return;
+      }
     }
     localStorage.removeItem('qnl_uid');
+    localStorage.removeItem('qnl_gid');
   }
+  renderQnlGroupSelect();
+}
+
+function renderQnlGroupSelect() {
+  const wrap = document.getElementById('qnl-inner');
+  if (!wrap) return;
+  const cards = GROUPS.map(g =>
+    `<button class="qnl-group-card" onclick="qnlSelectGroup('${g.id}')">${g.name}</button>`
+  ).join('');
+  wrap.innerHTML = `
+    <div class="qnl-register">
+      <h2>Quiniela</h2>
+      <p>Selecciona tu grupo e introduce la contraseña para acceder.</p>
+      <div class="qnl-groups-list">${cards}</div>
+      <div class="qnl-create-group">
+        ¿Quieres crear tu propio grupo?<br>
+        <a href="mailto:ignasiser97@gmail.com">Contáctame</a> y lo montamos.
+      </div>
+    </div>`;
+}
+
+function qnlSelectGroup(gid) {
+  qnlGroup = GROUPS.find(g => g.id === gid);
+  if (!qnlGroup) return;
   renderQnlPassScreen();
 }
 
@@ -113,7 +150,8 @@ function renderQnlPassScreen() {
   if (!wrap) return;
   wrap.innerHTML = `
     <div class="qnl-register">
-      <h2>Quiniela Cachorros</h2>
+      <button class="qnl-back" onclick="renderQnlGroupSelect()">← Grupos</button>
+      <h2>${qnlGroup.name}</h2>
       <p>Introduce la contraseña del grupo para acceder.</p>
       <input class="qnl-input" id="qnl-grp-pass" type="password"
              placeholder="Contraseña del grupo" autocomplete="off"
@@ -130,8 +168,8 @@ async function qnlCheckPass() {
   if (!val) return;
   const btn = document.getElementById('qnl-pass-btn');
   btn.disabled = true; btn.textContent = 'Comprobando…';
-  const hash = await hashStr(val + GROUP_SALT);
-  if (hash !== GROUP_HASH) {
+  const hash = await hashStr(val + qnlGroup.salt);
+  if (hash !== qnlGroup.hash) {
     btn.disabled = false; btn.textContent = 'Entrar';
     document.getElementById('qnl-pass-err').textContent = 'Contraseña incorrecta.';
     input.value = ''; input.focus();
@@ -143,7 +181,7 @@ async function qnlCheckPass() {
 function renderQnlPickerScreen() {
   const wrap = document.getElementById('qnl-inner');
   if (!wrap) return;
-  const buttons = FRIENDS.map(name =>
+  const buttons = qnlGroup.members.map(name =>
     `<button class="qnl-picker-btn" onclick="qnlPickFriend('${name}')">${name}</button>`
   ).join('');
   wrap.innerHTML = `
@@ -173,6 +211,7 @@ async function qnlPickFriend(name) {
   }
 
   localStorage.setItem('qnl_uid', qnlUser.id);
+  localStorage.setItem('qnl_gid', qnlGroup.id);
   await loadMyBets();
   qnlLoaded = true;
   renderQnlContainer();
@@ -181,10 +220,12 @@ async function qnlPickFriend(name) {
 function qnlLogout() {
   if (!confirm('¿Cambiar de usuario?')) return;
   localStorage.removeItem('qnl_uid');
+  localStorage.removeItem('qnl_gid');
   qnlUser   = null;
+  qnlGroup  = null;
   qnlBets   = {};
   qnlLoaded = false;
-  renderQnlPassScreen();
+  renderQnlGroupSelect();
 }
 
 async function loadMyBets() {
@@ -195,20 +236,6 @@ async function loadMyBets() {
 }
 
 // ── Render shell ───────────────────────────────────────────────
-
-function renderQnlRegistration() {
-  const wrap = document.getElementById('qnl-inner');
-  if (!wrap) return;
-  wrap.innerHTML = `
-    <div class="qnl-register">
-      <h2>Quiniela Cachorros</h2>
-      <p>Escribe tu nombre para apostar en cada partido<br>y ver la clasificación del grupo.</p>
-      <input class="qnl-input" id="qnl-name-input" type="text"
-             placeholder="Tu nombre o alias" maxlength="24" autocomplete="off"
-             onkeydown="if(event.key==='Enter') qnlRegister()">
-      <button class="qnl-btn" id="qnl-reg-btn" onclick="qnlRegister()">Entrar</button>
-    </div>`;
-}
 
 function renderQnlContainer() {
   const wrap = document.getElementById('qnl-inner');
