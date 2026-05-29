@@ -92,19 +92,48 @@ FLAGS = {
 }
 
 
-def fetch_standings() -> dict:
-    headers = {
+def _headers() -> dict:
+    return {
         "x-apisports-key": API_KEY,
         "x-rapidapi-host": "v3.football.api-sports.io",
     }
+
+
+def fetch_standings() -> dict:
     resp = requests.get(
         f"{BASE_URL}/standings",
-        headers=headers,
+        headers=_headers(),
         params={"league": LEAGUE_ID, "season": SEASON},
         timeout=15,
     )
     resp.raise_for_status()
     return resp.json()
+
+
+def fetch_top_stats(endpoint: str) -> list:
+    resp = requests.get(
+        f"{BASE_URL}/players/{endpoint}",
+        headers=_headers(),
+        params={"league": LEAGUE_ID, "season": SEASON},
+        timeout=15,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+
+    result = []
+    for item in data.get("response", [])[:20]:
+        player = item["player"]
+        stats  = item["statistics"][0]
+        en_name = stats["team"]["name"]
+        es_name = NAMES_ES.get(en_name, en_name)
+        result.append({
+            "player":  player["name"],
+            "team":    es_name,
+            "flag":    FLAGS.get(es_name, ""),
+            "goals":   stats["goals"]["total"]   or 0,
+            "assists": stats["goals"]["assists"]  or 0,
+        })
+    return result
 
 
 def parse_groups(raw: dict) -> dict:
@@ -174,9 +203,19 @@ def main() -> None:
         print("No hay datos de grupos todavía (el torneo aún no ha comenzado).", file=sys.stderr)
         sys.exit(0)
 
+    print("Obteniendo goleadores y asistentes…")
+    try:
+        top_scorers = fetch_top_stats("topscorers")
+        top_assists = fetch_top_stats("topassists")
+    except requests.RequestException as e:
+        print(f"AVISO: No se pudieron obtener estadísticas: {e}", file=sys.stderr)
+        top_scorers, top_assists = [], []
+
     result = {
-        "updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "groups":  groups,
+        "updated":    datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "groups":     groups,
+        "topScorers": top_scorers,
+        "topAssists": top_assists,
     }
 
     OUT_FILE.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
