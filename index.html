@@ -350,6 +350,26 @@ html,body { overscroll-behavior-y: contain; }
 .lb-table td.lb-pts { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--accent); letter-spacing:1px; }
 .lb-table td.lb-rank { color:var(--muted); font-weight:700; font-size:12px; }
 .lb-table tr.me td { background:rgba(232,200,74,.06); }
+.bet-toggle-bets {
+  font-size:11px; color:var(--muted); background:none;
+  border:1px solid var(--border); border-radius:4px; padding:5px 12px; cursor:pointer; transition:color .15s;
+}
+.bet-toggle-bets:hover { color:var(--text); }
+.group-bets-list { margin-top:10px; border-top:1px solid var(--border); padding-top:8px; }
+.group-bet-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:6px 0; font-size:12px; border-bottom:1px solid rgba(30,45,69,.3);
+}
+.group-bet-row:last-child { border-bottom:none; }
+.gb-name { flex:1; font-weight:500; }
+.gb-score { font-family:'Bebas Neue',sans-serif; font-size:16px; color:var(--accent); margin:0 10px; }
+.gb-pts-exact { font-family:'Bebas Neue',sans-serif; font-size:13px; color:var(--pos); }
+.gb-pts-win   { font-family:'Bebas Neue',sans-serif; font-size:13px; color:var(--accent); }
+.gb-pts-miss  { font-size:12px; color:var(--muted); }
+.bet-result-row {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-top:8px; padding-top:8px; border-top:1px solid var(--border); font-size:11px;
+}
 </style>
 </head>
 <body>
