@@ -1,9 +1,7 @@
 # TODO · Mundial 2026
 
-## En progreso
-- [ ] Pestaña Noticias — RSS de periódicos deportivos españoles (Marca, AS, Sport, MD)
-
 ## Completado
+- [x] Pestaña Noticias — RSS de Marca, AS, Sport y Mundo Deportivo con filtros por fuente
 - [x] Pestaña Quiniela Cachorros — apuesta por partido, mis apuestas, clasificación
 - [x] Autenticación con usuario + contraseña (SHA-256 + salt, sin email)
 - [x] Puntuación automática: 3 pts exacto, 1 pt ganador correcto
