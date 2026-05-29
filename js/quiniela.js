@@ -186,6 +186,7 @@ function renderQnlPickerScreen() {
   ).join('');
   wrap.innerHTML = `
     <div class="qnl-register">
+      <button class="qnl-back" onclick="renderQnlGroupSelect()">← Grupos</button>
       <h2>¿Quién eres?</h2>
       <p>Elige tu nombre. Solo necesitas hacerlo una vez.</p>
       <div class="qnl-picker-grid">${buttons}</div>
