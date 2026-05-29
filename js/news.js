@@ -1,10 +1,9 @@
 const NEWS_SOURCES = [
-  { id:'marca', name:'Marca',           url:'https://www.marca.com/rss/futbol/mundial-2026.xml' },
-  { id:'as',    name:'AS',              url:'https://as.com/rss/tags/mundial_2026.xml' },
-  { id:'sport', name:'Sport',           url:'https://www.sport.es/rss/futbol/mundial-2026.xml' },
+  { id:'marca', name:'Marca',           url:'https://www.marca.com/rss/futbol/mundial.xml' },
+  { id:'as',    name:'AS',              url:'https://as.com/rss/futbol/mundial.xml' },
   { id:'md',    name:'Mundo Deportivo', url:'https://www.mundodeportivo.com/rss/futbol/mundial.xml' },
 ];
-const RSS2JSON = 'https://api.rss2json.com/v1/api.json?count=25&rss_url=';
+const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
 
 let newsFilter = '';
 let allNews    = [];
