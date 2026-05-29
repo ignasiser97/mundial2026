@@ -30,7 +30,7 @@
 - [ ] Comparador de estadísticas entre jugadores
 
 ### Analytics
-- [ ] Cloudflare Web Analytics — crear cuenta, obtener snippet y añadir a index.html
+- [x] Cloudflare Web Analytics — crear cuenta, obtener snippet y añadir a index.html
 
 ## Ideas a valorar
 - [ ] Predictor/simulador de grupos (quién pasa)
