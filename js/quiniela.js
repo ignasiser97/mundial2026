@@ -53,12 +53,14 @@ function ptsLabel(pts) {
 
 // ── Auth ───────────────────────────────────────────────────────
 
-let qnlAuthMode = 'login'; // 'login' | 'register'
+const FRIENDS    = ['Nacho','Sergio','Edu','Alex','Javi','Jorge','Martín','Martinez','Ghobas','Portero','Gonza'];
+const GROUP_SALT = 'mundial26';
+const GROUP_HASH = '211939a94e7efb9ad5a16c120f91e23a03976b898395e49a5cd26cc40b65fb7e';
 
-async function hashPassword(password, salt) {
-  const data = new TextEncoder().encode(password + salt);
-  const hash = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+async function hashStr(s) {
+  const data = new TextEncoder().encode(s);
+  const buf  = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
 }
 
 async function loadQuiniela() {
@@ -76,119 +78,88 @@ async function loadQuiniela() {
       renderQnlContainer();
       return;
     }
+    localStorage.removeItem('qnl_uid');
   }
-  renderQnlAuth();
+  renderQnlPassScreen();
 }
 
-function renderQnlAuth() {
+function renderQnlPassScreen() {
   const wrap = document.getElementById('qnl-inner');
   if (!wrap) return;
-  const isLogin = qnlAuthMode === 'login';
   wrap.innerHTML = `
     <div class="qnl-register">
       <h2>Quiniela Cachorros</h2>
-      <div class="qnl-auth-tabs">
-        <button class="qnl-auth-tab ${isLogin ? 'active' : ''}" onclick="qnlSetAuthMode('login')">Entrar</button>
-        <button class="qnl-auth-tab ${!isLogin ? 'active' : ''}" onclick="qnlSetAuthMode('register')">Registrarse</button>
-      </div>
-      <label class="qnl-label">Nombre</label>
-      <input class="qnl-input" id="qnl-name" type="text" placeholder="Tu nombre o alias"
-             maxlength="24" autocomplete="username" onkeydown="qnlAuthKey(event)">
-      <label class="qnl-label">Contraseña</label>
-      <input class="qnl-input" id="qnl-pass" type="password" placeholder="••••••••"
-             autocomplete="${isLogin ? 'current-password' : 'new-password'}" onkeydown="qnlAuthKey(event)" style="margin-top:0">
-      ${!isLogin ? `
-      <label class="qnl-label">Confirmar contraseña</label>
-      <input class="qnl-input" id="qnl-pass2" type="password" placeholder="••••••••"
-             autocomplete="new-password" onkeydown="qnlAuthKey(event)" style="margin-top:0">` : ''}
-      <button class="qnl-btn" id="qnl-auth-btn" onclick="${isLogin ? 'qnlLogin()' : 'qnlRegister()'}">
-        ${isLogin ? 'Entrar' : 'Crear cuenta'}
-      </button>
-      <div class="qnl-error" id="qnl-error"></div>
+      <p>Introduce la contraseña del grupo para acceder.</p>
+      <input class="qnl-input" id="qnl-grp-pass" type="password"
+             placeholder="Contraseña del grupo" autocomplete="off"
+             onkeydown="if(event.key==='Enter') qnlCheckPass()">
+      <button class="qnl-btn" id="qnl-pass-btn" onclick="qnlCheckPass()">Entrar</button>
+      <div class="qnl-error" id="qnl-pass-err"></div>
+    </div>`;
+  setTimeout(() => document.getElementById('qnl-grp-pass')?.focus(), 50);
+}
+
+async function qnlCheckPass() {
+  const input = document.getElementById('qnl-grp-pass');
+  const val   = input?.value.trim().toLowerCase();
+  if (!val) return;
+  const btn = document.getElementById('qnl-pass-btn');
+  btn.disabled = true; btn.textContent = 'Comprobando…';
+  const hash = await hashStr(val + GROUP_SALT);
+  if (hash !== GROUP_HASH) {
+    btn.disabled = false; btn.textContent = 'Entrar';
+    document.getElementById('qnl-pass-err').textContent = 'Contraseña incorrecta.';
+    input.value = ''; input.focus();
+    return;
+  }
+  renderQnlPickerScreen();
+}
+
+function renderQnlPickerScreen() {
+  const wrap = document.getElementById('qnl-inner');
+  if (!wrap) return;
+  const buttons = FRIENDS.map(name =>
+    `<button class="qnl-picker-btn" onclick="qnlPickFriend('${name}')">${name}</button>`
+  ).join('');
+  wrap.innerHTML = `
+    <div class="qnl-register">
+      <h2>¿Quién eres?</h2>
+      <p>Elige tu nombre. Solo necesitas hacerlo una vez.</p>
+      <div class="qnl-picker-grid">${buttons}</div>
+      <div class="qnl-error" id="qnl-pick-err" style="margin-top:14px"></div>
     </div>`;
 }
 
-function qnlSetAuthMode(mode) {
-  qnlAuthMode = mode;
-  renderQnlAuth();
-}
+async function qnlPickFriend(name) {
+  document.querySelectorAll('.qnl-picker-btn').forEach(b => b.disabled = true);
+  const errEl = document.getElementById('qnl-pick-err');
 
-function qnlAuthKey(e) {
-  if (e.key === 'Enter') qnlAuthMode === 'login' ? qnlLogin() : qnlRegister();
-}
+  const { data: existing } = await db.from('users').select('*').eq('name', name).maybeSingle();
+  if (existing) {
+    qnlUser = existing;
+  } else {
+    const { data, error } = await db.from('users').insert({ name }).select().maybeSingle();
+    if (error || !data) {
+      if (errEl) errEl.textContent = 'Error al registrar. Inténtalo de nuevo.';
+      document.querySelectorAll('.qnl-picker-btn').forEach(b => b.disabled = false);
+      return;
+    }
+    qnlUser = data;
+  }
 
-function qnlAuthError(msg) {
-  const el = document.getElementById('qnl-error');
-  if (el) el.textContent = msg;
-  const btn = document.getElementById('qnl-auth-btn');
-  if (btn) { btn.disabled = false; btn.textContent = qnlAuthMode === 'login' ? 'Entrar' : 'Crear cuenta'; }
-}
-
-async function qnlLogin() {
-  const name = document.getElementById('qnl-name')?.value.trim();
-  const pass = document.getElementById('qnl-pass')?.value;
-  if (!name || !pass) { qnlAuthError('Rellena nombre y contraseña.'); return; }
-
-  const btn = document.getElementById('qnl-auth-btn');
-  btn.disabled = true; btn.textContent = 'Entrando…';
-
-  const { data: user } = await db.from('users')
-    .select('id, name, password_hash, salt')
-    .eq('name', name)
-    .maybeSingle();
-
-  if (!user) { qnlAuthError('Usuario no encontrado.'); return; }
-
-  const hash = await hashPassword(pass, user.salt);
-  if (hash !== user.password_hash) { qnlAuthError('Contraseña incorrecta.'); return; }
-
-  qnlUser = user;
-  localStorage.setItem('qnl_uid', user.id);
+  localStorage.setItem('qnl_uid', qnlUser.id);
   await loadMyBets();
   qnlLoaded = true;
   renderQnlContainer();
 }
 
-async function qnlRegister() {
-  const name  = document.getElementById('qnl-name')?.value.trim();
-  const pass  = document.getElementById('qnl-pass')?.value;
-  const pass2 = document.getElementById('qnl-pass2')?.value;
-
-  if (!name)             { qnlAuthError('Escribe un nombre.'); return; }
-  if (!pass)             { qnlAuthError('Escribe una contraseña.'); return; }
-  if (pass.length < 4)   { qnlAuthError('La contraseña debe tener al menos 4 caracteres.'); return; }
-  if (pass !== pass2)    { qnlAuthError('Las contraseñas no coinciden.'); return; }
-
-  const btn = document.getElementById('qnl-auth-btn');
-  btn.disabled = true; btn.textContent = 'Creando cuenta…';
-
-  const { data: existing } = await db.from('users').select('id').eq('name', name).maybeSingle();
-  if (existing) { qnlAuthError('Ese nombre ya está en uso. Prueba con otro.'); return; }
-
-  const salt = crypto.randomUUID();
-  const password_hash = await hashPassword(pass, salt);
-
-  const { data, error } = await db.from('users')
-    .insert({ name, password_hash, salt })
-    .select()
-    .maybeSingle();
-
-  if (error || !data) { qnlAuthError('Error al crear la cuenta. Inténtalo de nuevo.'); return; }
-
-  qnlUser = data;
-  localStorage.setItem('qnl_uid', data.id);
-  qnlLoaded = true;
-  renderQnlContainer();
-}
-
 function qnlLogout() {
-  if (!confirm('¿Cerrar sesión?')) return;
+  if (!confirm('¿Cambiar de usuario?')) return;
   localStorage.removeItem('qnl_uid');
   qnlUser   = null;
   qnlBets   = {};
   qnlLoaded = false;
-  qnlAuthMode = 'login';
-  renderQnlAuth();
+  renderQnlPassScreen();
 }
 
 async function loadMyBets() {
