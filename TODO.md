@@ -32,6 +32,9 @@
 ### Analytics
 - [x] Cloudflare Web Analytics — crear cuenta, obtener snippet y añadir a index.html
 
+### Sedes
+- [ ] Pestaña Sedes — info de las 16 ciudades y estadios en EE.UU., Canadá y México (nueva pestaña, última en la barra)
+
 ## Ideas a valorar
 - [ ] Predictor/simulador de grupos (quién pasa)
 - [ ] Widget de "próximo partido de España" para compartir como imagen
