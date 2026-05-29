@@ -62,44 +62,90 @@ function renderGroup(letter, teams) {
   </div>`;
 }
 
-// ── Bracket ────────────────────────────────────────────────────
+// ── Bracket visual ─────────────────────────────────────────────
+
+// Estructura del árbol: LEFT[ronda][grupo][match_code]
+const BKT_LEFT = [
+  [ ['P73','P75'], ['P74','P77'], ['P83','P84'], ['P81','P82'] ],  // R32
+  [ ['P90','P89'], ['P93','P94'] ],                                // R16
+  [ ['P97','P98'] ],                                               // QF
+];
+const BKT_RIGHT = [
+  [ ['P99','P100'] ],                                              // QF
+  [ ['P91','P92'], ['P95','P96'] ],                                // R16
+  [ ['P76','P78'], ['P79','P80'], ['P86','P88'], ['P85','P87'] ],  // R32
+];
+const BKT_LEFT_LABELS  = ['1/32','Octavos','Cuartos','Semis'];
+const BKT_RIGHT_LABELS = ['Cuartos','Octavos','1/32'];
+
+function buildPMap() {
+  const map = {};
+  for (const m of MATCHES) {
+    const c = m[2].match(/\(P(\d+)\)$/);
+    if (c) { map['P'+c[1]] = m; continue; }
+    if (m[7]==='sf')    { m[2].includes('1') ? map['SF1']=m : map['SF2']=m; }
+    if (m[7]==='final') map['FIN']=m;
+    if (m[7]==='3p')    map['3P']=m;
+  }
+  return map;
+}
+
+function bktCard(code, pmap, extra='') {
+  const m = pmap[code];
+  if (!m) return `<div class="bkt-m${extra?''+extra:''}"><div class="bkt-team">TBD</div><div class="bkt-div"></div><div class="bkt-team">TBD</div></div>`;
+  const parts = m[2].split('·')[0].trim().split(' vs ');
+  const home  = parts[0]?.trim() || 'TBD';
+  const away  = parts[1]?.trim() || 'TBD';
+  return `<div class="bkt-m${extra}">
+    <div class="bkt-team">${home}</div>
+    <div class="bkt-div"></div>
+    <div class="bkt-team">${away}</div>
+    <div class="bkt-date">${m[1]} · ${m[0].slice(5).replace('-','/')}</div>
+  </div>`;
+}
+
+function bktColumn(rounds, labels, side) {
+  return rounds.map((groups, ri) => {
+    const grpsHTML = groups.map(grp =>
+      `<div class="bkt-grp ${side}">${grp.map(c => bktCard(c, bktMap)).join('')}</div>`
+    ).join('');
+    return `<div class="bkt-col-wrap">
+      <div class="bkt-rlabel">${labels[ri]||''}</div>
+      <div class="bkt-col">${grpsHTML}</div>
+    </div>`;
+  }).join('');
+}
+
+let bktMap = {};
 
 function renderBracket() {
   const el = document.getElementById('bracket-content');
+  bktMap = buildPMap();
 
-  const chips = BRACKET_PHASES.map(p =>
-    `<button class="bp-chip ${p.key===bracketPhase?'active':''}" onclick="setBracketPhase('${p.key}')">${p.label}</button>`
-  ).join('');
+  const leftHTML  = bktColumn(BKT_LEFT,  BKT_LEFT_LABELS,  'l');
+  const rightHTML = bktColumn(BKT_RIGHT, BKT_RIGHT_LABELS, 'r');
 
-  const matches = MATCHES.filter(m => m[7] === bracketPhase);
+  // SF + FINAL center
+  const sf1 = `<div class="bkt-col-wrap">
+    <div class="bkt-rlabel">${BKT_LEFT_LABELS[3]}</div>
+    <div class="bkt-col">
+      <div class="bkt-solo l">${bktCard('SF1', bktMap, ' sf')}</div>
+    </div>
+  </div>`;
 
-  const cards = matches.map(m => {
-    const parts = m[2].split('·')[0].split(' vs ');
-    const home  = parts[0]?.trim() || '';
-    const away  = parts[1]?.trim() || '';
-    const night = isNight(m[1]);
-    const chBadges = (m[5].includes('d') ? '<span class="badge bd">DAZN</span>' : '') +
-                     (m[5].includes('l') ? '<span class="badge bl">LA 1</span>' : '');
-    return `
-      <div class="bracket-match-card">
-        <div class="bm-date">${fmtDate(m[0])} · ${m[1]} ESP${night?' 🌙':''} ${chBadges}</div>
-        <div class="bm-teams">
-          <span class="bm-team">${home}</span>
-          <span class="bm-vs">VS</span>
-          <span class="bm-team away">${away}</span>
-        </div>
-        <div class="bm-venue">${m[3]}</div>
-      </div>`;
-  }).join('');
+  const center = `<div class="bkt-center">
+    <div class="bkt-clabel">Final</div>
+    ${bktCard('FIN', bktMap, ' fin')}
+    <div class="bkt-clabel muted">3er Puesto</div>
+    ${bktCard('3P', bktMap, ' tp')}
+  </div>`;
 
-  el.innerHTML = `
-    <div class="bracket-phases">${chips}</div>
-    <div class="bracket-list">
-      ${cards || '<div class="empty">No hay partidos en esta fase.</div>'}
-    </div>`;
-}
+  const sf2 = `<div class="bkt-col-wrap">
+    <div class="bkt-rlabel">Semis</div>
+    <div class="bkt-col">
+      <div class="bkt-solo r">${bktCard('SF2', bktMap, ' sf')}</div>
+    </div>
+  </div>`;
 
-function setBracketPhase(phase) {
-  bracketPhase = phase;
-  renderBracket();
+  el.innerHTML = `<div class="bkt-scroll"><div class="bkt-tree">${leftHTML}${sf1}${center}${sf2}${rightHTML}</div></div>`;
 }
