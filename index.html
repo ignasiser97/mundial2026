@@ -28,7 +28,7 @@
   --spain-hl:#e8c84a;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; padding-bottom: 48px; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; padding-bottom: calc(62px + env(safe-area-inset-bottom)); }
 
 /* HERO */
 .hero {
@@ -59,15 +59,23 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .hero-gh:hover { opacity:1; color:var(--text); }
 .hero-gh svg { width:14px; height:14px; fill:currentColor; flex-shrink:0; }
 
-/* TABS */
-.tabs { position:sticky; top:0; z-index:100; display:flex; background:var(--surface); border-bottom:1px solid var(--border); }
-.tab-btn {
-  flex:1; padding:13px 0;
-  font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:1.5px;
-  color:var(--muted); background:none; border:none;
-  border-bottom:2px solid transparent; cursor:pointer; transition:color .15s,border-color .15s;
+/* TABS — bottom nav bar */
+.tabs {
+  position:fixed; bottom:0; left:0; right:0; z-index:100;
+  display:flex; background:var(--surface);
+  border-top:1px solid var(--border);
+  padding-bottom:env(safe-area-inset-bottom);
 }
-.tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+.tab-btn {
+  flex:1; padding:8px 4px 6px;
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  font-family:'DM Sans',sans-serif; font-size:10px; font-weight:500; letter-spacing:.2px;
+  color:var(--muted); background:none; border:none;
+  border-top:2px solid transparent; cursor:pointer; transition:color .15s,border-color .15s;
+}
+.tab-btn.active { color:var(--accent); border-top-color:var(--accent); }
+.tab-icon { width:22px; height:22px; flex-shrink:0; }
+.tab-icon svg { width:100%; height:100%; stroke:currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
 
 /* FILTERS */
 .filters { display:flex; flex-wrap:wrap; gap:8px; padding:12px 14px; background:var(--surface); border-bottom:1px solid var(--border); }
@@ -341,10 +349,6 @@ html,body { overscroll-behavior-y: contain; }
 }
 #ptr-indicator.snap { transition:transform .25s ease; }
 
-/* TABS: scrollable para caber 5 */
-.tabs { overflow-x:auto; scrollbar-width:none; }
-.tabs::-webkit-scrollbar { display:none; }
-.tab-btn { flex:0 0 auto; min-width:72px; }
 
 /* QUINIELA */
 .qnl-wrap { max-width:700px; margin:0 auto; padding:14px 12px 24px; }
@@ -430,11 +434,26 @@ html,body { overscroll-behavior-y: contain; }
 </div>
 
 <div class="tabs">
-  <button class="tab-btn active" data-tab="cal" onclick="switchTab('cal')">Calendario</button>
-  <button class="tab-btn"        data-tab="grp" onclick="switchTab('grp')">Grupos</button>
-  <button class="tab-btn"        data-tab="sts" onclick="switchTab('sts')">Estadísticas</button>
-  <button class="tab-btn"        data-tab="nws" onclick="switchTab('nws')">Noticias</button>
-  <button class="tab-btn"        data-tab="qnl" onclick="switchTab('qnl')">Quiniela</button>
+  <button class="tab-btn active" data-tab="cal" onclick="switchTab('cal')">
+    <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></span>
+    Calendario
+  </button>
+  <button class="tab-btn" data-tab="grp" onclick="switchTab('grp')">
+    <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></span>
+    Grupos
+  </button>
+  <button class="tab-btn" data-tab="sts" onclick="switchTab('sts')">
+    <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg></span>
+    Stats
+  </button>
+  <button class="tab-btn" data-tab="nws" onclick="switchTab('nws')">
+    <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg></span>
+    Noticias
+  </button>
+  <button class="tab-btn" data-tab="qnl" onclick="switchTab('qnl')">
+    <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+    Quiniela
+  </button>
 </div>
 
 <!-- ══ CALENDARIO ══ -->
