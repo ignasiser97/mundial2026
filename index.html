@@ -256,6 +256,52 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .ns-chip.active { background:var(--accent); color:#000; border-color:var(--accent); font-weight:600; }
 
 footer { text-align:center; padding:28px 16px 0; font-size:10px; color:var(--muted); letter-spacing:.5px; line-height:1.8; }
+
+/* TABS: scrollable para caber 5 */
+.tabs { overflow-x:auto; scrollbar-width:none; }
+.tabs::-webkit-scrollbar { display:none; }
+.tab-btn { flex:0 0 auto; min-width:72px; }
+
+/* QUINIELA */
+.qnl-wrap { max-width:700px; margin:0 auto; padding:14px 12px 24px; }
+.qnl-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.qnl-user { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--accent); letter-spacing:1px; }
+.qnl-logout { font-size:11px; color:var(--muted); background:none; border:1px solid var(--border); border-radius:4px; padding:4px 10px; cursor:pointer; }
+.qnl-logout:hover { color:var(--text); }
+.qnl-register { text-align:center; padding:48px 24px 32px; }
+.qnl-register h2 { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:3px; color:var(--accent); margin-bottom:8px; }
+.qnl-register p { color:var(--muted); font-size:13px; line-height:1.6; margin-bottom:28px; }
+.qnl-input { width:100%; background:var(--card); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:13px 16px; font-size:16px; font-family:'DM Sans',sans-serif; }
+.qnl-input:focus { outline:1px solid var(--accent); border-color:var(--accent); }
+.qnl-btn { width:100%; margin-top:12px; background:var(--accent); color:#000; border:none; border-radius:8px; padding:13px; font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:2px; cursor:pointer; transition:background .15s; }
+.qnl-btn:hover { background:#d4b440; }
+.qnl-btn:disabled { background:var(--border); color:var(--muted); cursor:not-allowed; }
+.qnl-subtabs { display:flex; gap:4px; margin-bottom:16px; background:var(--card); border-radius:8px; padding:4px; }
+.qnl-stab { flex:1; padding:8px 4px; font-family:'Bebas Neue',sans-serif; font-size:12px; letter-spacing:1px; color:var(--muted); background:none; border:none; border-radius:5px; cursor:pointer; transition:all .15s; }
+.qnl-stab.active { background:var(--surface); color:var(--accent); }
+.bet-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:14px; margin-bottom:10px; }
+.bet-match-name { font-weight:600; font-size:14px; margin-bottom:3px; }
+.bet-meta { font-size:11px; color:var(--muted); margin-bottom:14px; }
+.bet-score-row { display:flex; align-items:center; justify-content:center; gap:10px; }
+.bet-team { text-align:center; font-size:11px; color:var(--muted); flex:1; line-height:1.3; }
+.bet-score-input { width:52px; height:52px; text-align:center; font-family:'Bebas Neue',sans-serif; font-size:26px; background:var(--surface); color:var(--accent); border:1px solid var(--border); border-radius:8px; -moz-appearance:textfield; }
+.bet-score-input::-webkit-outer-spin-button,.bet-score-input::-webkit-inner-spin-button { -webkit-appearance:none; }
+.bet-score-input:focus { outline:1px solid var(--accent); border-color:var(--accent); }
+.bet-dash { font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--muted); flex-shrink:0; }
+.bet-actions { display:flex; justify-content:center; margin-top:12px; gap:10px; align-items:center; }
+.bet-submit { background:var(--accent); color:#000; border:none; border-radius:6px; padding:9px 28px; font-family:'Bebas Neue',sans-serif; font-size:14px; letter-spacing:1px; cursor:pointer; transition:background .15s; }
+.bet-submit:hover { background:#d4b440; }
+.bet-saved { color:var(--pos); font-size:12px; font-weight:600; }
+.bet-closed { color:var(--muted); font-size:11px; }
+.bet-lock-info { font-size:10px; color:var(--muted); text-align:center; margin-top:6px; }
+.lb-table { width:100%; border-collapse:collapse; font-size:13px; }
+.lb-table th { padding:7px 8px; color:var(--muted); font-size:10px; font-weight:600; letter-spacing:.5px; text-align:center; background:rgba(255,255,255,.03); border-bottom:1px solid var(--border); }
+.lb-table th.lb-name { text-align:left; }
+.lb-table td { padding:10px 8px; text-align:center; border-bottom:1px solid rgba(30,45,69,.4); }
+.lb-table td.lb-name { text-align:left; font-weight:600; }
+.lb-table td.lb-pts { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--accent); letter-spacing:1px; }
+.lb-table td.lb-rank { color:var(--muted); font-weight:700; font-size:12px; }
+.lb-table tr.me td { background:rgba(232,200,74,.06); }
 </style>
 </head>
 <body>
@@ -271,6 +317,7 @@ footer { text-align:center; padding:28px 16px 0; font-size:10px; color:var(--mut
   <button class="tab-btn"        data-tab="grp" onclick="switchTab('grp')">Grupos</button>
   <button class="tab-btn"        data-tab="sts" onclick="switchTab('sts')">Estadísticas</button>
   <button class="tab-btn"        data-tab="nws" onclick="switchTab('nws')">Noticias</button>
+  <button class="tab-btn"        data-tab="qnl" onclick="switchTab('qnl')">Quiniela</button>
 </div>
 
 <!-- ══ CALENDARIO ══ -->
@@ -349,11 +396,19 @@ footer { text-align:center; padding:28px 16px 0; font-size:10px; color:var(--mut
   </div>
 </div>
 
+<!-- ══ QUINIELA ══ -->
+<div id="qnl-tab" class="hidden">
+  <div class="qnl-wrap" id="qnl-inner">
+    <div class="empty">Cargando quiniela…</div>
+  </div>
+</div>
+
 <footer>
   Copa Mundial FIFA 2026 · Horarios en hora peninsular española<br>
   DAZN = suscripción · La 1 = emisión en abierto · Sujeto a cambios oficiales
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ──────────────────────────────────────────────────────────────────
 // DATOS
@@ -871,14 +926,344 @@ function renderNews() {
   document.getElementById('news-content').innerHTML = `<div class="news-list">${html}</div>`;
 }
 
+// ── QUINIELA ──────────────────────────────────────────────────
+
+const SUPABASE_URL = 'https://zdghmnaiuqcqoezvaxum.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkZ2htbmFpdXFjcW9lenZheHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNDkxMDEsImV4cCI6MjA5NTYyNTEwMX0.o9Y_dKF2fqVkjROW4iOMQ5rE_FH3TXZJPWctkALPbw0';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let qnlUser    = null;
+let qnlSubTab  = 'apostar';
+let qnlBets    = {};   // match_id → bet row
+let qnlLoaded  = false;
+
+function matchId(m) {
+  const label = m[2].split('·')[0].trim().replace(/\s+vs\s+/g,'_vs_').replace(/\s/g,'');
+  return `${m[0]}_${m[1]}_${label}`;
+}
+
+function isBetOpen(m) {
+  const now = new Date();
+  const todayCEST = new Date(now.getTime() + 2*3600*1000).toISOString().slice(0,10);
+  if (m[0] !== todayCEST) return false;
+  const [h,mn] = m[1].split(':').map(Number);
+  const [y,mo,d] = m[0].split('-').map(Number);
+  const kickoffUTC = Date.UTC(y, mo-1, d, h-2, mn);
+  return now.getTime() < kickoffUTC - 5*60*1000;
+}
+
+function isMatchStarted(m) {
+  const now = new Date();
+  const [h,mn] = m[1].split(':').map(Number);
+  const [y,mo,d] = m[0].split('-').map(Number);
+  return now.getTime() >= Date.UTC(y, mo-1, d, h-2, mn);
+}
+
+function todayMatchesCEST() {
+  const todayCEST = new Date(Date.now() + 2*3600*1000).toISOString().slice(0,10);
+  return MATCHES.filter(m => m[0] === todayCEST);
+}
+
+// ── Init / auth ────────────────────────────────────────────────
+
+async function loadQuiniela() {
+  const wrap = document.getElementById('qnl-inner');
+  if (!wrap) return;
+
+  if (qnlLoaded && qnlUser) { renderQnlContainer(); return; }
+
+  wrap.innerHTML = '<div class="empty">Cargando…</div>';
+
+  const uid  = localStorage.getItem('qnl_uid');
+  const name = localStorage.getItem('qnl_name');
+
+  if (uid && name) {
+    const { data } = await db.from('users').select('*').eq('id', uid).maybeSingle();
+    if (data) {
+      qnlUser = data;
+      await loadMyBets();
+      qnlLoaded = true;
+      renderQnlContainer();
+      return;
+    }
+  }
+  renderQnlRegistration();
+}
+
+async function qnlRegister() {
+  const input = document.getElementById('qnl-name-input');
+  const name  = (input?.value || '').trim();
+  if (!name) { input?.focus(); return; }
+
+  const btn = document.getElementById('qnl-reg-btn');
+  btn.disabled = true;
+  btn.textContent = 'Entrando…';
+
+  const { data, error } = await db.from('users').insert({ name }).select().maybeSingle();
+  if (error || !data) {
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
+    alert('Error al registrarse. Inténtalo de nuevo.');
+    return;
+  }
+
+  qnlUser = data;
+  localStorage.setItem('qnl_uid',  data.id);
+  localStorage.setItem('qnl_name', data.name);
+  qnlLoaded = true;
+  renderQnlContainer();
+}
+
+function qnlLogout() {
+  if (!confirm('¿Cambiar de usuario? En este dispositivo perderás el acceso a tu cuenta.')) return;
+  localStorage.removeItem('qnl_uid');
+  localStorage.removeItem('qnl_name');
+  qnlUser   = null;
+  qnlBets   = {};
+  qnlLoaded = false;
+  renderQnlRegistration();
+}
+
+async function loadMyBets() {
+  if (!qnlUser) return;
+  const { data } = await db.from('bets').select('*').eq('user_id', qnlUser.id);
+  qnlBets = {};
+  (data || []).forEach(b => { qnlBets[b.match_id] = b; });
+}
+
+// ── Render ─────────────────────────────────────────────────────
+
+function renderQnlRegistration() {
+  const wrap = document.getElementById('qnl-inner');
+  if (!wrap) return;
+  wrap.innerHTML = `
+    <div class="qnl-register">
+      <h2>Quiniela Cachorros</h2>
+      <p>Escribe tu nombre para apostar en cada partido<br>y ver la clasificación del grupo.</p>
+      <input class="qnl-input" id="qnl-name-input" type="text"
+             placeholder="Tu nombre o alias" maxlength="24" autocomplete="off"
+             onkeydown="if(event.key==='Enter') qnlRegister()">
+      <button class="qnl-btn" id="qnl-reg-btn" onclick="qnlRegister()">Entrar</button>
+    </div>`;
+}
+
+function renderQnlContainer() {
+  const wrap = document.getElementById('qnl-inner');
+  if (!wrap) return;
+  wrap.innerHTML = `
+    <div class="qnl-header">
+      <span class="qnl-user">Hola, ${qnlUser.name} 👋</span>
+      <button class="qnl-logout" onclick="qnlLogout()">Cambiar usuario</button>
+    </div>
+    <div class="qnl-subtabs">
+      <button class="qnl-stab ${qnlSubTab==='apostar'?'active':''}"        onclick="qnlSwitchSub('apostar')">Apostar</button>
+      <button class="qnl-stab ${qnlSubTab==='misapuestas'?'active':''}"    onclick="qnlSwitchSub('misapuestas')">Mis apuestas</button>
+      <button class="qnl-stab ${qnlSubTab==='clasificacion'?'active':''}"  onclick="qnlSwitchSub('clasificacion')">Clasificación</button>
+    </div>
+    <div id="qnl-subcontent"></div>`;
+  renderQnlSubTab();
+}
+
+async function qnlSwitchSub(sub) {
+  qnlSubTab = sub;
+  document.querySelectorAll('.qnl-stab').forEach((b,i) => {
+    b.classList.toggle('active', ['apostar','misapuestas','clasificacion'][i] === sub);
+  });
+  renderQnlSubTab();
+}
+
+async function renderQnlSubTab() {
+  const el = document.getElementById('qnl-subcontent');
+  if (!el) return;
+  if (qnlSubTab === 'apostar')       { await loadMyBets(); renderApostar(el); }
+  else if (qnlSubTab === 'misapuestas')  renderMisApuestas(el);
+  else if (qnlSubTab === 'clasificacion') {
+    el.innerHTML = '<div class="empty">Cargando clasificación…</div>';
+    await renderClasificacion(el);
+  }
+}
+
+function renderApostar(el) {
+  const today = todayMatchesCEST();
+  if (!today.length) {
+    el.innerHTML = '<div class="empty">No hay partidos hoy.<br>Las apuestas abren el día del partido.</div>';
+    return;
+  }
+
+  const cards = today.map(m => {
+    const mid   = matchId(m);
+    const saved = qnlBets[mid];
+    const open  = isBetOpen(m);
+    const started = isMatchStarted(m);
+    const parts = m[2].split('·')[0].split(' vs ');
+    const home  = parts[0]?.trim() || '';
+    const away  = parts[1]?.trim() || '';
+
+    let body;
+    if (open) {
+      body = `
+        <div class="bet-score-row">
+          <span class="bet-team">${home}</span>
+          <input class="bet-score-input" type="number" min="0" max="20"
+                 id="h-${mid}" value="${saved?.home_score ?? ''}" placeholder="0">
+          <span class="bet-dash">-</span>
+          <input class="bet-score-input" type="number" min="0" max="20"
+                 id="a-${mid}" value="${saved?.away_score ?? ''}" placeholder="0">
+          <span class="bet-team">${away}</span>
+        </div>
+        <div class="bet-actions">
+          <button class="bet-submit" onclick="submitBet('${mid}')">
+            ${saved ? '✎ Actualizar' : '+ Apostar'}
+          </button>
+        </div>
+        <div class="bet-lock-info">Cierra 5 min antes del pitido</div>`;
+    } else if (saved) {
+      body = `
+        <div class="bet-score-row">
+          <span class="bet-team">${home}</span>
+          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${saved.home_score}</span>
+          <span class="bet-dash">-</span>
+          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${saved.away_score}</span>
+          <span class="bet-team">${away}</span>
+        </div>
+        <div class="bet-actions"><span class="bet-saved">✓ Apuesta guardada</span></div>`;
+    } else {
+      body = `
+        <div class="bet-score-row" style="opacity:.45">
+          <span class="bet-team">${home}</span>
+          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--muted)">-</span>
+          <span class="bet-dash">-</span>
+          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--muted)">-</span>
+          <span class="bet-team">${away}</span>
+        </div>
+        <div class="bet-actions"><span class="bet-closed">${started ? 'Partido en juego' : 'Apuestas cerradas'}</span></div>`;
+    }
+
+    return `
+      <div class="bet-card">
+        <div class="bet-match-name">${home} vs ${away}</div>
+        <div class="bet-meta">${m[1]} · ${m[3].split(',').pop().trim()}</div>
+        ${body}
+      </div>`;
+  }).join('');
+
+  el.innerHTML = cards;
+}
+
+function renderMisApuestas(el) {
+  const myBets = Object.values(qnlBets);
+  if (!myBets.length) {
+    el.innerHTML = '<div class="empty">Todavía no has hecho ninguna apuesta.</div>';
+    return;
+  }
+
+  const lookup = {};
+  MATCHES.forEach(m => { lookup[matchId(m)] = m; });
+
+  const cards = myBets.map(b => {
+    const m = lookup[b.match_id];
+    if (!m) return '';
+    const parts = m[2].split('·')[0].split(' vs ');
+    const home = parts[0]?.trim() || '';
+    const away = parts[1]?.trim() || '';
+    return `
+      <div class="bet-card">
+        <div class="bet-match-name">${home} vs ${away}</div>
+        <div class="bet-meta">${m[0]} · ${m[1]}</div>
+        <div class="bet-score-row" style="margin-top:10px">
+          <span class="bet-team">${home}</span>
+          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${b.home_score}</span>
+          <span class="bet-dash">-</span>
+          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${b.away_score}</span>
+          <span class="bet-team">${away}</span>
+        </div>
+      </div>`;
+  }).filter(Boolean).join('');
+
+  el.innerHTML = cards || '<div class="empty">No se encontraron apuestas.</div>';
+}
+
+async function renderClasificacion(el) {
+  const [{ data: users }, { data: bets }] = await Promise.all([
+    db.from('users').select('id, name'),
+    db.from('bets').select('user_id'),
+  ]);
+
+  if (!users?.length) {
+    el.innerHTML = '<div class="empty">Aún no hay participantes.</div>';
+    return;
+  }
+
+  const betCount = {};
+  (bets || []).forEach(b => { betCount[b.user_id] = (betCount[b.user_id] || 0) + 1; });
+
+  const board = users
+    .map(u => ({ id: u.id, name: u.name, apuestas: betCount[u.id] || 0, pts: 0 }))
+    .sort((a,b) => b.apuestas - a.apuestas || a.name.localeCompare(b.name));
+
+  const rows = board.map((u,i) => {
+    const isMe = u.id === qnlUser?.id;
+    return `<tr${isMe?' class="me"':''}>
+      <td class="lb-rank">${i+1}</td>
+      <td class="lb-name">${u.name}${isMe?' 👈':''}</td>
+      <td>${u.apuestas}</td>
+      <td class="lb-pts">${u.pts}</td>
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `
+    <p style="font-size:11px;color:var(--muted);margin-bottom:12px">
+      Los puntos se activarán cuando haya resultados.
+    </p>
+    <table class="lb-table">
+      <thead><tr>
+        <th>#</th>
+        <th class="lb-name">Nombre</th>
+        <th>Apuestas</th>
+        <th>Pts</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+async function submitBet(mid) {
+  const hEl = document.getElementById('h-' + mid);
+  const aEl = document.getElementById('a-' + mid);
+  const home_score = parseInt(hEl?.value, 10);
+  const away_score = parseInt(aEl?.value, 10);
+
+  if (isNaN(home_score) || isNaN(away_score) || home_score < 0 || away_score < 0) {
+    alert('Introduce un resultado válido (números ≥ 0).');
+    return;
+  }
+
+  const m = MATCHES.find(x => matchId(x) === mid);
+  if (!m || !isBetOpen(m)) {
+    alert('Las apuestas para este partido ya están cerradas.');
+    return;
+  }
+
+  const { error } = await db.from('bets').upsert(
+    { user_id: qnlUser.id, match_id: mid, home_score, away_score },
+    { onConflict: 'user_id,match_id' }
+  );
+
+  if (error) { alert('Error al guardar. Inténtalo de nuevo.'); return; }
+
+  qnlBets[mid] = { match_id: mid, home_score, away_score };
+  const el = document.getElementById('qnl-subcontent');
+  if (el) renderApostar(el);
+}
+
 // ── TABS ──────────────────────────────────────────────────────
 let grpLoaded=false, stsLoaded=false, nwsLoaded=false;
 function switchTab(tab){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
-  ['cal','grp','sts','nws'].forEach(t=>document.getElementById(t+'-tab').classList.toggle('hidden',t!==tab));
+  ['cal','grp','sts','nws','qnl'].forEach(t=>document.getElementById(t+'-tab').classList.toggle('hidden',t!==tab));
   if(tab==='grp' && !grpLoaded){ grpLoaded=true; loadGroups(); }
   if(tab==='sts' && !stsLoaded){ stsLoaded=true; loadStats(); }
   if(tab==='nws' && !nwsLoaded){ nwsLoaded=true; loadNews(); }
+  if(tab==='qnl'){ loadQuiniela(); }
 }
 
 // ── INIT ──────────────────────────────────────────────────────
