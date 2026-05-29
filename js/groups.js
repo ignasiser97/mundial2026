@@ -1,3 +1,29 @@
+let grpSubTab    = 'grupos';
+let bracketPhase = 'r32';
+
+const BRACKET_PHASES = [
+  { key:'r32',   label:'1/32'   },
+  { key:'r16',   label:'Octavos' },
+  { key:'qf',    label:'Cuartos' },
+  { key:'sf',    label:'Semis'   },
+  { key:'3p',    label:'3º/4º'  },
+  { key:'final', label:'Final'   },
+];
+
+// ── Sub-tabs ───────────────────────────────────────────────────
+
+function grpSwitchSub(sub) {
+  grpSubTab = sub;
+  document.querySelectorAll('.grp-stab').forEach((b,i) =>
+    b.classList.toggle('active', ['grupos','bracket'][i] === sub)
+  );
+  document.getElementById('grp-sub-grupos').classList.toggle('hidden', sub !== 'grupos');
+  document.getElementById('grp-sub-bracket').classList.toggle('hidden', sub !== 'bracket');
+  if (sub === 'bracket') renderBracket();
+}
+
+// ── Grupos ─────────────────────────────────────────────────────
+
 async function loadGroups() {
   const el=document.getElementById('groups-content');
   try{
@@ -34,4 +60,46 @@ function renderGroup(letter, teams) {
       <tbody>${rows}</tbody>
     </table>
   </div>`;
+}
+
+// ── Bracket ────────────────────────────────────────────────────
+
+function renderBracket() {
+  const el = document.getElementById('bracket-content');
+
+  const chips = BRACKET_PHASES.map(p =>
+    `<button class="bp-chip ${p.key===bracketPhase?'active':''}" onclick="setBracketPhase('${p.key}')">${p.label}</button>`
+  ).join('');
+
+  const matches = MATCHES.filter(m => m[7] === bracketPhase);
+
+  const cards = matches.map(m => {
+    const parts = m[2].split('·')[0].split(' vs ');
+    const home  = parts[0]?.trim() || '';
+    const away  = parts[1]?.trim() || '';
+    const night = isNight(m[1]);
+    const chBadges = (m[5].includes('d') ? '<span class="badge bd">DAZN</span>' : '') +
+                     (m[5].includes('l') ? '<span class="badge bl">LA 1</span>' : '');
+    return `
+      <div class="bracket-match-card">
+        <div class="bm-date">${fmtDate(m[0])} · ${m[1]} ESP${night?' 🌙':''} ${chBadges}</div>
+        <div class="bm-teams">
+          <span class="bm-team">${home}</span>
+          <span class="bm-vs">VS</span>
+          <span class="bm-team away">${away}</span>
+        </div>
+        <div class="bm-venue">${m[3]}</div>
+      </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="bracket-phases">${chips}</div>
+    <div class="bracket-list">
+      ${cards || '<div class="empty">No hay partidos en esta fase.</div>'}
+    </div>`;
+}
+
+function setBracketPhase(phase) {
+  bracketPhase = phase;
+  renderBracket();
 }
