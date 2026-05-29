@@ -92,10 +92,14 @@ function buildPMap() {
 
 function bktCard(code, pmap, extra='') {
   const m = pmap[code];
-  if (!m) return `<div class="bkt-m${extra?''+extra:''}"><div class="bkt-team">TBD</div><div class="bkt-div"></div><div class="bkt-team">TBD</div></div>`;
-  const parts = m[2].split('·')[0].trim().split(' vs ');
-  const home  = parts[0]?.trim() || 'TBD';
-  const away  = parts[1]?.trim() || 'TBD';
+  if (!m) return `<div class="bkt-m${extra}"><div class="bkt-team">-</div><div class="bkt-div"></div><div class="bkt-team">-</div></div>`;
+  const isR32 = m[7] === 'r32';
+  let home = '-', away = '-';
+  if (isR32) {
+    const parts = m[2].split('·')[0].trim().split(' vs ');
+    home = parts[0]?.trim() || '-';
+    away = parts[1]?.trim() || '-';
+  }
   return `<div class="bkt-m${extra}">
     <div class="bkt-team">${home}</div>
     <div class="bkt-div"></div>
