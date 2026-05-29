@@ -53,14 +53,21 @@ function ptsLabel(pts) {
 
 // ── Auth ───────────────────────────────────────────────────────
 
+let qnlAuthMode = 'login'; // 'login' | 'register'
+
+async function hashPassword(password, salt) {
+  const data = new TextEncoder().encode(password + salt);
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
 async function loadQuiniela() {
   const wrap = document.getElementById('qnl-inner');
   if (!wrap) return;
   if (qnlLoaded && qnlUser) { renderQnlContainer(); return; }
   wrap.innerHTML = '<div class="empty">Cargando…</div>';
-  const uid  = localStorage.getItem('qnl_uid');
-  const name = localStorage.getItem('qnl_name');
-  if (uid && name) {
+  const uid = localStorage.getItem('qnl_uid');
+  if (uid) {
     const { data } = await db.from('users').select('*').eq('id', uid).maybeSingle();
     if (data) {
       qnlUser = data;
@@ -70,38 +77,118 @@ async function loadQuiniela() {
       return;
     }
   }
-  renderQnlRegistration();
+  renderQnlAuth();
+}
+
+function renderQnlAuth() {
+  const wrap = document.getElementById('qnl-inner');
+  if (!wrap) return;
+  const isLogin = qnlAuthMode === 'login';
+  wrap.innerHTML = `
+    <div class="qnl-register">
+      <h2>Quiniela Cachorros</h2>
+      <div class="qnl-auth-tabs">
+        <button class="qnl-auth-tab ${isLogin ? 'active' : ''}" onclick="qnlSetAuthMode('login')">Entrar</button>
+        <button class="qnl-auth-tab ${!isLogin ? 'active' : ''}" onclick="qnlSetAuthMode('register')">Registrarse</button>
+      </div>
+      <label class="qnl-label">Nombre</label>
+      <input class="qnl-input" id="qnl-name" type="text" placeholder="Tu nombre o alias"
+             maxlength="24" autocomplete="username" onkeydown="qnlAuthKey(event)">
+      <label class="qnl-label">Contraseña</label>
+      <input class="qnl-input" id="qnl-pass" type="password" placeholder="••••••••"
+             autocomplete="${isLogin ? 'current-password' : 'new-password'}" onkeydown="qnlAuthKey(event)" style="margin-top:0">
+      ${!isLogin ? `
+      <label class="qnl-label">Confirmar contraseña</label>
+      <input class="qnl-input" id="qnl-pass2" type="password" placeholder="••••••••"
+             autocomplete="new-password" onkeydown="qnlAuthKey(event)" style="margin-top:0">` : ''}
+      <button class="qnl-btn" id="qnl-auth-btn" onclick="${isLogin ? 'qnlLogin()' : 'qnlRegister()'}">
+        ${isLogin ? 'Entrar' : 'Crear cuenta'}
+      </button>
+      <div class="qnl-error" id="qnl-error"></div>
+    </div>`;
+}
+
+function qnlSetAuthMode(mode) {
+  qnlAuthMode = mode;
+  renderQnlAuth();
+}
+
+function qnlAuthKey(e) {
+  if (e.key === 'Enter') qnlAuthMode === 'login' ? qnlLogin() : qnlRegister();
+}
+
+function qnlAuthError(msg) {
+  const el = document.getElementById('qnl-error');
+  if (el) el.textContent = msg;
+  const btn = document.getElementById('qnl-auth-btn');
+  if (btn) { btn.disabled = false; btn.textContent = qnlAuthMode === 'login' ? 'Entrar' : 'Crear cuenta'; }
+}
+
+async function qnlLogin() {
+  const name = document.getElementById('qnl-name')?.value.trim();
+  const pass = document.getElementById('qnl-pass')?.value;
+  if (!name || !pass) { qnlAuthError('Rellena nombre y contraseña.'); return; }
+
+  const btn = document.getElementById('qnl-auth-btn');
+  btn.disabled = true; btn.textContent = 'Entrando…';
+
+  const { data: user } = await db.from('users')
+    .select('id, name, password_hash, salt')
+    .eq('name', name)
+    .maybeSingle();
+
+  if (!user) { qnlAuthError('Usuario no encontrado.'); return; }
+
+  const hash = await hashPassword(pass, user.salt);
+  if (hash !== user.password_hash) { qnlAuthError('Contraseña incorrecta.'); return; }
+
+  qnlUser = user;
+  localStorage.setItem('qnl_uid', user.id);
+  await loadMyBets();
+  qnlLoaded = true;
+  renderQnlContainer();
 }
 
 async function qnlRegister() {
-  const input = document.getElementById('qnl-name-input');
-  const name  = (input?.value || '').trim();
-  if (!name) { input?.focus(); return; }
-  const btn = document.getElementById('qnl-reg-btn');
-  btn.disabled = true;
-  btn.textContent = 'Entrando…';
-  const { data, error } = await db.from('users').insert({ name }).select().maybeSingle();
-  if (error || !data) {
-    btn.disabled = false;
-    btn.textContent = 'Entrar';
-    alert('Error al registrarse. Inténtalo de nuevo.');
-    return;
-  }
+  const name  = document.getElementById('qnl-name')?.value.trim();
+  const pass  = document.getElementById('qnl-pass')?.value;
+  const pass2 = document.getElementById('qnl-pass2')?.value;
+
+  if (!name)             { qnlAuthError('Escribe un nombre.'); return; }
+  if (!pass)             { qnlAuthError('Escribe una contraseña.'); return; }
+  if (pass.length < 4)   { qnlAuthError('La contraseña debe tener al menos 4 caracteres.'); return; }
+  if (pass !== pass2)    { qnlAuthError('Las contraseñas no coinciden.'); return; }
+
+  const btn = document.getElementById('qnl-auth-btn');
+  btn.disabled = true; btn.textContent = 'Creando cuenta…';
+
+  const { data: existing } = await db.from('users').select('id').eq('name', name).maybeSingle();
+  if (existing) { qnlAuthError('Ese nombre ya está en uso. Prueba con otro.'); return; }
+
+  const salt = crypto.randomUUID();
+  const password_hash = await hashPassword(pass, salt);
+
+  const { data, error } = await db.from('users')
+    .insert({ name, password_hash, salt })
+    .select()
+    .maybeSingle();
+
+  if (error || !data) { qnlAuthError('Error al crear la cuenta. Inténtalo de nuevo.'); return; }
+
   qnlUser = data;
-  localStorage.setItem('qnl_uid',  data.id);
-  localStorage.setItem('qnl_name', data.name);
+  localStorage.setItem('qnl_uid', data.id);
   qnlLoaded = true;
   renderQnlContainer();
 }
 
 function qnlLogout() {
-  if (!confirm('¿Cambiar de usuario? En este dispositivo perderás el acceso a tu cuenta.')) return;
+  if (!confirm('¿Cerrar sesión?')) return;
   localStorage.removeItem('qnl_uid');
-  localStorage.removeItem('qnl_name');
   qnlUser   = null;
   qnlBets   = {};
   qnlLoaded = false;
-  renderQnlRegistration();
+  qnlAuthMode = 'login';
+  renderQnlAuth();
 }
 
 async function loadMyBets() {
