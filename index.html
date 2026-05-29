@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mundial 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0a0e1a;
+  --surface: #111827;
+  --card:    #141e30;
+  --border:  #1e2d45;
+  --accent:  #e8c84a;
+  --red:     #e84a4a;
+  --dazn:    #f5a623;
+  --la1:     #0055a5;
+  --text:    #e8eaf0;
+  --muted:   #6b7a99;
+  --night:   #8b7ae8;
+  --pos:     #4ade80;
+  --neg:     #f87171;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  padding-bottom: 48px;
+}
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(160deg, #0a0e1a 0%, #0d1e3a 60%, #0a1628 100%);
+  border-bottom: 2px solid var(--accent);
+  padding: 28px 20px 22px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(232,200,74,.09) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  border: 1px solid rgba(232,200,74,.4);
+  padding: 3px 12px;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(38px, 9vw, 72px);
+  letter-spacing: 2px;
+  line-height: 1;
+  color: #fff;
+}
+.hero h1 span { color: var(--accent); }
+.hero p {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: .4px;
+}
+
+/* ── TABS ── */
+.tabs {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.tab-btn {
+  flex: 1;
+  padding: 14px 0;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ── FILTERS ── */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.filters select {
+  flex: 1 1 140px;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a99' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+  cursor: pointer;
+}
+.filters select:focus { outline: 1px solid var(--accent); }
+
+/* ── LEYENDA ── */
+.legend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ── BADGES ── */
+.badge {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.bd { background: var(--dazn); color: #000; }
+.bl { background: var(--la1);  color: #fff; }
+
+/* ── CALENDARIO ── */
+.cal-wrap { max-width: 700px; margin: 0 auto; padding: 0 0 24px; }
+
+.phase-banner {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  padding: 18px 16px 6px;
+  border-bottom: 1px solid var(--border);
+  margin-top: 8px;
+}
+.day-header {
+  background: #0e1625;
+  padding: 7px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  border-left: 3px solid var(--border);
+  margin-top: 2px;
+}
+.match-row {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(30,45,69,.55);
+  transition: background .12s;
+}
+.match-row:active { background: rgba(255,255,255,.03); }
+@media (hover: hover) { .match-row:hover { background: rgba(255,255,255,.03); } }
+.match-row.spain {
+  background: rgba(232,200,74,.05);
+  border-left: 3px solid var(--accent);
+}
+.match-row.spain-pos {
+  background: rgba(139,122,232,.05);
+  border-left: 3px solid var(--night);
+}
+
+.time {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 19px;
+  color: var(--accent);
+  letter-spacing: 1px;
+  line-height: 1.1;
+}
+.time small {
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.time.night { color: var(--night); }
+
+.match-info { min-width: 0; }
+.match-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+.match-row.spain .match-name { color: #fff; }
+.match-meta {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.empty {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ── GRUPOS ── */
+.groups-wrap { max-width: 700px; margin: 0 auto; padding: 16px 12px 24px; }
+.last-updated {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  padding: 4px 0 14px;
+  letter-spacing: .3px;
+}
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+@media (max-width: 460px) { .groups-grid { grid-template-columns: 1fr; } }
+
+.group-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.group-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--accent);
+  padding: 8px 12px;
+  background: #0e1625;
+  border-bottom: 1px solid var(--border);
+}
+.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.standings-table thead tr {
+  background: rgba(255,255,255,.03);
+}
+.standings-table th {
+  padding: 5px 4px;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: .5px;
+  text-align: center;
+}
+.standings-table th:first-child { text-align: left; padding-left: 10px; }
+.standings-table td {
+  padding: 6px 4px;
+  text-align: center;
+  border-top: 1px solid rgba(30,45,69,.5);
+  color: var(--text);
+}
+.standings-table td.team-name {
+  text-align: left;
+  padding-left: 10px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+.standings-table td.pts { font-weight: 700; color: var(--accent); }
+.standings-table td.dg-pos { color: var(--pos); }
+.standings-table td.dg-neg { color: var(--neg); }
+.standings-table tbody tr:nth-child(1),
+.standings-table tbody tr:nth-child(2) { background: rgba(232,200,74,.04); }
+
+.tab-content.hidden { display: none; }
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 28px 16px 0;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .5px;
+  line-height: 1.8;
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">Copa del Mundo FIFA</div>
+  <h1>MUNDIAL <span>2026</span></h1>
+  <p>Horarios en hora peninsular española (CEST) · Canales de emisión</p>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="cal" onclick="switchTab('cal')">Calendario</button>
+  <button class="tab-btn"        data-tab="grp" onclick="switchTab('grp')">Grupos</button>
+</div>
+
+<!-- ══ PESTAÑA CALENDARIO ══ -->
+<div id="cal-tab" class="tab-content">
+  <div class="filters">
+    <select id="f-date"    onchange="applyFilters()"><option value="">Todas las fechas</option></select>
+    <select id="f-channel" onchange="applyFilters()">
+      <option value="">Todos los canales</option>
+      <option value="la1">Solo La 1 (gratis)</option>
+    </select>
+    <select id="f-country" onchange="applyFilters()">
+      <option value="">Todos los países</option>
+      <option value="MEX">México</option>
+      <option value="USA">Estados Unidos</option>
+      <option value="CAN">Canadá</option>
+    </select>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><span class="badge bd">DAZN</span> suscripción</div>
+    <div class="legend-item"><span class="badge bl">LA 1</span> gratis</div>
+    <div class="legend-item"><span style="font-size:15px">🌙</span> madrugada</div>
+    <div class="legend-item"><span style="font-size:15px">🇪🇸</span> España juega</div>
+  </div>
+  <div class="cal-wrap">
+    <div id="cal-content"></div>
+  </div>
+</div>
+
+<!-- ══ PESTAÑA GRUPOS ══ -->
+<div id="grp-tab" class="tab-content hidden">
+  <div class="groups-wrap">
+    <div id="last-updated" class="last-updated">Cargando clasificaciones…</div>
+    <div id="groups-content"><div class="empty">Cargando…</div></div>
+  </div>
+</div>
+
+<footer>
+  Copa Mundial FIFA 2026 · Horarios en hora peninsular española<br>
+  DAZN = suscripción · La 1 = emisión en abierto · Sujeto a cambios oficiales
+</footer>
+
+<script>
+// ─────────────────────────────────────────────────────────────────
+// DATOS: todos los partidos del torneo
+// Formato: [fecha, hora, nombre, sede, país, canales, bandera_españa]
+//   fecha:    YYYY-MM-DD (fecha calendario real, hora española)
+//   hora:     HH:MM (hora española)
+//   nombre:   texto del partido
+//   sede:     estadio, ciudad
+//   país:     MEX | USA | CAN
+//   canales:  'd' = solo DAZN, 'dl' = DAZN + La1
+//   flags:    0=ninguno, 1=España juega, 2=España posible (eliminatorias)
+//   fase:     groups | r32 | r16 | qf | sf | 3p | final
+// ─────────────────────────────────────────────────────────────────
+const MATCHES = [
+  // ── FASE DE GRUPOS ──────────────────────────────────────────
+  ['2026-06-11','21:00','México vs Sudáfrica · Grupo A',          'Estadio Azteca, Ciudad de México','MEX','d', 0,'groups'],
+  ['2026-06-12','04:00','Corea del Sur vs Rep. Checa · Grupo A',  'Estadio Akron, Guadalajara',      'MEX','d', 0,'groups'],
+  ['2026-06-12','21:00','Canadá vs Bosnia · Grupo B',             'BMO Field, Toronto',              'CAN','d', 0,'groups'],
+  ['2026-06-13','03:00','Estados Unidos vs Paraguay · Grupo D',   'SoFi Stadium, Los Ángeles',       'USA','d', 0,'groups'],
+  ['2026-06-13','06:00','Australia vs Turquía · Grupo D',         'BC Place, Vancouver',             'CAN','d', 0,'groups'],
+  ['2026-06-13','21:00','Catar vs Suiza · Grupo B',               "Levi's Stadium, San Francisco",   'USA','d', 0,'groups'],
+  ['2026-06-14','00:00','Brasil vs Marruecos · Grupo C',          'MetLife Stadium, Nueva Jersey',   'USA','dl',0,'groups'],
+  ['2026-06-14','03:00','Haití vs Escocia · Grupo C',             'Gillette Stadium, Boston',        'USA','d', 0,'groups'],
+  ['2026-06-14','19:00','Alemania vs Curazao · Grupo E',          'NRG Stadium, Houston',            'USA','dl',0,'groups'],
+  ['2026-06-15','00:00','Países Bajos vs Japón · Grupo F',        'AT&T Stadium, Dallas',            'USA','d', 0,'groups'],
+  ['2026-06-15','01:00','Costa de Marfil vs Ecuador · Grupo E',   'Lincoln Financial Field, Filadelfia','USA','d',0,'groups'],
+  ['2026-06-15','04:00','Suecia vs Túnez · Grupo F',              'Estadio BBVA, Guadalupe',         'MEX','d', 0,'groups'],
+  ['2026-06-15','18:00','España vs Cabo Verde · Grupo H',         'Mercedes-Benz Stadium, Atlanta',  'USA','dl',1,'groups'],
+  ['2026-06-15','21:00','Bélgica vs Egipto · Grupo G',            'Lumen Field, Seattle',            'USA','d', 0,'groups'],
+  ['2026-06-16','00:00','Arabia Saudí vs Uruguay · Grupo H',      'Hard Rock Stadium, Miami',        'USA','dl',0,'groups'],
+  ['2026-06-16','03:00','RI de Irán vs Nueva Zelanda · Grupo G',  'SoFi Stadium, Los Ángeles',       'USA','d', 0,'groups'],
+  ['2026-06-16','21:00','Francia vs Senegal · Grupo I',           'MetLife Stadium, Nueva Jersey',   'USA','dl',0,'groups'],
+  ['2026-06-17','00:00','Irak vs Noruega · Grupo I',              'Gillette Stadium, Boston',        'USA','d', 0,'groups'],
+  ['2026-06-17','03:00','Argentina vs Argelia · Grupo J',         'Arrowhead Stadium, Kansas City',  'USA','d', 0,'groups'],
+  ['2026-06-17','06:00','Austria vs Jordania · Grupo J',          "Levi's Stadium, San Francisco",   'USA','d', 0,'groups'],
+  ['2026-06-17','19:00','Portugal vs RD Congo · Grupo K',         'NRG Stadium, Houston',            'USA','d', 0,'groups'],
+  ['2026-06-17','22:00','Inglaterra vs Croacia · Grupo L',        'AT&T Stadium, Dallas',            'USA','dl',0,'groups'],
+  ['2026-06-18','01:00','Ghana vs Panamá · Grupo L',              'BMO Field, Toronto',              'CAN','d', 0,'groups'],
+  ['2026-06-18','04:00','Uzbekistán vs Colombia · Grupo K',       'Estadio Azteca, Ciudad de México','MEX','d', 0,'groups'],
+  ['2026-06-18','18:00','Chequia vs Sudáfrica · Grupo A',         'Mercedes-Benz Stadium, Atlanta',  'USA','d', 0,'groups'],
+  ['2026-06-18','18:00','Suiza vs Bosnia · Grupo B',              'SoFi Stadium, Los Ángeles',       'USA','dl',0,'groups'],
+  ['2026-06-19','00:00','Canadá vs Catar · Grupo B',              'BC Place, Vancouver',             'CAN','d', 0,'groups'],
+  ['2026-06-19','03:00','México vs Corea del Sur · Grupo A',      'Estadio Akron, Guadalajara',      'MEX','d', 0,'groups'],
+  ['2026-06-19','06:00','Turquía vs Paraguay · Grupo D',          "Levi's Stadium, San Francisco",   'USA','d', 0,'groups'],
+  ['2026-06-19','21:00','Estados Unidos vs Australia · Grupo D',  'Lumen Field, Seattle',            'USA','dl',0,'groups'],
+  ['2026-06-20','00:00','Escocia vs Marruecos · Grupo C',         'Lincoln Financial Field, Filadelfia','USA','d',0,'groups'],
+  ['2026-06-20','02:30','Brasil vs Haití · Grupo C',              'Gillette Stadium, Boston',        'USA','d', 0,'groups'],
+  ['2026-06-20','19:00','Países Bajos vs Suecia · Grupo F',       'NRG Stadium, Houston',            'USA','dl',0,'groups'],
+  ['2026-06-20','22:00','Alemania vs Costa de Marfil · Grupo E',  'BMO Field, Toronto',              'CAN','dl',0,'groups'],
+  ['2026-06-21','02:00','Ecuador vs Curazao · Grupo E',           'Arrowhead Stadium, Kansas City',  'USA','d', 0,'groups'],
+  ['2026-06-21','06:00','Túnez vs Japón · Grupo F',               'Estadio BBVA, Guadalupe',         'MEX','d', 0,'groups'],
+  ['2026-06-21','18:00','España vs Arabia Saudí · Grupo H',       'Mercedes-Benz Stadium, Atlanta',  'USA','dl',1,'groups'],
+  ['2026-06-21','21:00','Bélgica vs Irán · Grupo G',              'SoFi Stadium, Los Ángeles',       'USA','d', 0,'groups'],
+  ['2026-06-22','00:00','Uruguay vs Cabo Verde · Grupo H',        'Hard Rock Stadium, Miami',        'USA','dl',0,'groups'],
+  ['2026-06-22','03:00','Nueva Zelanda vs Egipto · Grupo G',      'BC Place, Vancouver',             'CAN','d', 0,'groups'],
+  ['2026-06-22','19:00','Argentina vs Austria · Grupo J',         'AT&T Stadium, Dallas',            'USA','dl',0,'groups'],
+  ['2026-06-22','23:00','Francia vs Irak · Grupo I',              'Lincoln Financial Field, Filadelfia','USA','d',0,'groups'],
+  ['2026-06-23','02:00','Noruega vs Senegal · Grupo I',           'MetLife Stadium, Nueva Jersey',   'USA','d', 0,'groups'],
+  ['2026-06-23','05:00','Jordania vs Argelia · Grupo J',          "Levi's Stadium, San Francisco",   'USA','d', 0,'groups'],
+  ['2026-06-23','19:00','Portugal vs Uzbekistán · Grupo K',       'NRG Stadium, Houston',            'USA','d', 0,'groups'],
+  ['2026-06-23','22:00','Inglaterra vs Ghana · Grupo L',          'Gillette Stadium, Boston',        'USA','dl',0,'groups'],
+  ['2026-06-24','01:00','Panamá vs Croacia · Grupo L',            'BMO Field, Toronto',              'CAN','d', 0,'groups'],
+  ['2026-06-24','04:00','Colombia vs RD Congo · Grupo K',         'Estadio Akron, Guadalajara',      'MEX','d', 0,'groups'],
+  ['2026-06-24','21:00','Suiza vs Canadá · Grupo B',              'BC Place, Vancouver',             'CAN','d', 0,'groups'],
+  ['2026-06-24','21:00','Bosnia vs Catar · Grupo B',              'Lumen Field, Seattle',            'USA','d', 0,'groups'],
+  ['2026-06-25','00:00','Escocia vs Brasil · Grupo C',            'Hard Rock Stadium, Miami',        'USA','dl',0,'groups'],
+  ['2026-06-25','00:00','Marruecos vs Haití · Grupo C',           'Mercedes-Benz Stadium, Atlanta',  'USA','d', 0,'groups'],
+  ['2026-06-25','03:00','Chequia vs México · Grupo A',            'Estadio Azteca, Ciudad de México','MEX','d', 0,'groups'],
+  ['2026-06-25','03:00','Sudáfrica vs Corea del Sur · Grupo A',   'Estadio BBVA, Guadalupe',         'MEX','d', 0,'groups'],
+  ['2026-06-25','22:00','Ecuador vs Alemania · Grupo E',          'MetLife Stadium, Nueva Jersey',   'USA','d', 0,'groups'],
+  ['2026-06-25','22:00','Curazao vs Costa de Marfil · Grupo E',   'Lincoln Financial Field, Filadelfia','USA','d',0,'groups'],
+  ['2026-06-26','01:00','Túnez vs Países Bajos · Grupo F',        'Arrowhead Stadium, Kansas City',  'USA','d', 0,'groups'],
+  ['2026-06-26','01:00','Japón vs Suecia · Grupo F',              'AT&T Stadium, Dallas',            'USA','d', 0,'groups'],
+  ['2026-06-26','04:00','Turquía vs Estados Unidos · Grupo D',    'SoFi Stadium, Los Ángeles',       'USA','d', 0,'groups'],
+  ['2026-06-26','04:00','Paraguay vs Australia · Grupo D',        "Levi's Stadium, San Francisco",   'USA','d', 0,'groups'],
+  ['2026-06-26','21:00','Noruega vs Francia · Grupo I',           'Gillette Stadium, Boston',        'USA','d', 0,'groups'],
+  ['2026-06-26','21:00','Senegal vs Irak · Grupo I',              'BMO Field, Toronto',              'CAN','d', 0,'groups'],
+  ['2026-06-27','02:00','Uruguay vs España · Grupo H',            'Estadio Akron, Guadalajara',      'MEX','dl',1,'groups'],
+  ['2026-06-27','02:00','Cabo Verde vs Arabia Saudí · Grupo H',   'NRG Stadium, Houston',            'USA','d', 0,'groups'],
+  ['2026-06-27','05:00','Nueva Zelanda vs Bélgica · Grupo G',     'Lumen Field, Seattle',            'USA','d', 0,'groups'],
+  ['2026-06-27','05:00','Egipto vs RI de Irán · Grupo G',         'BC Place, Vancouver',             'CAN','d', 0,'groups'],
+  ['2026-06-27','23:00','Panamá vs Inglaterra · Grupo L',         'MetLife Stadium, Nueva Jersey',   'USA','d', 0,'groups'],
+  ['2026-06-27','23:00','Croacia vs Ghana · Grupo L',             'Lincoln Financial Field, Filadelfia','USA','d',0,'groups'],
+  ['2026-06-28','01:30','Colombia vs Portugal · Grupo K',         'Hard Rock Stadium, Miami',        'USA','d', 0,'groups'],
+  ['2026-06-28','01:30','RD Congo vs Uzbekistán · Grupo K',       'Mercedes-Benz Stadium, Atlanta',  'USA','d', 0,'groups'],
+  ['2026-06-28','04:00','Jordania vs Argentina · Grupo J',        'Arrowhead Stadium, Kansas City',  'USA','d', 0,'groups'],
+  ['2026-06-28','04:00','Argelia vs Austria · Grupo J',           'AT&T Stadium, Dallas',            'USA','d', 0,'groups'],
+  // ── DIECISEISAVOS ───────────────────────────────────────────
+  ['2026-06-28','21:00','2º A vs 2º B · 1/32 (P73)',             'SoFi Stadium, Los Ángeles',       'USA','d', 0,'r32'],
+  ['2026-06-29','19:00','1º C vs 2º F · 1/32 (P76)',             'NRG Stadium, Houston',            'USA','d', 0,'r32'],
+  ['2026-06-29','22:30','1º E vs 3º · 1/32 (P74)',               'Gillette Stadium, Boston',        'USA','d', 0,'r32'],
+  ['2026-06-30','03:00','1º F vs 2º C · 1/32 (P75)',             'Estadio BBVA, Guadalupe',         'MEX','d', 0,'r32'],
+  ['2026-06-30','19:00','2º E vs 2º I · 1/32 (P78)',             'AT&T Stadium, Dallas',            'USA','d', 0,'r32'],
+  ['2026-06-30','23:00','1º I vs 3º · 1/32 (P77)',               'MetLife Stadium, Nueva Jersey',   'USA','d', 0,'r32'],
+  ['2026-07-01','03:00','1º A vs 3º · 1/32 (P79)',               'Estadio Azteca, Ciudad de México','MEX','d', 0,'r32'],
+  ['2026-07-01','18:00','1º L vs 3º · 1/32 (P80)',               'Mercedes-Benz Stadium, Atlanta',  'USA','dl',0,'r32'],
+  ['2026-07-01','22:00','1º G vs 3º · 1/32 (P82)',               'Lumen Field, Seattle',            'USA','d', 0,'r32'],
+  ['2026-07-02','02:00','1º D vs 3º · 1/32 (P81)',               "Levi's Stadium, San Francisco",   'USA','d', 0,'r32'],
+  ['2026-07-02','21:00','1º H vs 2º J · 1/32 (P84)',             'SoFi Stadium, Los Ángeles',       'USA','dl',2,'r32'],
+  ['2026-07-03','00:00','1º J vs 2º H · 1/32 (P86)',             'Hard Rock Stadium, Miami',        'USA','d', 2,'r32'],
+  ['2026-07-03','01:00','2º K vs 2º L · 1/32 (P83)',             'BMO Field, Toronto',              'CAN','d', 0,'r32'],
+  ['2026-07-03','03:30','1º K vs 3º · 1/32 (P87)',               'Arrowhead Stadium, Kansas City',  'USA','d', 0,'r32'],
+  ['2026-07-03','05:00','1º B vs 3º · 1/32 (P85)',               'BC Place, Vancouver',             'CAN','d', 0,'r32'],
+  ['2026-07-03','20:00','2º D vs 2º G · 1/32 (P88)',             'AT&T Stadium, Dallas',            'USA','dl',0,'r32'],
+  // ── OCTAVOS ─────────────────────────────────────────────────
+  ['2026-07-04','19:00','P73 vs P75 · Octavos (P90)',            'NRG Stadium, Houston',            'USA','dl',0,'r16'],
+  ['2026-07-04','23:00','P74 vs P77 · Octavos (P89)',            'Lincoln Financial Field, Filadelfia','USA','dl',0,'r16'],
+  ['2026-07-05','22:00','P76 vs P78 · Octavos (P91)',            'MetLife Stadium, Nueva Jersey',   'USA','dl',0,'r16'],
+  ['2026-07-06','02:00','P79 vs P80 · Octavos (P92)',            'Estadio Azteca, Ciudad de México','MEX','dl',2,'r16'],
+  ['2026-07-06','21:00','P83 vs P84 · Octavos (P93)',            'AT&T Stadium, Dallas',            'USA','dl',2,'r16'],
+  ['2026-07-07','01:00','P81 vs P82 · Octavos (P94)',            'Lumen Field, Seattle',            'USA','dl',0,'r16'],
+  ['2026-07-07','18:00','P86 vs P88 · Octavos (P95)',            'Mercedes-Benz Stadium, Atlanta',  'USA','dl',2,'r16'],
+  ['2026-07-07','22:00','P85 vs P87 · Octavos (P96)',            'BC Place, Vancouver',             'CAN','dl',0,'r16'],
+  // ── CUARTOS ─────────────────────────────────────────────────
+  ['2026-07-09','22:00','P89 vs P90 · Cuartos (P97)',            'Gillette Stadium, Boston',        'USA','dl',0,'qf'],
+  ['2026-07-10','21:00','P93 vs P94 · Cuartos (P98)',            'SoFi Stadium, Los Ángeles',       'USA','dl',2,'qf'],
+  ['2026-07-11','23:00','P91 vs P92 · Cuartos (P99)',            'Hard Rock Stadium, Miami',        'USA','dl',2,'qf'],
+  ['2026-07-12','03:00','P95 vs P96 · Cuartos (P100)',           'Arrowhead Stadium, Kansas City',  'USA','dl',0,'qf'],
+  // ── SEMIFINALES ─────────────────────────────────────────────
+  ['2026-07-14','21:00','Semifinal 1 · P97 vs P98',              'AT&T Stadium, Dallas',            'USA','dl',0,'sf'],
+  ['2026-07-15','21:00','Semifinal 2 · P99 vs P100',             'Mercedes-Benz Stadium, Atlanta',  'USA','dl',0,'sf'],
+  // ── TERCER PUESTO + FINAL ───────────────────────────────────
+  ['2026-07-18','23:00','3er y 4º puesto',                        'Hard Rock Stadium, Miami',        'USA','dl',0,'3p'],
+  ['2026-07-19','21:00','Gran Final del Mundial 2026',            'MetLife Stadium, Nueva Jersey',   'USA','dl',0,'final'],
+];
+
+// ─────────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────────
+const DAYS_ES   = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const MONTHS_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+const PHASES = {
+  groups:'Fase de Grupos', r32:'Dieciseisavos de Final',
+  r16:'Octavos de Final',  qf:'Cuartos de Final',
+  sf:'Semifinales',        '3p':'3er y 4º Puesto',  final:'Gran Final',
+};
+
+function viewDate(date, time) {
+  const h = +time.split(':')[0];
+  if (h <= 6) {
+    const [y, m, d] = date.split('-').map(Number);
+    const dt = new Date(Date.UTC(y, m - 1, d));
+    dt.setUTCDate(dt.getUTCDate() - 1);
+    return dt.toISOString().slice(0, 10);
+  }
+  return date;
+}
+
+function fmtDate(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const dt  = new Date(Date.UTC(y, m - 1, d));
+  const day = DAYS_ES[dt.getUTCDay()];
+  return `${day} ${d} de ${MONTHS_ES[m - 1]}`;
+}
+
+function isNight(time) { return +time.split(':')[0] <= 6; }
+
+function sortKey(date, time) {
+  return new Date(date + 'T' + time + ':00').getTime();
+}
+
+// ─────────────────────────────────────────────────────────────────
+// ESTADO FILTROS
+// ─────────────────────────────────────────────────────────────────
+let fDate = '', fChannel = '', fCountry = '';
+
+function applyFilters() {
+  fDate    = document.getElementById('f-date').value;
+  fChannel = document.getElementById('f-channel').value;
+  fCountry = document.getElementById('f-country').value;
+  renderCalendar();
+}
+
+// ─────────────────────────────────────────────────────────────────
+// RENDER CALENDARIO
+// ─────────────────────────────────────────────────────────────────
+function renderCalendar() {
+  // Filtrar
+  const filtered = MATCHES.filter(([date, time,,,country, ch]) => {
+    const vd = viewDate(date, time);
+    if (fDate    && vd !== fDate)                       return false;
+    if (fChannel === 'la1' && !ch.includes('l'))        return false;
+    if (fCountry && country !== fCountry)               return false;
+    return true;
+  });
+
+  if (!filtered.length) {
+    document.getElementById('cal-content').innerHTML =
+      '<p class="empty">No hay partidos con estos filtros.</p>';
+    return;
+  }
+
+  // Ordenar por fecha+hora real
+  filtered.sort((a, b) => sortKey(a[0], a[1]) - sortKey(b[0], b[1]));
+
+  // Agrupar por viewDate
+  const byDay = {};
+  for (const m of filtered) {
+    const vd = viewDate(m[0], m[1]);
+    (byDay[vd] = byDay[vd] || []).push(m);
+  }
+
+  let html = '';
+  let lastPhase = '';
+
+  for (const vd of Object.keys(byDay).sort()) {
+    html += `<div class="day-header">${fmtDate(vd)}</div>`;
+    for (const m of byDay[vd]) {
+      const [date, time, label, venue, country, ch, flags, phase] = m;
+      // Fase banner
+      if (phase !== lastPhase) {
+        html += `<div class="phase-banner">${PHASES[phase] || phase}</div>`;
+        lastPhase = phase;
+      }
+      html += renderMatch(date, time, label, venue, ch, flags);
+    }
+  }
+
+  document.getElementById('cal-content').innerHTML = html;
+}
+
+function renderMatch(date, time, label, venue, ch, flags) {
+  const night     = isNight(time);
+  const hasSpain  = flags === 1;
+  const spainPos  = flags === 2;
+  const rowCls    = ['match-row', hasSpain ? 'spain' : '', spainPos ? 'spain-pos' : ''].filter(Boolean).join(' ');
+  const timeCls   = 'time' + (night ? ' night' : '');
+  const nightLbl  = night ? ' 🌙' : '';
+  const spanFlag  = hasSpain ? '🇪🇸 ' : spainPos ? '⭐ ' : '';
+  const badges    = [
+    ch.includes('d') ? '<span class="badge bd">DAZN</span>' : '',
+    ch.includes('l') ? '<span class="badge bl">LA 1</span>' : '',
+  ].join('');
+
+  return `<div class="${rowCls}">
+    <div class="${timeCls}">${time}<small>ESP${nightLbl}</small></div>
+    <div class="match-info">
+      <div class="match-name">${spanFlag}${badges} ${label}</div>
+      <div class="match-meta">${venue}</div>
+    </div>
+  </div>`;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// RENDER GRUPOS
+// ─────────────────────────────────────────────────────────────────
+async function loadGroups() {
+  const el = document.getElementById('groups-content');
+  try {
+    const res  = await fetch('./standings.json?t=' + Date.now());
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+
+    const upd = new Date(data.updated);
+    document.getElementById('last-updated').textContent =
+      'Actualizado: ' + upd.toLocaleDateString('es-ES') + ' ' +
+      upd.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+    const entries = Object.entries(data.groups);
+    let html = '<div class="groups-grid">';
+    for (const [letter, teams] of entries) {
+      html += renderGroup(letter, teams);
+    }
+    html += '</div>';
+    el.innerHTML = html;
+  } catch (e) {
+    el.innerHTML = '<p class="empty">No se pudieron cargar las clasificaciones.</p>';
+  }
+}
+
+function renderGroup(letter, teams) {
+  const rows = teams.map((t, i) => {
+    const dgCls = t.dg > 0 ? 'dg-pos' : t.dg < 0 ? 'dg-neg' : '';
+    const dg    = t.dg > 0 ? '+' + t.dg : t.dg;
+    return `<tr>
+      <td class="team-name">${t.flag || ''} ${t.team}</td>
+      <td>${t.pj}</td>
+      <td class="pts">${t.pts}</td>
+      <td>${t.gf}</td>
+      <td>${t.gc}</td>
+      <td class="${dgCls}">${dg}</td>
+    </tr>`;
+  }).join('');
+
+  return `<div class="group-card">
+    <div class="group-title">Grupo ${letter}</div>
+    <table class="standings-table">
+      <thead><tr>
+        <th>Equipo</th><th>PJ</th><th>Pts</th><th>GF</th><th>GC</th><th>DG</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// TABS
+// ─────────────────────────────────────────────────────────────────
+let groupsLoaded = false;
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.tab === tab)
+  );
+  document.getElementById('cal-tab').classList.toggle('hidden', tab !== 'cal');
+  document.getElementById('grp-tab').classList.toggle('hidden', tab !== 'grp');
+  if (tab === 'grp' && !groupsLoaded) {
+    groupsLoaded = true;
+    loadGroups();
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────────
+function populateDateFilter() {
+  const seen  = new Set();
+  const dates = [];
+  for (const [date, time] of MATCHES) {
+    const vd = viewDate(date, time);
+    if (!seen.has(vd)) { seen.add(vd); dates.push(vd); }
+  }
+  dates.sort();
+  const sel = document.getElementById('f-date');
+  for (const d of dates) {
+    const o = document.createElement('option');
+    o.value = d;
+    o.textContent = fmtDate(d);
+    sel.appendChild(o);
+  }
+}
+
+populateDateFilter();
+renderCalendar();
+</script>
+</body>
+</html>
