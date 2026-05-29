@@ -1,4 +1,4 @@
-const VERSION = 'v22';
+const VERSION = 'v23';
 const CACHE   = 'mundial2026-' + VERSION;
 
 const CORE = [
@@ -8,11 +8,13 @@ const CORE = [
   './logo.png',
   './standings.json',
   './js/matches.js',
+  './js/home.js',
   './js/calendar.js',
   './js/groups.js',
   './js/stats.js',
   './js/news.js',
   './js/quiniela.js',
+  './js/venues.js',
   './js/app.js',
 ];
 

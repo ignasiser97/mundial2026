@@ -20,10 +20,14 @@
 
 ## Pendiente
 
+### Inicio
+- [x] Pestaña Inicio — cuenta atrás para el Mundial (primera pestaña, primera en cargarse)
+
 ### Quiniela Cachorros
 - [ ] Desarrollar más funcionalidad según avance el torneo
 
 ### Otros
+- [x] Filtro rápido "Solo España" en el calendario — botón/chip visible para ver solo los partidos de España
 - [ ] Marcador en directo dentro del partido (score live durante el partido)
 - [ ] Resultados de partidos ya jugados (marcadores finales en el calendario)
 - [ ] Notificaciones push antes de cada partido de España
@@ -33,7 +37,7 @@
 - [x] Cloudflare Web Analytics — crear cuenta, obtener snippet y añadir a index.html
 
 ### Sedes
-- [ ] Pestaña Sedes — info de las 16 ciudades y estadios en EE.UU., Canadá y México (nueva pestaña, última en la barra)
+- [x] Pestaña Sedes — info de las 16 ciudades y estadios en EE.UU., Canadá y México (nueva pestaña, última en la barra)
 
 ## Ideas a valorar
 - [ ] Predictor/simulador de grupos (quién pasa)

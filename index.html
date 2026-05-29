@@ -434,6 +434,52 @@ html,body { overscroll-behavior-y: contain; }
   margin-top:8px; padding-top:8px; border-top:1px solid var(--border); font-size:11px;
 }
 
+/* INICIO — CUENTA ATRÁS */
+.home-wrap { max-width:700px; margin:0 auto; padding:40px 20px 24px; }
+.home-countdown { text-align:center; }
+.home-badge {
+  display:inline-block; font-family:'Bebas Neue',sans-serif;
+  font-size:11px; letter-spacing:3px; color:var(--accent);
+  border:1px solid rgba(232,200,74,.4); padding:3px 14px; border-radius:2px; margin-bottom:16px;
+}
+.home-date { font-family:'Bebas Neue',sans-serif; font-size:clamp(32px,8vw,60px); color:#fff; letter-spacing:3px; margin-bottom:28px; }
+.home-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(28px,7vw,52px); color:var(--accent); letter-spacing:2px; margin-bottom:12px; }
+.home-units { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:24px; }
+.home-unit { display:flex; flex-direction:column; align-items:center; gap:4px; }
+.home-num {
+  font-family:'Bebas Neue',sans-serif; font-size:clamp(52px,14vw,96px);
+  color:var(--accent); line-height:1;
+  background:var(--card); border:1px solid var(--border); border-radius:8px;
+  padding:8px 14px; min-width:72px; text-align:center;
+}
+.home-label { font-size:10px; color:var(--muted); letter-spacing:1.5px; font-weight:600; text-transform:uppercase; }
+.home-sep { font-family:'Bebas Neue',sans-serif; font-size:clamp(36px,8vw,64px); color:var(--border); margin-bottom:22px; }
+.home-sub { font-size:12px; color:var(--muted); letter-spacing:.4px; }
+
+/* FILTRO ESPAÑA */
+.filters-spain { padding:8px 14px 0; }
+.spain-chip {
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+  padding:7px 16px; border-radius:20px; cursor:pointer;
+  border:1px solid var(--border); color:var(--muted); background:none;
+  transition:all .15s;
+}
+.spain-chip.active { background:var(--accent); color:#000; border-color:var(--accent); }
+
+/* SEDES */
+.venues-wrap { max-width:700px; margin:0 auto; padding:14px 12px 24px; }
+.venues-country { margin-bottom:24px; }
+.venues-country-title {
+  font-family:'Bebas Neue',sans-serif; font-size:14px; letter-spacing:2px;
+  color:var(--accent); padding:0 0 8px; border-bottom:1px solid var(--border); margin-bottom:10px;
+}
+.venues-grid { display:flex; flex-direction:column; gap:8px; }
+.venue-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:12px 14px; }
+.venue-name { font-weight:600; font-size:14px; color:var(--text); margin-bottom:2px; }
+.venue-city { font-size:12px; color:var(--muted); margin-bottom:6px; }
+.venue-meta { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); }
+.venue-matches { color:var(--accent); font-weight:600; }
+
 /* GRUPOS DE QUINIELA */
 .qnl-groups-list { display:flex; flex-direction:column; gap:10px; margin-top:4px; }
 .qnl-group-card {
@@ -471,7 +517,11 @@ html,body { overscroll-behavior-y: contain; }
 </div>
 
 <div class="tabs">
-  <button class="tab-btn active" data-tab="cal" onclick="switchTab('cal')">
+  <button class="tab-btn active" data-tab="hom" onclick="switchTab('hom')">
+    <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></span>
+    Inicio
+  </button>
+  <button class="tab-btn" data-tab="cal" onclick="switchTab('cal')">
     <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></span>
     Calendario
   </button>
@@ -491,10 +541,19 @@ html,body { overscroll-behavior-y: contain; }
     <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
     Quiniela
   </button>
+  <button class="tab-btn" data-tab="ven" onclick="switchTab('ven')">
+    <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></span>
+    Sedes
+  </button>
+</div>
+
+<!-- ══ INICIO ══ -->
+<div id="hom-tab">
+  <div class="home-wrap" id="home-content"></div>
 </div>
 
 <!-- ══ CALENDARIO ══ -->
-<div id="cal-tab">
+<div id="cal-tab" class="hidden">
   <div class="filters">
     <!-- Fecha: calendario -->
     <div class="filter-item cp-wrap" id="cp-wrap">
@@ -531,6 +590,9 @@ html,body { overscroll-behavior-y: contain; }
              autocomplete="off" oninput="tsFilter()" onfocus="tsOpen()" onkeydown="tsKey(event)">
       <ul class="ts-dropdown hidden" id="ts-dropdown"></ul>
     </div>
+  </div>
+  <div class="filters-spain">
+    <button class="spain-chip" id="spain-chip" onclick="toggleSpainFilter()">🇪🇸 Solo España</button>
   </div>
   <div class="legend">
     <div class="legend-item"><span class="badge bd">DAZN</span> suscripción</div>
@@ -585,6 +647,11 @@ html,body { overscroll-behavior-y: contain; }
   </div>
 </div>
 
+<!-- ══ SEDES ══ -->
+<div id="ven-tab" class="hidden">
+  <div class="venues-wrap" id="venues-content"></div>
+</div>
+
 <footer>
   <div class="footer-divider"></div>
   <div class="footer-author">Ignacio Sisamón Serrano</div>
@@ -597,13 +664,16 @@ html,body { overscroll-behavior-y: contain; }
 </footer>
 
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "9b5194de54734f409ba32ac9f3f8d052"}'></script><!-- End Cloudflare Web Analytics -->
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "9b5194de54734f409ba32ac9f3f8d052"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/matches.js"></script>
+<script src="js/home.js"></script>
 <script src="js/calendar.js"></script>
 <script src="js/groups.js"></script>
 <script src="js/stats.js"></script>
 <script src="js/news.js"></script>
 <script src="js/quiniela.js"></script>
+<script src="js/venues.js"></script>
 <script src="js/app.js"></script>
 
 </body>

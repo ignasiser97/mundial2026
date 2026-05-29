@@ -75,18 +75,39 @@ function applyUpdate() {
 }
 
 // ── Tabs ───────────────────────────────────────────────────────
-let grpLoaded=false, stsLoaded=false, nwsLoaded=false;
+let grpLoaded=false, stsLoaded=false, nwsLoaded=false, venLoaded=false;
 
 function switchTab(tab){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
-  ['cal','grp','sts','nws','qnl'].forEach(t=>document.getElementById(t+'-tab').classList.toggle('hidden',t!==tab));
+  ['hom','cal','grp','sts','nws','qnl','ven'].forEach(t=>document.getElementById(t+'-tab').classList.toggle('hidden',t!==tab));
   if(tab==='grp' && !grpLoaded){ grpLoaded=true; loadGroups(); }
   if(tab==='sts' && !stsLoaded){ stsLoaded=true; loadStats(); }
   if(tab==='nws' && !nwsLoaded){ nwsLoaded=true; loadNews(); }
   if(tab==='qnl'){ loadQuiniela(); }
+  if(tab==='ven' && !venLoaded){ venLoaded=true; renderVenues(); }
+}
+
+// ── Filtro España ──────────────────────────────────────────────
+let fSpain = false;
+
+function toggleSpainFilter() {
+  fSpain = !fSpain;
+  document.getElementById('spain-chip').classList.toggle('active', fSpain);
+  if (fSpain) {
+    fTeam = 'España';
+    document.getElementById('ts-input').value = '';
+    document.getElementById('ts-input').placeholder = '🔍 Todos los equipos';
+    fDate = '';
+    document.getElementById('cp-label').textContent = 'Todas las fechas';
+    document.getElementById('cp-trigger').style.borderColor = '';
+  } else {
+    fTeam = '';
+  }
+  renderCalendar();
 }
 
 // ── Init ───────────────────────────────────────────────────────
 tsInit();
 cpRender();
+renderHome();
 renderCalendar();
