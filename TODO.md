@@ -8,6 +8,10 @@
 - [x] Sistema de usuarios: alias + UUID en localStorage, sin email ni contraseña (Supabase)
 - [x] Cierre de apuestas automático 5 min antes del pitido
 - [x] Apuestas solo el día del partido
+- [x] Pull-to-refresh (scroll hacia abajo para actualizar datos y noticias)
+- [x] Bracket visual de la fase eliminatoria en pestaña Grupos (selector por ronda)
+- [x] Separar index.html en módulos JS (js/matches.js, calendar.js, groups.js, stats.js, news.js, quiniela.js, app.js)
+- [x] Service Worker: cacheo offline + banner "Nueva versión disponible" al actualizar
 
 ## Pendiente
 
@@ -16,13 +20,8 @@
 - [ ] Ver las apuestas de los demás amigos una vez cerrado el partido
 - [ ] Desarrollar más funcionalidad según avance el torneo
 
-### Arquitectura
-- [ ] Separar index.html en módulos JS (matches.js, filters.js, groups.js, stats.js, news.js, quiniela.js) para facilitar el mantenimiento
-
 ### Otros
-- [ ] Pull-to-refresh (scroll hacia abajo para actualizar datos y noticias)
 - [ ] Marcador en directo dentro del partido (score live durante el partido)
-- [ ] Bracket visual de la fase eliminatoria (árbol de cruces)
 - [ ] Resultados de partidos ya jugados (marcadores finales en el calendario)
 - [ ] Notificaciones push antes de cada partido de España
 - [ ] Comparador de estadísticas entre jugadores
