@@ -50,7 +50,7 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .tabs { position:sticky; top:0; z-index:100; display:flex; background:var(--surface); border-bottom:1px solid var(--border); }
 .tab-btn {
   flex:1; padding:13px 0;
-  font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:2px;
+  font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:1.5px;
   color:var(--muted); background:none; border:none;
   border-bottom:2px solid transparent; cursor:pointer; transition:color .15s,border-color .15s;
 }
@@ -218,6 +218,37 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .stats-table tbody tr:hover { background:rgba(255,255,255,.03); }
 .stats-empty { text-align:center; padding:30px 16px; color:var(--muted); font-size:13px; line-height:1.6; }
 
+/* NOTICIAS */
+.news-wrap { max-width:700px; margin:0 auto; padding:14px 12px 24px; }
+.news-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.news-updated { font-size:11px; color:var(--muted); }
+.news-refresh {
+  font-family:'Bebas Neue',sans-serif; font-size:12px; letter-spacing:1.5px;
+  color:var(--accent); background:none; border:1px solid var(--accent);
+  border-radius:4px; padding:4px 10px; cursor:pointer;
+}
+.news-refresh:hover { background:rgba(232,200,74,.1); }
+.news-list { display:flex; flex-direction:column; gap:10px; }
+.news-card {
+  display:flex; gap:12px; align-items:flex-start;
+  background:var(--card); border:1px solid var(--border); border-radius:8px;
+  padding:12px; text-decoration:none; color:var(--text);
+  transition:border-color .15s;
+}
+.news-card:hover { border-color:var(--accent); }
+.news-thumb { width:76px; height:56px; object-fit:cover; border-radius:5px; flex-shrink:0; background:var(--border); }
+.news-body { flex:1; min-width:0; }
+.news-title { font-size:13px; font-weight:600; line-height:1.4; display:-webkit-box; -webkit-line-clamp:3; line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.news-meta { font-size:11px; color:var(--muted); margin-top:5px; display:flex; gap:8px; flex-wrap:wrap; }
+.news-source { color:var(--accent); font-weight:600; }
+.news-sources { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+.ns-chip {
+  font-size:11px; padding:4px 10px; border-radius:20px; cursor:pointer;
+  border:1px solid var(--border); color:var(--muted); background:none;
+  transition:all .15s;
+}
+.ns-chip.active { background:var(--accent); color:#000; border-color:var(--accent); font-weight:600; }
+
 footer { text-align:center; padding:28px 16px 0; font-size:10px; color:var(--muted); letter-spacing:.5px; line-height:1.8; }
 </style>
 </head>
@@ -233,6 +264,7 @@ footer { text-align:center; padding:28px 16px 0; font-size:10px; color:var(--mut
   <button class="tab-btn active" data-tab="cal" onclick="switchTab('cal')">Calendario</button>
   <button class="tab-btn"        data-tab="grp" onclick="switchTab('grp')">Grupos</button>
   <button class="tab-btn"        data-tab="sts" onclick="switchTab('sts')">Estadísticas</button>
+  <button class="tab-btn"        data-tab="nws" onclick="switchTab('nws')">Noticias</button>
 </div>
 
 <!-- ══ CALENDARIO ══ -->
@@ -296,6 +328,18 @@ footer { text-align:center; padding:28px 16px 0; font-size:10px; color:var(--mut
   <div class="stats-wrap">
     <div id="last-updated-sts" class="last-updated"></div>
     <div id="stats-content"><div class="empty">Cargando estadísticas…</div></div>
+  </div>
+</div>
+
+<!-- ══ NOTICIAS ══ -->
+<div id="nws-tab" class="hidden">
+  <div class="news-wrap">
+    <div class="news-header">
+      <span id="news-updated" class="news-updated"></span>
+      <button class="news-refresh" onclick="loadNews(true)">↻ Actualizar</button>
+    </div>
+    <div class="news-sources" id="news-sources"></div>
+    <div id="news-content"><div class="empty">Cargando noticias…</div></div>
   </div>
 </div>
 
@@ -726,13 +770,109 @@ function renderStatsSection(title, key, players) {
   </div>`;
 }
 
+// ── NOTICIAS ──────────────────────────────────────────────────
+const NEWS_SOURCES = [
+  { id:'marca', name:'Marca',           url:'https://www.marca.com/rss/futbol.xml' },
+  { id:'as',    name:'AS',              url:'https://as.com/rss/tags/mundial_2026.xml' },
+  { id:'sport', name:'Sport',           url:'https://www.sport.es/rss/futbol/mundial-2026.xml' },
+  { id:'md',    name:'Mundo Deportivo', url:'https://www.mundodeportivo.com/rss/futbol/mundial.xml' },
+];
+const RSS2JSON = 'https://api.rss2json.com/v1/api.json?count=25&rss_url=';
+
+let newsFilter = ''; // source id filter, '' = todas
+let allNews    = [];
+
+function timeAgo(date) {
+  const s = (Date.now() - date.getTime()) / 1000;
+  if (s < 60)    return 'ahora mismo';
+  if (s < 3600)  return `hace ${Math.floor(s/60)} min`;
+  if (s < 86400) return `hace ${Math.floor(s/3600)} h`;
+  return `hace ${Math.floor(s/86400)} d`;
+}
+
+async function fetchSource(src) {
+  try {
+    const res  = await fetch(RSS2JSON + encodeURIComponent(src.url));
+    const data = await res.json();
+    if (data.status !== 'ok') return [];
+    return data.items
+      .filter(i => /mundial/i.test((i.title||'') + ' ' + (i.description||'')))
+      .map(i => ({
+        title:     i.title || '',
+        link:      i.link  || '#',
+        date:      new Date(i.pubDate || Date.now()),
+        thumb:     i.thumbnail || i.enclosure?.link || '',
+        sourceId:  src.id,
+        sourceName:src.name,
+      }));
+  } catch { return []; }
+}
+
+async function loadNews(force=false) {
+  const el = document.getElementById('news-content');
+  if (!force && allNews.length) { renderNews(); return; }
+
+  el.innerHTML = '<div class="empty">Cargando noticias…</div>';
+  const results = await Promise.all(NEWS_SOURCES.map(fetchSource));
+  allNews = results.flat()
+    .sort((a,b) => b.date - a.date)
+    // deduplicar por título similar
+    .filter((item,i,arr) => !arr.slice(0,i).some(p => p.title.slice(0,40) === item.title.slice(0,40)));
+
+  document.getElementById('news-updated').textContent =
+    allNews.length ? `${allNews.length} artículos · ${new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}` : '';
+
+  renderSourceChips();
+  renderNews();
+}
+
+function renderSourceChips() {
+  const counts = {};
+  NEWS_SOURCES.forEach(s => { counts[s.id] = allNews.filter(n=>n.sourceId===s.id).length; });
+  const el = document.getElementById('news-sources');
+  const all = `<button class="ns-chip ${newsFilter===''?'active':''}" onclick="newsSetFilter('')">Todas (${allNews.length})</button>`;
+  const chips = NEWS_SOURCES
+    .filter(s => counts[s.id] > 0)
+    .map(s => `<button class="ns-chip ${newsFilter===s.id?'active':''}" onclick="newsSetFilter('${s.id}')">${s.name} (${counts[s.id]})</button>`)
+    .join('');
+  el.innerHTML = all + chips;
+}
+
+function newsSetFilter(id) {
+  newsFilter = id;
+  renderSourceChips();
+  renderNews();
+}
+
+function renderNews() {
+  const items = newsFilter ? allNews.filter(n=>n.sourceId===newsFilter) : allNews;
+  if (!items.length) {
+    document.getElementById('news-content').innerHTML =
+      '<p class="empty">No se encontraron noticias del Mundial.</p>';
+    return;
+  }
+  const html = items.map(n => `
+    <a class="news-card" href="${n.link}" target="_blank" rel="noopener">
+      ${n.thumb ? `<img class="news-thumb" src="${n.thumb}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''}
+      <div class="news-body">
+        <div class="news-title">${n.title}</div>
+        <div class="news-meta">
+          <span class="news-source">${n.sourceName}</span>
+          <span>${timeAgo(n.date)}</span>
+        </div>
+      </div>
+    </a>`).join('');
+  document.getElementById('news-content').innerHTML = `<div class="news-list">${html}</div>`;
+}
+
 // ── TABS ──────────────────────────────────────────────────────
-let grpLoaded=false, stsLoaded=false;
+let grpLoaded=false, stsLoaded=false, nwsLoaded=false;
 function switchTab(tab){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
-  ['cal','grp','sts'].forEach(t=>document.getElementById(t+'-tab').classList.toggle('hidden',t!==tab));
+  ['cal','grp','sts','nws'].forEach(t=>document.getElementById(t+'-tab').classList.toggle('hidden',t!==tab));
   if(tab==='grp' && !grpLoaded){ grpLoaded=true; loadGroups(); }
   if(tab==='sts' && !stsLoaded){ stsLoaded=true; loadStats(); }
+  if(tab==='nws' && !nwsLoaded){ nwsLoaded=true; loadNews(); }
 }
 
 // ── INIT ──────────────────────────────────────────────────────
