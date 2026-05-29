@@ -11,6 +11,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
+from dotenv import load_dotenv
+
+# Carga .env si existe (desarrollo local); en GitHub Actions usa el Secret directamente
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 API_KEY = os.environ.get("API_FOOTBALL_KEY", "")
 BASE_URL = "https://v3.football.api-sports.io"
