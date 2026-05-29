@@ -6,8 +6,9 @@ Liga 1 = FIFA World Cup, temporada 2026.
 
 import json
 import os
+import re
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 import requests
@@ -108,6 +109,58 @@ def fetch_standings() -> dict:
     )
     resp.raise_for_status()
     return resp.json()
+
+
+def fetch_results() -> dict:
+    """Devuelve {match_id: {home_score, away_score}} para partidos ya jugados."""
+    resp = requests.get(
+        f"{BASE_URL}/fixtures",
+        headers=_headers(),
+        params={"league": LEAGUE_ID, "season": SEASON},
+        timeout=15,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+
+    CEST = timezone(timedelta(hours=2))
+    results = {}
+
+    for fix in data.get("response", []):
+        status = fix.get("fixture", {}).get("status", {}).get("short", "")
+        if status not in ("FT", "AET", "PEN"):
+            continue
+
+        goals = fix.get("goals", {})
+        home_score = goals.get("home")
+        away_score = goals.get("away")
+        if home_score is None or away_score is None:
+            continue
+
+        # Fecha y hora en CEST
+        date_raw = fix.get("fixture", {}).get("date", "")
+        try:
+            dt_utc = datetime.fromisoformat(date_raw)
+            dt_cest = dt_utc.astimezone(CEST)
+        except ValueError:
+            continue
+
+        date_str = dt_cest.strftime("%Y-%m-%d")
+        time_str = dt_cest.strftime("%H:%M")
+
+        home_en = fix.get("teams", {}).get("home", {}).get("name", "")
+        away_en = fix.get("teams", {}).get("away", {}).get("name", "")
+        home_es = NAMES_ES.get(home_en, home_en)
+        away_es = NAMES_ES.get(away_en, away_en)
+
+        # Mismo formato que matchId() en el frontend
+        label = f"{home_es} vs {away_es}"
+        label = re.sub(r"\s+vs\s+", "_vs_", label)
+        label = label.replace(" ", "")
+        match_id = f"{date_str}_{time_str}_{label}"
+
+        results[match_id] = {"home": int(home_score), "away": int(away_score)}
+
+    return results
 
 
 def fetch_top_stats(endpoint: str) -> list:
@@ -211,15 +264,23 @@ def main() -> None:
         print(f"AVISO: No se pudieron obtener estadísticas: {e}", file=sys.stderr)
         top_scorers, top_assists = [], []
 
+    print("Obteniendo resultados de partidos…")
+    try:
+        match_results = fetch_results()
+    except requests.RequestException as e:
+        print(f"AVISO: No se pudieron obtener resultados: {e}", file=sys.stderr)
+        match_results = {}
+
     result = {
-        "updated":    datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "groups":     groups,
-        "topScorers": top_scorers,
-        "topAssists": top_assists,
+        "updated":       datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "groups":        groups,
+        "topScorers":    top_scorers,
+        "topAssists":    top_assists,
+        "matchResults":  match_results,
     }
 
     OUT_FILE.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"✓ standings.json actualizado — {len(groups)} grupos")
+    print(f"✓ standings.json actualizado — {len(groups)} grupos, {len(match_results)} resultados")
 
 
 if __name__ == "__main__":

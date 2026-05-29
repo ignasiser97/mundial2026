@@ -240,6 +240,18 @@ function renderApostar(el) {
   el.innerHTML = cards;
 }
 
+let _matchResults = null; // cache de standings.json matchResults
+
+async function getMatchResults() {
+  if (_matchResults) return _matchResults;
+  try {
+    const res = await fetch('./standings.json?t=' + Date.now());
+    const data = await res.json();
+    _matchResults = data.matchResults || {};
+  } catch { _matchResults = {}; }
+  return _matchResults;
+}
+
 async function toggleGroupBets(mid, btn) {
   const el = document.getElementById('gbets-' + mid);
   if (!el.classList.contains('hidden')) {
@@ -249,10 +261,11 @@ async function toggleGroupBets(mid, btn) {
   }
   btn.textContent = 'Cargando…';
 
-  const [{ data: bets }, { data: result }] = await Promise.all([
+  const [{ data: bets }, resultsMap] = await Promise.all([
     db.from('bets').select('home_score, away_score, user_id, users(name)').eq('match_id', mid),
-    db.from('results').select('*').eq('match_id', mid).maybeSingle(),
+    getMatchResults(),
   ]);
+  const result = resultsMap[mid] ? { home_score: resultsMap[mid].home, away_score: resultsMap[mid].away } : null;
 
   if (!bets?.length) {
     el.innerHTML = '<div class="group-bets-list"><p style="font-size:12px;color:var(--muted);text-align:center;padding:4px">Nadie ha apostado en este partido</p></div>';
@@ -322,9 +335,11 @@ async function renderMisApuestas(el) {
     return;
   }
 
-  const { data: results } = await db.from('results').select('*');
+  const raw = await getMatchResults();
   const resultMap = {};
-  (results || []).forEach(r => { resultMap[r.match_id] = r; });
+  Object.entries(raw).forEach(([id, r]) => {
+    resultMap[id] = { home_score: r.home, away_score: r.away };
+  });
 
   const lookup = {};
   MATCHES.forEach(m => { lookup[matchId(m)] = m; });
@@ -365,10 +380,10 @@ async function renderMisApuestas(el) {
 // ── Clasificación ──────────────────────────────────────────────
 
 async function renderClasificacion(el) {
-  const [{ data: users }, { data: bets }, { data: results }] = await Promise.all([
+  const [{ data: users }, { data: bets }, raw] = await Promise.all([
     db.from('users').select('id, name'),
     db.from('bets').select('user_id, match_id, home_score, away_score'),
-    db.from('results').select('*'),
+    getMatchResults(),
   ]);
 
   if (!users?.length) {
@@ -377,8 +392,10 @@ async function renderClasificacion(el) {
   }
 
   const resultMap = {};
-  (results || []).forEach(r => { resultMap[r.match_id] = r; });
-  const hasResults = (results || []).length > 0;
+  Object.entries(raw).forEach(([id, r]) => {
+    resultMap[id] = { home_score: r.home, away_score: r.away };
+  });
+  const hasResults = Object.keys(raw).length > 0;
 
   const stats = {};
   (users || []).forEach(u => { stats[u.id] = { id: u.id, name: u.name, apuestas: 0, exactos: 0, pts: 0 }; });
