@@ -1,19 +1,22 @@
 # TODO · Mundial 2026
 
 ## Completado
-- [x] Pestaña Noticias — RSS de Marca, AS y Mundo Deportivo con filtros por fuente
+- [x] Pestaña Noticias — RSS de Marca, AS y Mundo Deportivo
 - [x] Pestaña Quiniela Cachorros — apuesta por partido, mis apuestas, clasificación
-- [x] Auth estilo Tricount — contraseña de grupo + picker de nombre (sin registro individual)
+- [x] Auth estilo Tricount — contraseña de grupo + picker de nombre
 - [x] Puntuación automática: 3 pts exacto, 1 pt ganador correcto
-- [x] Ver apuestas del grupo una vez cerrado el partido
+- [x] Ver apuestas del grupo (en Apostar y en Mis apuestas)
 - [x] Resultados automáticos desde API-Football (standings.json → matchResults)
+- [x] Próximo partido en Quiniela cuando no hay partidos hoy
+- [x] Toast de confirmación al guardar apuesta
 - [x] Cierre de apuestas automático 5 min antes del pitido
 - [x] Pull-to-refresh en todas las pestañas
-- [x] Bracket visual en árbol con scroll horizontal (pestaña Grupos)
+- [x] Bracket visual en árbol con hint de scroll
+- [x] Bottom tab bar con iconos SVG + scroll horizontal
+- [x] Badge GitHub + footer con autoría y disclaimer compacto
 - [x] Separar index.html en módulos JS (js/)
 - [x] Service Worker: cacheo offline + banner de actualización
-- [x] Bottom tab bar con iconos SVG + scroll horizontal (estilo app nativa)
-- [x] Badge GitHub arriba derecha + footer con autoría, LinkedIn y disclaimer
+- [x] Auditoría: XSS noticias, timezone CET/CEST, null checks, límites de navegación
 
 ## Pendiente
 
@@ -27,7 +30,7 @@
 - [ ] Comparador de estadísticas entre jugadores
 
 ### Analytics
-- [ ] Cloudflare Web Analytics — tráfico de visitas solo visible para el owner (crear cuenta, obtener snippet y añadir a index.html)
+- [ ] Cloudflare Web Analytics — crear cuenta, obtener snippet y añadir a index.html
 
 ## Ideas a valorar
 - [ ] Predictor/simulador de grupos (quién pasa)
