@@ -41,6 +41,39 @@
   });
 })();
 
+// ── Service Worker ─────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then(reg => {
+    reg.addEventListener('updatefound', () => {
+      const newWorker = reg.installing;
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          showUpdateBanner(reg);
+        }
+      });
+    });
+  });
+
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!refreshing) { refreshing = true; window.location.reload(); }
+  });
+}
+
+function showUpdateBanner(reg) {
+  if (document.getElementById('update-banner')) return;
+  const el = document.createElement('div');
+  el.id = 'update-banner';
+  el.innerHTML = `<span>Nueva versión disponible</span><button onclick="applyUpdate()">Actualizar</button>`;
+  document.body.appendChild(el);
+  window._swReg = reg;
+}
+
+function applyUpdate() {
+  window._swReg?.waiting?.postMessage({ type: 'SKIP_WAITING' });
+  document.getElementById('update-banner')?.remove();
+}
+
 // ── Tabs ───────────────────────────────────────────────────────
 let grpLoaded=false, stsLoaded=false, nwsLoaded=false;
 
