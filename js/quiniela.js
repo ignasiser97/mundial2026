@@ -54,7 +54,7 @@ function spainToUTC(dateStr, timeStr) {
   // Calcular offset de Madrid en esa fecha usando un mediodía de referencia
   const refUTC   = Date.UTC(y, mo-1, d, 12);
   const refSpain = new Date(refUTC).toLocaleString('sv', { timeZone:'Europe/Madrid' });
-  const offsetH  = parseInt(refSpain.split('T')[1]) - 12; // +1 CET o +2 CEST
+  const offsetH  = parseInt(refSpain.slice(11, 13)) - 12; // +1 CET o +2 CEST
   return Date.UTC(y, mo-1, d, h - offsetH, mn);
 }
 
