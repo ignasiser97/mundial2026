@@ -1,15 +1,19 @@
+const MUNDIAL_START_MS = new Date('2026-06-11T19:00:00Z').getTime();
+
+let _homeInterval = null;
+
 function renderHome() {
   const el = document.getElementById('home-content');
   if (!el) return;
+  if (_homeInterval) { clearInterval(_homeInterval); _homeInterval = null; }
   tick();
-  setInterval(tick, 1000);
+  _homeInterval = setInterval(tick, 1000);
 
   function tick() {
-    const now    = Date.now();
-    const target = new Date('2026-06-11T19:00:00Z').getTime(); // 21:00 Madrid (CEST)
-    const diff   = target - now;
+    const diff = MUNDIAL_START_MS - Date.now();
 
     if (diff <= 0) {
+      clearInterval(_homeInterval); _homeInterval = null;
       el.innerHTML = `
         <div class="home-countdown">
           <div class="home-title">EL MUNDIAL HA COMENZADO</div>
@@ -18,10 +22,10 @@ function renderHome() {
       return;
     }
 
-    const d  = Math.floor(diff / 86400000);
-    const h  = Math.floor((diff % 86400000) / 3600000);
-    const m  = Math.floor((diff % 3600000)  / 60000);
-    const s  = Math.floor((diff % 60000)    / 1000);
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000)  / 60000);
+    const s = Math.floor((diff % 60000)    / 1000);
 
     el.innerHTML = `
       <div class="home-countdown">

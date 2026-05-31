@@ -19,27 +19,6 @@ const VENUE_LATLON = {
 
 let _leafletMap = null;
 
-function makeMarkerIcon(isFinal) {
-  const size = 22;
-  const ring = isFinal
-    ? `position:relative;display:inline-flex;align-items:center;justify-content:center;
-       width:${size + 8}px;height:${size + 8}px;
-       border-radius:50%;border:2px solid #e8c84a;
-       box-shadow:0 0 6px #e8c84a,0 0 12px rgba(232,200,74,.4);`
-    : '';
-  const html = isFinal
-    ? `<span style="${ring}"><span style="font-size:${size}px;line-height:1">⚽</span></span>`
-    : `<span style="font-size:${size}px;line-height:1;filter:drop-shadow(0 1px 3px rgba(0,0,0,.9))">⚽</span>`;
-  const s = isFinal ? size + 10 : size;
-  return L.divIcon({
-    html,
-    className: '',
-    iconSize:   [s, s],
-    iconAnchor: [s / 2, s / 2],
-    popupAnchor:[0, -s / 2 - 2],
-  });
-}
-
 // Sedes donde España juega en fase de grupos (flags === 1)
 const SPAIN_GROUP_VENUES = new Set(
   MATCHES.filter(m => m[6] === 1 && m[7] === 'groups').map(m => m[3].split(',')[0].trim())

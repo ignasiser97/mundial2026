@@ -20,6 +20,7 @@ let qnlTorneoSub  = 'apuesta';
 let qnlBets       = {};
 let qnlLoaded     = false;
 let qnlTorneoBet  = null;
+let qnlBetsDirty  = true;
 
 const SPAIN_ROUNDS = [
   'Fase de grupos', '1/32 de final', 'Octavos de final',
@@ -32,7 +33,7 @@ const ALL_TEAMS = [...new Set(
 )].sort((a, b) => a.localeCompare(b, 'es'));
 
 function isTorneoOpen() {
-  return Date.now() < new Date('2026-06-11T19:00:00Z').getTime();
+  return Date.now() < MUNDIAL_START_MS;
 }
 
 // ── Helpers ────────────────────────────────────────────────────
@@ -59,7 +60,7 @@ function spainToUTC(dateStr, timeStr) {
 }
 
 function isBetOpen(m) {
-  if (m[0] !== spainToday() && m[0] > '2026-06-11') return false;
+  if (Date.now() >= MUNDIAL_START_MS && m[0] !== spainToday()) return false;
   return Date.now() < spainToUTC(m[0], m[1]) - 5*60*1000;
 }
 
@@ -247,10 +248,11 @@ function qnlLogout() {
 }
 
 async function loadMyBets() {
-  if (!qnlUser) return;
+  if (!qnlUser || !qnlBetsDirty) return;
   const { data } = await db.from('bets').select('*').eq('user_id', qnlUser.id);
   qnlBets = {};
   (data || []).forEach(b => { qnlBets[b.match_id] = b; });
+  qnlBetsDirty = false;
 }
 
 // ── Render shell ───────────────────────────────────────────────
@@ -313,6 +315,11 @@ function renderPartidosMode(el) {
 }
 
 async function qnlSwitchSub(sub) {
+  if (qnlSubTab === 'apostar' && sub !== 'apostar') {
+    const hasUnsaved = [...document.querySelectorAll('.bet-score-input')]
+      .some(inp => inp.value !== '' && !inp.disabled);
+    if (hasUnsaved && !confirm('Tienes una apuesta sin guardar. ¿Salir igualmente?')) return;
+  }
   qnlSubTab = sub;
   document.querySelectorAll('.qnl-stab').forEach((b, i) =>
     b.classList.toggle('active', ['apostar','misapuestas','clasificacion'][i] === sub)
@@ -356,8 +363,11 @@ function teamOptions(selected = '') {
 }
 
 async function renderTorneoApuesta(el) {
-  const { data } = await db.from('tournament_bets').select('*').eq('user_id', qnlUser.id).maybeSingle();
-  qnlTorneoBet = data;
+  if (!qnlTorneoBet) {
+    const { data } = await db.from('tournament_bets').select('*').eq('user_id', qnlUser.id).maybeSingle();
+    qnlTorneoBet = data || false;
+  }
+  const data = qnlTorneoBet || null;
   const b = data || {};
   const open = isTorneoOpen();
 
@@ -439,6 +449,7 @@ async function saveTorneoBet() {
     { onConflict: 'user_id' }
   );
   if (error) { document.getElementById('torneo-err').textContent = 'Error al guardar.'; return; }
+  qnlTorneoBet = { winner, finalist, spain_round: spain, top_scorer: scorer, best_keeper: keeper, surprise };
   showToast('✓ Apuesta de torneo guardada');
   const el = document.getElementById('qnl-torneo-content');
   if (el) await renderTorneoApuesta(el);
@@ -701,12 +712,15 @@ async function submitBet(mid) {
     alert('Las apuestas para este partido ya están cerradas.');
     return;
   }
+  const btn = document.querySelector(`[onclick="submitBet('${mid}')"]`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Guardando…'; }
   const { error } = await db.from('bets').upsert(
     { user_id: qnlUser.id, match_id: mid, home_score, away_score },
     { onConflict: 'user_id,match_id' }
   );
   if (error) { alert('Error al guardar. Inténtalo de nuevo.'); return; }
   qnlBets[mid] = { match_id: mid, home_score, away_score };
+  qnlBetsDirty = true;
   showToast('✓ Apuesta guardada');
   const el = document.getElementById('qnl-subcontent');
   if (el) await renderApostar(el);

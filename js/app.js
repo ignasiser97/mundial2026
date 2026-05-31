@@ -33,8 +33,8 @@
     el.style.transform = `translateY(-${H}px)`;
     if (!triggered) return;
     const tab = document.querySelector('.tab-btn.active')?.dataset.tab;
-    if      (tab === 'grp') { grpLoaded=false; loadGroups(); }
-    else if (tab === 'sts') { stsLoaded=false; loadStats(); }
+    if      (tab === 'grp') { tabLoaded.grp=false; loadGroups(); }
+    else if (tab === 'sts') { tabLoaded.sts=false; loadStats(); }
     else if (tab === 'nws') { loadNews(true); }
     else if (tab === 'qnl') { qnlLoaded=false; loadQuiniela(); }
     else                    { renderCalendar(); }
@@ -75,27 +75,27 @@ function applyUpdate() {
 }
 
 // ── Tabs ───────────────────────────────────────────────────────
-let grpLoaded=false, stsLoaded=false, nwsLoaded=false, venLoaded=false;
+const tabLoaded = { grp: false, sts: false, nws: false, ven: false };
 
-function switchTab(tab){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
-  ['hom','cal','grp','sts','nws','qnl','ven'].forEach(t=>{
-    const el=document.getElementById(t+'-tab');
-    if(t===tab){
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  ['hom','cal','grp','sts','nws','qnl','ven'].forEach(t => {
+    const el = document.getElementById(t + '-tab');
+    if (t === tab) {
       el.classList.remove('hidden');
       el.classList.remove('tab-fade');
-      void el.offsetWidth; // reflow para reiniciar animación
+      void el.offsetWidth;
       el.classList.add('tab-fade');
     } else {
       el.classList.add('hidden');
     }
   });
-  if(tab==='grp' && !grpLoaded){ grpLoaded=true; loadGroups(); }
-  if(tab==='sts' && !stsLoaded){ stsLoaded=true; loadStats(); }
-  if(tab==='nws' && !nwsLoaded){ nwsLoaded=true; loadNews(); }
-  if(tab==='qnl'){ loadQuiniela(); }
-  if(tab==='ven' && !venLoaded){ venLoaded=true; renderVenues(); }
-  else if(tab==='ven'){ initVenueMap(); }
+  if (tab === 'grp' && !tabLoaded.grp) { tabLoaded.grp = true; loadGroups(); }
+  if (tab === 'sts' && !tabLoaded.sts) { tabLoaded.sts = true; loadStats(); }
+  if (tab === 'nws' && !tabLoaded.nws) { tabLoaded.nws = true; loadNews(); }
+  if (tab === 'qnl') { loadQuiniela(); }
+  if (tab === 'ven' && !tabLoaded.ven) { tabLoaded.ven = true; renderVenues(); }
+  else if (tab === 'ven') { initVenueMap(); }
 }
 
 // ── Filtro España ──────────────────────────────────────────────
@@ -106,13 +106,16 @@ function toggleSpainFilter() {
   document.getElementById('spain-chip').classList.toggle('active', fSpain);
   if (fSpain) {
     fTeam = 'España';
+    tsSelected = 'España';
     document.getElementById('ts-input').value = '';
     document.getElementById('ts-input').placeholder = '🔍 Todos los equipos';
     fDate = '';
     document.getElementById('cp-label').textContent = 'Todas las fechas';
     document.getElementById('cp-trigger').style.borderColor = '';
+    cpRender();
   } else {
     fTeam = '';
+    tsSelected = '';
   }
   renderCalendar();
 }
