@@ -2,8 +2,7 @@
 
 > PWA para seguir el Mundial de Fútbol 2026 — calendario, clasificaciones, quiniela y más, todo en español.
 
-[![Deploy](https://img.shields.io/github/actions/workflow/status/ignasiser97/mundial/deploy.yml?label=deploy&logo=github)](https://github.com/ignasiser97/mundial/actions)
-[![Live](https://img.shields.io/badge/ver%20app-mundial2026-gold?logo=googlechrome)](https://ignasiser97.github.io/mundial/)
+[![Live](https://img.shields.io/badge/ver%20app-mundial2026-gold?logo=googlechrome)](https://ignasiser97.github.io/mundial2026/)
 
 ---
 
@@ -36,15 +35,14 @@
 - Agregación de RSS de Marca, AS y Mundo Deportivo
 - Deduplicación y filtro por fuente
 
-### 🎯 Quiniela Cachorros
+### 🎯 Quiniela
 - Liga privada de predicciones por grupos con contraseña
 - Introduce el marcador de cada partido antes del pitido inicial
 - Puntuación: **3 pts** resultado exacto · **1 pt** resultado correcto · **0** fallo
-- Clasificación de grupo en tiempo real (Supabase)
+- Clasificación de grupo en tiempo real
 
 ### 🔔 Notificaciones Push
-- Notificaciones antes de los partidos de España (opt-in)
-- Envío automatizado vía GitHub Actions cada 5 minutos durante el torneo
+- Notificaciones incluidas
 
 ### 📲 PWA
 - Installable (añadir a pantalla de inicio)
