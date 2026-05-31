@@ -59,7 +59,6 @@ function spainToUTC(dateStr, timeStr) {
 }
 
 function isBetOpen(m) {
-  if (m[0] !== spainToday()) return false;
   return Date.now() < spainToUTC(m[0], m[1]) - 5*60*1000;
 }
 
@@ -502,86 +501,83 @@ async function renderQnlSubTab() {
 // ── Apostar ────────────────────────────────────────────────────
 
 function renderApostar(el) {
-  const today = todayMatchesCEST();
-  if (!today.length) {
-    const next = nextUpcomingMatch();
-    let nextHtml = '';
-    if (next) {
-      const parts = next[2].split('·')[0].split(' vs ');
-      const home = parts[0]?.trim() || '';
-      const away = parts[1]?.trim() || '';
-      nextHtml = `<div class="bet-card" style="margin-top:16px;border-color:rgba(232,200,74,.3)">
-        <div style="font-size:10px;color:var(--accent);font-family:'Bebas Neue',sans-serif;letter-spacing:1px;margin-bottom:8px">Próximo partido</div>
-        <div class="bet-match-name">${home} vs ${away}</div>
-        <div class="bet-meta">${fmtDate(next[0])} · ${next[1]}</div>
-      </div>`;
-    }
-    el.innerHTML = `<div class="empty">No hay partidos hoy.<br>Las apuestas abren el día del partido.</div>${nextHtml}`;
+  const today = spainToday();
+  const upcomingDates = [...new Set(
+    MATCHES.filter(m => m[0] >= today).map(m => m[0])
+  )].sort().slice(0, 3);
+
+  if (!upcomingDates.length) {
+    el.innerHTML = '<div class="empty">El torneo ha finalizado.</div>';
     return;
   }
 
-  const cards = today.map(m => {
-    const mid     = matchId(m);
-    const saved   = qnlBets[mid];
-    const open    = isBetOpen(m);
-    const started = isMatchStarted(m);
-    const parts   = m[2].split('·')[0].split(' vs ');
-    const home    = parts[0]?.trim() || '';
-    const away    = parts[1]?.trim() || '';
+  const sections = upcomingDates.map(date => {
+    const label = date === today ? `Hoy · ${fmtDate(date)}` : fmtDate(date);
+    const cards = MATCHES.filter(m => m[0] === date).map(m => {
+      const mid     = matchId(m);
+      const saved   = qnlBets[mid];
+      const open    = isBetOpen(m);
+      const started = isMatchStarted(m);
+      const parts   = m[2].split('·')[0].split(' vs ');
+      const home    = parts[0]?.trim() || '';
+      const away    = parts[1]?.trim() || '';
 
-    const verGrupoBtn = started
-      ? `<button class="bet-toggle-bets" onclick="toggleGroupBets('${mid}',this)">Ver grupo</button>`
-      : '';
+      const verGrupoBtn = started
+        ? `<button class="bet-toggle-bets" onclick="toggleGroupBets('${mid}',this)">Ver grupo</button>`
+        : '';
 
-    let body;
-    if (open) {
-      body = `
-        <div class="bet-score-row">
-          <span class="bet-team">${home}</span>
-          <input class="bet-score-input" type="number" min="0" max="20"
-                 id="h-${mid}" value="${saved?.home_score ?? ''}" placeholder="0">
-          <span class="bet-dash">-</span>
-          <input class="bet-score-input" type="number" min="0" max="20"
-                 id="a-${mid}" value="${saved?.away_score ?? ''}" placeholder="0">
-          <span class="bet-team">${away}</span>
-        </div>
-        <div class="bet-actions">
-          <button class="bet-submit" onclick="submitBet('${mid}')">${saved ? '✎ Actualizar' : '+ Apostar'}</button>
-        </div>
-        <div class="bet-lock-info">Cierra 5 min antes del pitido</div>`;
-    } else if (saved) {
-      body = `
-        <div class="bet-score-row">
-          <span class="bet-team">${home}</span>
-          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${saved.home_score}</span>
-          <span class="bet-dash">-</span>
-          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${saved.away_score}</span>
-          <span class="bet-team">${away}</span>
-        </div>
-        <div class="bet-actions"><span class="bet-saved">✓ Apuesta guardada</span>${verGrupoBtn}</div>
-        <div id="gbets-${mid}" class="hidden"></div>`;
-    } else {
-      body = `
-        <div class="bet-score-row" style="opacity:.45">
-          <span class="bet-team">${home}</span>
-          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--muted)">-</span>
-          <span class="bet-dash">-</span>
-          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--muted)">-</span>
-          <span class="bet-team">${away}</span>
-        </div>
-        <div class="bet-actions"><span class="bet-closed">${started ? 'Partido en juego' : 'Apuestas cerradas'}</span>${verGrupoBtn}</div>
-        <div id="gbets-${mid}" class="hidden"></div>`;
-    }
+      let body;
+      if (open) {
+        body = `
+          <div class="bet-score-row">
+            <span class="bet-team">${home}</span>
+            <input class="bet-score-input" type="number" min="0" max="20"
+                   id="h-${mid}" value="${saved?.home_score ?? ''}" placeholder="0">
+            <span class="bet-dash">-</span>
+            <input class="bet-score-input" type="number" min="0" max="20"
+                   id="a-${mid}" value="${saved?.away_score ?? ''}" placeholder="0">
+            <span class="bet-team">${away}</span>
+          </div>
+          <div class="bet-actions">
+            <button class="bet-submit" onclick="submitBet('${mid}')">${saved ? '✎ Actualizar' : '+ Apostar'}</button>
+          </div>
+          <div class="bet-lock-info">Cierra 5 min antes del pitido</div>`;
+      } else if (saved) {
+        body = `
+          <div class="bet-score-row">
+            <span class="bet-team">${home}</span>
+            <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${saved.home_score}</span>
+            <span class="bet-dash">-</span>
+            <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${saved.away_score}</span>
+            <span class="bet-team">${away}</span>
+          </div>
+          <div class="bet-actions"><span class="bet-saved">✓ Apuesta guardada</span>${verGrupoBtn}</div>
+          <div id="gbets-${mid}" class="hidden"></div>`;
+      } else {
+        body = `
+          <div class="bet-score-row" style="opacity:.45">
+            <span class="bet-team">${home}</span>
+            <span style="font-family:'Bebas Neue';font-size:28px;color:var(--muted)">-</span>
+            <span class="bet-dash">-</span>
+            <span style="font-family:'Bebas Neue';font-size:28px;color:var(--muted)">-</span>
+            <span class="bet-team">${away}</span>
+          </div>
+          <div class="bet-actions"><span class="bet-closed">${started ? 'Partido en juego' : 'Apuestas cerradas'}</span>${verGrupoBtn}</div>
+          <div id="gbets-${mid}" class="hidden"></div>`;
+      }
 
-    return `
-      <div class="bet-card">
-        <div class="bet-match-name">${home} vs ${away}</div>
-        <div class="bet-meta">${m[1]} · ${m[3].split(',').pop().trim()}</div>
-        ${body}
-      </div>`;
+      return `
+        <div class="bet-card">
+          <div class="bet-match-name">${home} vs ${away}</div>
+          <div class="bet-meta">${m[1]} · ${m[3].split(',').pop().trim()}</div>
+          ${body}
+        </div>`;
+    }).join('');
+
+    return `<div class="bet-day-label">${label}</div>${cards}`;
   }).join('');
 
-  el.innerHTML = cards;
+  el.innerHTML = sections;
 }
 
 let _matchResults = null; // cache de standings.json matchResults
