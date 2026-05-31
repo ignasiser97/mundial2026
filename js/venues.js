@@ -1,45 +1,45 @@
-// Coordenadas SVG derivadas de lat/lon reales (viewBox 340x230)
-// x = 15 + (125 - |lon|) * 5.5   y = 20 + (52 - lat) * 5.88
+// x = 18 + (125 - |lon|) * 5.8   y = 16 + (52 - lat) * 6.1
+// label: [dx, dy, anchor]  — offset respecto al punto
 const VENUE_COORDS = {
-  'BC Place':                 { x: 26,  y: 36  },
-  'BMO Field':                { x: 266, y: 69  },
-  'Lumen Field':              { x: 30,  y: 46  },
-  "Levi's Stadium":           { x: 32,  y: 105 },
-  'SoFi Stadium':             { x: 52,  y: 127 },
-  'Arrowhead Stadium':        { x: 182, y: 96  },
-  'AT&T Stadium':             { x: 170, y: 133 },
-  'NRG Stadium':              { x: 178, y: 151 },
-  'Mercedes-Benz Stadium':    { x: 238, y: 128 },
-  'Hard Rock Stadium':        { x: 261, y: 174 },
-  'Gillette Stadium':         { x: 310, y: 78  },
-  'Lincoln Financial Field':  { x: 289, y: 91  },
-  'MetLife Stadium':          { x: 295, y: 86  },
-  'Estadio Akron':            { x: 134, y: 204 },
-  'Estadio Azteca':           { x: 158, y: 212 },
-  'Estadio BBVA':             { x: 151, y: 175 },
+  'BC Place':                 { x: 20,  y: 34,  label:'Vancouver',      lx: 6,   ly:-2,  a:'start' },
+  'BMO Field':                { x: 268, y: 69,  label:'Toronto',        lx:-6,   ly:-5,  a:'end'   },
+  'Lumen Field':              { x: 24,  y: 48,  label:'Seattle',        lx: 6,   ly: 4,  a:'start' },
+  "Levi's Stadium":           { x: 22,  y: 107, label:'San Francisco',  lx: 6,   ly:-2,  a:'start' },
+  'SoFi Stadium':             { x: 40,  y: 124, label:'Los Ángeles',    lx: 6,   ly: 4,  a:'start' },
+  'Arrowhead Stadium':        { x: 182, y: 100, label:'Kansas City',    lx: 6,   ly:-2,  a:'start' },
+  'AT&T Stadium':             { x: 170, y: 128, label:'Dallas',         lx:-6,   ly:-4,  a:'end'   },
+  'NRG Stadium':              { x: 178, y: 146, label:'Houston',        lx: 6,   ly: 4,  a:'start' },
+  'Mercedes-Benz Stadium':    { x: 236, y: 124, label:'Atlanta',        lx: 6,   ly:-2,  a:'start' },
+  'Hard Rock Stadium':        { x: 252, y: 162, label:'Miami',          lx: 6,   ly: 4,  a:'start' },
+  'Gillette Stadium':         { x: 304, y: 76,  label:'Boston',         lx:-6,   ly:-4,  a:'end'   },
+  'Lincoln Financial Field':  { x: 288, y: 89,  label:'Filadelfia',     lx:-6,   ly: 4,  a:'end'   },
+  'MetLife Stadium':          { x: 294, y: 82,  label:'Nueva Jersey',   lx:-6,   ly:-4,  a:'end'   },
+  'Estadio Akron':            { x: 126, y: 196, label:'Guadalajara',    lx:-6,   ly:-3,  a:'end'   },
+  'Estadio Azteca':           { x: 148, y: 208, label:'Ciudad de México',lx: 6,  ly: 4,  a:'start' },
+  'Estadio BBVA':             { x: 156, y: 168, label:'Monterrey',      lx: 6,   ly:-2,  a:'start' },
 };
 
 function venueMap() {
-  const dots = VENUES.map(v => {
+  const items = VENUES.map(v => {
     const c = VENUE_COORDS[v.name];
     if (!c) return '';
-    const col = v.country === 'México' ? '#f97316' : v.country === 'Canadá' ? '#ef4444' : '#e8c84a';
-    return `<circle cx="${c.x}" cy="${c.y}" r="4" fill="${col}" stroke="#0a0e1a" stroke-width="1.2" opacity=".9"/>`;
+    const col  = v.country === 'México' ? '#f97316' : v.country === 'Canadá' ? '#ef4444' : '#e8c84a';
+    const dot  = `<circle cx="${c.x}" cy="${c.y}" r="3.5" fill="${col}" stroke="#0d1525" stroke-width="1"/>`;
+    const text = `<text x="${c.x + c.lx}" y="${c.y + c.ly}" text-anchor="${c.a}"
+      font-size="6.5" fill="${col}" font-family="'DM Sans',sans-serif" opacity=".85">${c.label}</text>`;
+    return dot + text;
   }).join('');
 
   return `
   <div class="venue-map-wrap">
     <svg viewBox="0 0 340 230" xmlns="http://www.w3.org/2000/svg" class="venue-map-svg">
       <rect width="340" height="230" fill="#0d1525" rx="8"/>
-      <!-- border US-Canada ~49N -->
-      <line x1="15" y1="38" x2="310" y2="38" stroke="#1e2d45" stroke-width="1" stroke-dasharray="4,3"/>
-      <!-- border US-Mexico rough -->
-      <line x1="52" y1="130" x2="175" y2="130" stroke="#1e2d45" stroke-width="1" stroke-dasharray="4,3"/>
-      <!-- country labels -->
-      <text x="155" y="28" text-anchor="middle" font-size="8" fill="#4a5a78" font-family="'Bebas Neue',sans-serif" letter-spacing="2">CANADÁ</text>
-      <text x="175" y="88" text-anchor="middle" font-size="8" fill="#4a5a78" font-family="'Bebas Neue',sans-serif" letter-spacing="2">EE.UU.</text>
-      <text x="148" y="160" text-anchor="middle" font-size="8" fill="#4a5a78" font-family="'Bebas Neue',sans-serif" letter-spacing="2">MÉXICO</text>
-      ${dots}
+      <line x1="15" y1="38"  x2="305" y2="38"  stroke="#1e2d45" stroke-width=".8" stroke-dasharray="4,3"/>
+      <line x1="40" y1="134" x2="168" y2="134" stroke="#1e2d45" stroke-width=".8" stroke-dasharray="4,3"/>
+      <text x="170" y="26"  text-anchor="middle" font-size="7.5" fill="#2e3f58" font-family="'Bebas Neue',sans-serif" letter-spacing="2">CANADÁ</text>
+      <text x="175" y="90"  text-anchor="middle" font-size="7.5" fill="#2e3f58" font-family="'Bebas Neue',sans-serif" letter-spacing="2">EE.UU.</text>
+      <text x="118" y="155" text-anchor="middle" font-size="7.5" fill="#2e3f58" font-family="'Bebas Neue',sans-serif" letter-spacing="2">MÉXICO</text>
+      ${items}
     </svg>
     <div class="venue-map-legend">
       <span><span class="vml-dot" style="background:#f97316"></span>México</span>
