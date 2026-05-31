@@ -1,4 +1,4 @@
-const VERSION = 'v25';
+const VERSION = 'v26';
 const CACHE   = 'mundial2026-' + VERSION;
 
 const CORE = [
@@ -16,6 +16,7 @@ const CORE = [
   './js/quiniela.js',
   './js/venues.js',
   './js/app.js',
+  './js/push.js',
 ];
 
 self.addEventListener('install', e => {
@@ -53,4 +54,28 @@ self.addEventListener('fetch', e => {
 // La página envía SKIP_WAITING cuando el usuario pulsa "Actualizar"
 self.addEventListener('message', e => {
   if (e.data?.type === 'SKIP_WAITING') self.skipWaiting();
+});
+
+self.addEventListener('push', e => {
+  const data = e.data?.json() ?? {};
+  e.waitUntil(
+    self.registration.showNotification(data.title ?? 'Mundial 2026', {
+      body:  data.body  ?? '',
+      icon:  './logo.png',
+      badge: './logo.png',
+      tag:   data.tag   ?? 'mundial',
+      data:  { url: data.url ?? './' },
+    })
+  );
+});
+
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+      const existing = list.find(c => c.url.includes(self.location.origin));
+      if (existing) return existing.focus();
+      return clients.openWindow(e.notification.data?.url ?? './');
+    })
+  );
 });

@@ -95,6 +95,7 @@ function switchTab(tab){
   if(tab==='nws' && !nwsLoaded){ nwsLoaded=true; loadNews(); }
   if(tab==='qnl'){ loadQuiniela(); }
   if(tab==='ven' && !venLoaded){ venLoaded=true; renderVenues(); }
+  else if(tab==='ven'){ initVenueMap(); }
 }
 
 // ── Filtro España ──────────────────────────────────────────────

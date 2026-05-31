@@ -1,52 +1,64 @@
-// x = 18 + (125 - |lon|) * 5.8   y = 16 + (52 - lat) * 6.1
-// label: [dx, dy, anchor]  — offset respecto al punto
-const VENUE_COORDS = {
-  'BC Place':                 { x: 20,  y: 34,  label:'Vancouver',      lx: 6,   ly:-2,  a:'start' },
-  'BMO Field':                { x: 268, y: 69,  label:'Toronto',        lx:-6,   ly:-5,  a:'end'   },
-  'Lumen Field':              { x: 24,  y: 48,  label:'Seattle',        lx: 6,   ly: 4,  a:'start' },
-  "Levi's Stadium":           { x: 22,  y: 107, label:'San Francisco',  lx: 6,   ly:-2,  a:'start' },
-  'SoFi Stadium':             { x: 40,  y: 124, label:'Los Ángeles',    lx: 6,   ly: 4,  a:'start' },
-  'Arrowhead Stadium':        { x: 182, y: 100, label:'Kansas City',    lx: 6,   ly:-2,  a:'start' },
-  'AT&T Stadium':             { x: 170, y: 128, label:'Dallas',         lx:-6,   ly:-4,  a:'end'   },
-  'NRG Stadium':              { x: 178, y: 146, label:'Houston',        lx: 6,   ly: 4,  a:'start' },
-  'Mercedes-Benz Stadium':    { x: 236, y: 124, label:'Atlanta',        lx: 6,   ly:-2,  a:'start' },
-  'Hard Rock Stadium':        { x: 252, y: 162, label:'Miami',          lx: 6,   ly: 4,  a:'start' },
-  'Gillette Stadium':         { x: 304, y: 76,  label:'Boston',         lx:-6,   ly:-4,  a:'end'   },
-  'Lincoln Financial Field':  { x: 288, y: 89,  label:'Filadelfia',     lx:-6,   ly: 4,  a:'end'   },
-  'MetLife Stadium':          { x: 294, y: 82,  label:'Nueva Jersey',   lx:-6,   ly:-4,  a:'end'   },
-  'Estadio Akron':            { x: 126, y: 196, label:'Guadalajara',    lx:-6,   ly:-3,  a:'end'   },
-  'Estadio Azteca':           { x: 148, y: 208, label:'Ciudad de México',lx: 6,  ly: 4,  a:'start' },
-  'Estadio BBVA':             { x: 156, y: 168, label:'Monterrey',      lx: 6,   ly:-2,  a:'start' },
+const VENUE_LATLON = {
+  'BC Place':                 [49.28, -123.11],
+  'BMO Field':                [43.63,  -79.42],
+  'Lumen Field':              [47.60, -122.33],
+  "Levi's Stadium":           [37.40, -121.97],
+  'SoFi Stadium':             [33.95, -118.34],
+  'Arrowhead Stadium':        [39.05,  -94.48],
+  'AT&T Stadium':             [32.75,  -97.09],
+  'NRG Stadium':              [29.69,  -95.41],
+  'Mercedes-Benz Stadium':    [33.76,  -84.40],
+  'Hard Rock Stadium':        [25.96,  -80.24],
+  'Gillette Stadium':         [42.09,  -71.26],
+  'Lincoln Financial Field':  [39.90,  -75.17],
+  'MetLife Stadium':          [40.81,  -74.07],
+  'Estadio Akron':            [20.69, -103.47],
+  'Estadio Azteca':           [19.30,  -99.15],
+  'Estadio BBVA':             [25.67, -100.31],
 };
 
-function venueMap() {
-  const items = VENUES.map(v => {
-    const c = VENUE_COORDS[v.name];
-    if (!c) return '';
-    const col  = v.country === 'México' ? '#f97316' : v.country === 'Canadá' ? '#ef4444' : '#e8c84a';
-    const dot  = `<circle cx="${c.x}" cy="${c.y}" r="3.5" fill="${col}" stroke="#0d1525" stroke-width="1"/>`;
-    const text = `<text x="${c.x + c.lx}" y="${c.y + c.ly}" text-anchor="${c.a}"
-      font-size="6.5" fill="${col}" font-family="'DM Sans',sans-serif" opacity=".85">${c.label}</text>`;
-    return dot + text;
-  }).join('');
+let _leafletMap = null;
 
-  return `
-  <div class="venue-map-wrap">
-    <svg viewBox="0 0 340 230" xmlns="http://www.w3.org/2000/svg" class="venue-map-svg">
-      <rect width="340" height="230" fill="#0d1525" rx="8"/>
-      <line x1="15" y1="38"  x2="305" y2="38"  stroke="#1e2d45" stroke-width=".8" stroke-dasharray="4,3"/>
-      <line x1="40" y1="134" x2="168" y2="134" stroke="#1e2d45" stroke-width=".8" stroke-dasharray="4,3"/>
-      <text x="170" y="26"  text-anchor="middle" font-size="7.5" fill="#2e3f58" font-family="'Bebas Neue',sans-serif" letter-spacing="2">CANADÁ</text>
-      <text x="175" y="90"  text-anchor="middle" font-size="7.5" fill="#2e3f58" font-family="'Bebas Neue',sans-serif" letter-spacing="2">EE.UU.</text>
-      <text x="118" y="155" text-anchor="middle" font-size="7.5" fill="#2e3f58" font-family="'Bebas Neue',sans-serif" letter-spacing="2">MÉXICO</text>
-      ${items}
-    </svg>
-    <div class="venue-map-legend">
-      <span><span class="vml-dot" style="background:#f97316"></span>México</span>
-      <span><span class="vml-dot" style="background:#ef4444"></span>Canadá</span>
-      <span><span class="vml-dot" style="background:#e8c84a"></span>EE.UU.</span>
-    </div>
-  </div>`;
+function makeMarkerIcon(emoji, size) {
+  return L.divIcon({
+    html: `<span style="font-size:${size}px;line-height:1;filter:drop-shadow(0 1px 3px rgba(0,0,0,.9))">${emoji}</span>`,
+    className: '',
+    iconSize:   [size, size],
+    iconAnchor: [size / 2, size / 2],
+    popupAnchor:[0, -size / 2 - 2],
+  });
+}
+
+function initVenueMap() {
+  if (_leafletMap) { _leafletMap.invalidateSize(); return; }
+  const el = document.getElementById('venue-map-container');
+  if (!el || typeof L === 'undefined') return;
+
+  _leafletMap = L.map('venue-map-container', {
+    center: [36, -95],
+    zoom: 3,
+    scrollWheelZoom: false,
+    zoomControl: true,
+  });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OSM</a> © <a href="https://carto.com/">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19,
+  }).addTo(_leafletMap);
+
+  VENUES.forEach(v => {
+    const ll = VENUE_LATLON[v.name];
+    if (!ll) return;
+    const isFinal = v.name === 'MetLife Stadium';
+    const icon    = makeMarkerIcon(isFinal ? '🏆' : '⚽', isFinal ? 26 : 20);
+    const finalBadge = isFinal
+      ? `<div style="color:#e8c84a;font-weight:700;font-size:11px;margin-bottom:4px">🏆 SEDE DE LA FINAL · 19 jul 2026</div>`
+      : '';
+    L.marker(ll, { icon })
+      .bindPopup(`${finalBadge}<strong>${v.name}</strong>${v.city}, ${v.flag} ${v.country}<br>${v.cap} espectadores · <span style="color:#e8c84a;font-weight:600">${v.matches} partidos</span>`)
+      .addTo(_leafletMap);
+  });
 }
 
 const VENUES = [
@@ -79,34 +91,70 @@ MATCHES.forEach(m => {
 });
 
 const MAX_CAP = 83000;
+let venSubTab = 'mapa';
+
+function venSwitchSub(sub) {
+  venSubTab = sub;
+  document.querySelectorAll('.ven-stab').forEach((b, i) =>
+    b.classList.toggle('active', ['mapa','espana'][i] === sub)
+  );
+  document.getElementById('ven-sub-mapa').classList.toggle('hidden', sub !== 'mapa');
+  document.getElementById('ven-sub-espana').classList.toggle('hidden', sub !== 'espana');
+  if (sub === 'mapa') initVenueMap();
+}
 
 function renderVenues() {
   const el = document.getElementById('venues-content');
   if (!el) return;
 
   const countries = ['México','Canadá','EE.UU.'];
-  let html = venueMap();
-
+  let sedesHtml = '<div id="venue-map-container"></div>';
   for (const country of countries) {
     const list = VENUES.filter(v => v.country === country);
-    html += `<div class="venues-country">
-      <div class="venues-country-title">${list[0].flag} ${country}</div>
-      <div class="venues-grid">`;
+    sedesHtml += `<div class="venues-country"><div class="venues-country-title">${list[0].flag} ${country}</div><div class="venues-grid">`;
     for (const v of list) {
       const pct = Math.round(parseInt(v.cap.replace('.','')) / MAX_CAP * 100);
-      html += `
+      const finalBadge = v.name === 'MetLife Stadium'
+        ? `<span class="venue-final-badge">🏆 Final</span>` : '';
+      sedesHtml += `
         <div class="venue-card">
-          <div class="venue-name">${v.name}</div>
+          <div class="venue-name">${v.name} ${finalBadge}</div>
           <div class="venue-city">${v.city}</div>
           <div class="venue-cap-bar"><div class="venue-cap-fill" style="width:${pct}%"></div></div>
-          <div class="venue-meta">
-            <span>${v.cap} esp.</span>
-            <span class="venue-matches">${v.matches} partidos</span>
-          </div>
+          <div class="venue-meta"><span>${v.cap} esp.</span><span class="venue-matches">${v.matches} partidos</span></div>
         </div>`;
     }
-    html += `</div></div>`;
+    sedesHtml += `</div></div>`;
   }
 
-  el.innerHTML = html;
+  el.innerHTML = `
+    <div class="ven-sub-espana-html" id="ven-sub-mapa">${sedesHtml}</div>
+    <div class="hidden" id="ven-sub-espana">${renderSpainMatches()}</div>`;
+
+  setTimeout(initVenueMap, 50);
+}
+
+function renderSpainMatches() {
+  const spainMatches = MATCHES.filter(m => m[6] === 1 || m[6] === 2);
+  const cards = spainMatches.map(m => {
+    const [date, time, label, venue,, ch, flags, phase] = m;
+    const isPossible = flags === 2;
+    const parts = label.split('·')[0].trim().split(' vs ');
+    const home = parts[0]?.trim() || '';
+    const away = parts[1]?.trim() || '';
+    const phaseName = PHASES[phase] || phase;
+    const badges = (ch.includes('d') ? '<span class="badge bd">DAZN</span>' : '') +
+                   (ch.includes('l') ? '<span class="badge bl">LA 1</span>' : '');
+    return `
+      <div class="venue-card${isPossible ? ' venue-card-possible' : ''}">
+        <div class="venue-name">🇪🇸 ${home} vs ${away}</div>
+        <div class="venue-city">${venue}</div>
+        <div class="venue-meta">
+          <span>${fmtDate(date)} · ${time}</span>
+          <span>${badges} ${isPossible ? '<span class="venue-possible">si clasifica</span>' : phaseName}</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  return `<div class="venues-wrap-inner"><div class="venues-grid">${cards}</div></div>`;
 }

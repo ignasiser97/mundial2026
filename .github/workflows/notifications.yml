@@ -1,0 +1,31 @@
+name: Push Notifications
+
+on:
+  schedule:
+    # Every 5 minutes during June and July (the tournament months)
+    - cron: '*/5 * * 6,7 *'
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: worker
+
+      - name: Send scheduled notifications
+        run: node send-notifications.js
+        working-directory: worker
+        env:
+          VAPID_PUBLIC_KEY:  ${{ secrets.VAPID_PUBLIC_KEY }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          VAPID_SUBJECT:     mailto:ignasiser97@gmail.com
+          SUPABASE_URL:      ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}

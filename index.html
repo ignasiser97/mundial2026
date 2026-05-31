@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mundial 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="logo.png">
 <meta name="theme-color" content="#0a0e1a">
@@ -492,10 +493,15 @@ html,body { overscroll-behavior-y: contain; }
 
 /* SEDES */
 .venues-wrap { max-width:700px; margin:0 auto; padding:14px 12px 24px; }
-.venue-map-wrap { margin-bottom:20px; }
-.venue-map-svg { width:100%; height:auto; border-radius:8px; display:block; }
-.venue-map-legend { display:flex; gap:14px; justify-content:center; margin-top:8px; font-size:11px; color:var(--muted); }
-.vml-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:4px; vertical-align:middle; }
+#venue-map-container { height:260px; border-radius:8px; overflow:hidden; margin-bottom:20px; border:1px solid var(--border); }
+/* Popup Leaflet — dark theme */
+.leaflet-popup-content-wrapper { background:var(--card); border:1px solid var(--border); border-radius:8px; color:var(--text); box-shadow:0 4px 20px rgba(0,0,0,.5); }
+.leaflet-popup-tip { background:var(--card); }
+.leaflet-popup-content { font-family:'DM Sans',sans-serif; font-size:12px; line-height:1.6; margin:10px 14px; }
+.leaflet-popup-content strong { font-size:13px; color:var(--accent); display:block; margin-bottom:2px; }
+.leaflet-popup-close-button { color:var(--muted) !important; }
+.leaflet-bar a { background:var(--card) !important; border-color:var(--border) !important; color:var(--text) !important; }
+.leaflet-bar a:hover { background:var(--surface) !important; }
 .venues-country { margin-bottom:24px; }
 .venues-country-title {
   font-family:'Bebas Neue',sans-serif; font-size:14px; letter-spacing:2px;
@@ -507,8 +513,28 @@ html,body { overscroll-behavior-y: contain; }
 .venue-city { font-size:12px; color:var(--muted); margin-bottom:6px; }
 .venue-cap-bar { height:3px; background:var(--border); border-radius:2px; margin-bottom:6px; overflow:hidden; }
 .venue-cap-fill { height:100%; background:var(--accent); border-radius:2px; opacity:.7; }
-.venue-meta { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); }
+.venue-meta { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); gap:6px; flex-wrap:wrap; }
 .venue-matches { color:var(--accent); font-weight:600; }
+.venue-final-badge { font-family:'Bebas Neue',sans-serif; font-size:10px; letter-spacing:1px; color:#000; background:var(--accent); padding:1px 6px; border-radius:3px; vertical-align:middle; }
+.venue-possible { color:var(--muted); font-style:italic; }
+.venue-card-possible { opacity:.65; border-style:dashed; }
+.venues-wrap-inner { padding:14px 12px 24px; }
+.ven-subtabs { display:flex; background:var(--surface); border-bottom:1px solid var(--border); }
+.ven-stab { flex:1; padding:10px 0; font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:1.5px; color:var(--muted); background:none; border:none; border-bottom:2px solid transparent; cursor:pointer; }
+.ven-stab.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+/* NOTIFICACIONES PUSH */
+#push-section { text-align:center; padding:0 20px 36px; max-width:700px; margin:0 auto; }
+.push-btn {
+  background:none; border:1px solid var(--accent); color:var(--accent);
+  border-radius:20px; padding:9px 22px;
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+  cursor:pointer; transition:all .15s; letter-spacing:.3px;
+}
+.push-btn:hover  { background:rgba(232,200,74,.1); }
+.push-btn:disabled { opacity:.4; cursor:not-allowed; }
+.push-hint   { font-size:11px; color:var(--muted); margin-top:6px; }
+.push-active { font-size:12px; color:var(--pos); font-weight:600; }
 
 /* GRUPOS DE QUINIELA */
 .qnl-groups-list { display:flex; flex-direction:column; gap:10px; margin-top:4px; }
@@ -580,6 +606,7 @@ html,body { overscroll-behavior-y: contain; }
 <!-- ══ INICIO ══ -->
 <div id="hom-tab">
   <div class="home-wrap" id="home-content"></div>
+  <div id="push-section"></div>
 </div>
 
 <!-- ══ CALENDARIO ══ -->
@@ -681,6 +708,10 @@ html,body { overscroll-behavior-y: contain; }
 
 <!-- ══ SEDES ══ -->
 <div id="ven-tab" class="hidden">
+  <div class="ven-subtabs">
+    <button class="ven-stab active" onclick="venSwitchSub('mapa')">Sedes</button>
+    <button class="ven-stab"        onclick="venSwitchSub('espana')">🇪🇸 España</button>
+  </div>
   <div class="venues-wrap" id="venues-content"></div>
 </div>
 
@@ -697,6 +728,7 @@ html,body { overscroll-behavior-y: contain; }
 
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "9b5194de54734f409ba32ac9f3f8d052"}'></script><!-- End Cloudflare Web Analytics -->
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "9b5194de54734f409ba32ac9f3f8d052"}'></script><!-- End Cloudflare Web Analytics -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/matches.js"></script>
 <script src="js/home.js"></script>
@@ -707,6 +739,7 @@ html,body { overscroll-behavior-y: contain; }
 <script src="js/quiniela.js"></script>
 <script src="js/venues.js"></script>
 <script src="js/app.js"></script>
+<script src="js/push.js"></script>
 
 </body>
 </html>
