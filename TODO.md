@@ -30,7 +30,7 @@
 - [x] Filtro rápido "Solo España" en el calendario — botón/chip visible para ver solo los partidos de España
 - [ ] Marcador en directo dentro del partido (score live durante el partido)
 - [ ] Resultados de partidos ya jugados (marcadores finales en el calendario)
-- [ ] Notificaciones push antes de cada partido de España
+- [ ] Notificaciones push — infraestructura lista (SW, push.js, GitHub Actions cron, tablas Supabase), pendiente depurar inyección VAPID key y activar botón (#push-section oculto por CSS)
 - [ ] Comparador de estadísticas entre jugadores
 
 ### Analytics
