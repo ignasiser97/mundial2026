@@ -489,7 +489,7 @@ async function renderQnlSubTab() {
   if (!el) return;
   if (qnlSubTab === 'apostar') {
     await loadMyBets();
-    renderApostar(el);
+    await renderApostar(el);
   } else if (qnlSubTab === 'misapuestas') {
     el.innerHTML = '<div class="empty">Cargando…</div>';
     await renderMisApuestas(el);
@@ -501,7 +501,7 @@ async function renderQnlSubTab() {
 
 // ── Apostar ────────────────────────────────────────────────────
 
-function renderApostar(el) {
+async function renderApostar(el) {
   const today = spainToday();
   const upcomingDates = [...new Set(
     MATCHES.filter(m => m[0] >= today).map(m => m[0])
@@ -511,6 +511,23 @@ function renderApostar(el) {
     el.innerHTML = '<div class="empty">El torneo ha finalizado.</div>';
     return;
   }
+
+  const displayedIds = upcomingDates
+    .flatMap(date => MATCHES.filter(m => m[0] === date))
+    .map(m => matchId(m));
+
+  const { data: groupBetsRaw } = await db
+    .from('bets')
+    .select('match_id, home_score, away_score, users(name)')
+    .in('match_id', displayedIds);
+
+  const groupBetsMap = {};
+  (groupBetsRaw || []).forEach(b => {
+    if (!groupBetsMap[b.match_id]) groupBetsMap[b.match_id] = [];
+    groupBetsMap[b.match_id].push(b);
+  });
+
+  const memberCount = qnlGroup?.members?.length || 0;
 
   const sections = upcomingDates.map(date => {
     const label = date === today ? `Hoy · ${fmtDate(date)}` : fmtDate(date);
@@ -522,6 +539,25 @@ function renderApostar(el) {
       const parts   = m[2].split('·')[0].split(' vs ');
       const home    = parts[0]?.trim() || '';
       const away    = parts[1]?.trim() || '';
+      const bets    = groupBetsMap[mid] || [];
+
+      const badge = `<span class="bet-count-badge">${bets.length}/${memberCount}</span>`;
+
+      let dropContent;
+      if (!bets.length) {
+        dropContent = `<div style="font-size:12px;color:var(--muted);text-align:center;padding:2px 0">Nadie ha apostado aún</div>`;
+      } else {
+        const rows = bets.map(b => {
+          const score = open
+            ? `<span class="bdrop-hidden">oculto</span>`
+            : `<span class="bdrop-score">${b.home_score} – ${b.away_score}</span>`;
+          return `<div class="bdrop-row"><span>${b.users.name}</span>${score}</div>`;
+        }).join('');
+        const note = open
+          ? `<div class="bdrop-note">Los marcadores se revelan al cerrar las apuestas</div>`
+          : '';
+        dropContent = rows + note;
+      }
 
       const verGrupoBtn = started
         ? `<button class="bet-toggle-bets" onclick="toggleGroupBets('${mid}',this)">Ver grupo</button>`
@@ -569,8 +605,12 @@ function renderApostar(el) {
 
       return `
         <div class="bet-card">
-          <div class="bet-match-name">${home} vs ${away}</div>
-          <div class="bet-meta">${m[1]} · ${m[3].split(',').pop().trim()}</div>
+          ${badge}
+          <div class="bet-card-header" onclick="toggleBetDropdown('${mid}')">
+            <div class="bet-match-name">${home} vs ${away}</div>
+            <div class="bet-meta">${m[1]} · ${m[3].split(',').pop().trim()}</div>
+          </div>
+          <div id="bdrop-${mid}" class="bet-dropdown hidden">${dropContent}</div>
           ${body}
         </div>`;
     }).join('');
@@ -579,6 +619,10 @@ function renderApostar(el) {
   }).join('');
 
   el.innerHTML = sections;
+}
+
+function toggleBetDropdown(mid) {
+  document.getElementById('bdrop-' + mid)?.classList.toggle('hidden');
 }
 
 let _matchResults = null; // cache de standings.json matchResults
@@ -665,7 +709,7 @@ async function submitBet(mid) {
   qnlBets[mid] = { match_id: mid, home_score, away_score };
   showToast('✓ Apuesta guardada');
   const el = document.getElementById('qnl-subcontent');
-  if (el) renderApostar(el);
+  if (el) await renderApostar(el);
 }
 
 // ── Mis apuestas ───────────────────────────────────────────────
