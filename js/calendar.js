@@ -177,15 +177,17 @@ function renderCalendar() {
       const [date,time,label,venue,,ch,flags,phase]=m;
       if(phase!==lastPhase){ html+=`<div class="phase-banner">${PHASES[phase]||phase}</div>`; lastPhase=phase; }
       const night=isNight(time);
-      const rowCls=['match-row',flags===1?'spain':flags===2?'spain-pos':''].filter(Boolean).join(' ');
+      const groupLetter = phase==='groups' ? (label.match(/Grupo ([A-L])/)?.[1] || null) : null;
+      const rowCls=['match-row',flags===1?'spain':flags===2?'spain-pos':'',groupLetter?'match-row-link':''].filter(Boolean).join(' ');
       const timeCls='time'+(night?' night':'');
       const spanFlag=flags===1?'🇪🇸 ':flags===2?'⭐ ':'';
       const badges=(ch.includes('d')?'<span class="badge bd">DAZN</span>':'')+(ch.includes('l')?'<span class="badge bl">LA 1</span>':'');
-      html+=`<div class="${rowCls}">
+      const onclick=groupLetter?` onclick="navigateToGroup('${groupLetter}')"`:' ';
+      html+=`<div class="${rowCls}"${onclick}>
         <div class="${timeCls}">${time}<small>ESP${night?' 🌙':''}</small></div>
         <div class="match-info">
           <div class="match-name">${spanFlag}${badges} ${label}</div>
-          <div class="match-meta">${venue}</div>
+          <div class="match-meta">${venue}${groupLetter?` · <span class="match-grp-link">Grupo ${groupLetter} →</span>`:''}</div>
         </div>
       </div>`;
     }

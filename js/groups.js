@@ -24,43 +24,118 @@ function grpSwitchSub(sub) {
 
 // ── Grupos ─────────────────────────────────────────────────────
 
+let grpActiveLetter = '';
+
 async function loadGroups() {
-  const el=document.getElementById('groups-content');
-  try{
-    const res=await fetch('./standings.json?t='+Date.now());
-    if(!res.ok) throw new Error(res.status);
-    const data=await res.json();
-    const upd=new Date(data.updated);
-    document.getElementById('last-updated').textContent=
-      'Actualizado: '+upd.toLocaleDateString('es-ES')+' '+
-      upd.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
-    let html='<div class="groups-grid">';
-    for(const [letter,teams] of Object.entries(data.groups)) html+=renderGroup(letter,teams);
-    html+='</div>';
-    el.innerHTML=html;
-  }catch(e){ el.innerHTML='<p class="empty">No se pudieron cargar las clasificaciones.</p>'; }
+  const el = document.getElementById('groups-content');
+  try {
+    const res  = await fetch('./standings.json?t=' + Date.now());
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    const upd  = new Date(data.updated);
+    document.getElementById('last-updated').textContent =
+      'Actualizado: ' + upd.toLocaleDateString('es-ES') + ' ' +
+      upd.toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
+
+    const letters = Object.keys(data.groups);
+    renderGroupChips(letters);
+
+    let html = '<div class="groups-grid">';
+    for (const [letter, teams] of Object.entries(data.groups)) html += renderGroup(letter, teams);
+    html += '</div>';
+    el.innerHTML = html;
+  } catch(e) {
+    el.innerHTML = '<p class="empty">No se pudieron cargar las clasificaciones.</p>';
+  }
+}
+
+function renderGroupChips(letters) {
+  const bar = document.getElementById('grp-filter-bar');
+  if (!bar) return;
+  const chips = ['<button class="grp-letter-chip active" data-letter="" onclick="grpFilterLetter(\'\')">Todos</button>',
+    ...letters.map(l =>
+      `<button class="grp-letter-chip" data-letter="${l}" onclick="grpFilterLetter('${l}')">${l}</button>`)
+  ].join('');
+  bar.innerHTML = chips +
+    `<input class="grp-team-input" id="grp-team-input" type="text"
+       placeholder="🔍 Buscar equipo" autocomplete="off"
+       oninput="grpTeamSearch(this.value)">`;
+  bar.classList.remove('hidden');
+}
+
+function grpFilterLetter(letter) {
+  grpActiveLetter = letter;
+  // limpiar búsqueda de equipo
+  const inp = document.getElementById('grp-team-input');
+  if (inp) inp.value = '';
+  document.querySelectorAll('.grp-letter-chip').forEach(c =>
+    c.classList.toggle('active', c.dataset.letter === letter)
+  );
+  document.querySelectorAll('#groups-content .group-card').forEach(card =>
+    card.classList.toggle('hidden', !!letter && card.id !== 'group-' + letter)
+  );
+  const grid = document.querySelector('#groups-content .groups-grid');
+  if (grid) grid.style.gridTemplateColumns = letter ? '1fr' : '';
+}
+
+function grpTeamSearch(val) {
+  const q = val.trim().toLowerCase();
+  // limpiar chips de letra
+  grpActiveLetter = '';
+  document.querySelectorAll('.grp-letter-chip').forEach(c => c.classList.remove('active'));
+
+  let visible = 0;
+  document.querySelectorAll('#groups-content .group-card').forEach(card => {
+    const match = !q || [...card.querySelectorAll('td.tnm')]
+      .some(td => td.textContent.toLowerCase().includes(q));
+    card.classList.toggle('hidden', !match);
+    if (match) visible++;
+  });
+  const grid = document.querySelector('#groups-content .groups-grid');
+  if (grid) grid.style.gridTemplateColumns = visible === 1 ? '1fr' : '';
 }
 
 function renderGroup(letter, teams) {
-  const rows=teams.map(t=>{
-    const dgVal=t.dg??0;
-    const dgCls=dgVal>0?'pos':dgVal<0?'neg':'';
-    const dg=dgVal>0?'+'+dgVal:dgVal;
-    const isSpain=t.team==='España';
-    return `<tr${isSpain?' class="spain-row"':''}>
+  const rows = teams.map(t => {
+    const dgVal = t.dg ?? 0;
+    const dgCls = dgVal > 0 ? 'pos' : dgVal < 0 ? 'neg' : '';
+    const dg    = dgVal > 0 ? '+' + dgVal : dgVal;
+    const isSpain = t.team === 'España';
+    return `<tr${isSpain ? ' class="spain-row"' : ''}>
       <td class="tnm">${t.flag||''} ${t.team}</td>
       <td>${t.pj}</td><td class="pts">${t.pts}</td>
       <td>${t.gf}</td><td>${t.gc}</td>
       <td class="${dgCls}">${dg}</td>
     </tr>`;
   }).join('');
-  return `<div class="group-card">
+  return `<div class="group-card" id="group-${letter}">
     <div class="group-title">Grupo ${letter}</div>
     <table class="standings-table">
       <thead><tr><th>Equipo</th><th>PJ</th><th>Pts</th><th>GF</th><th>GC</th><th>DG</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>
   </div>`;
+}
+
+// ── Navegación bracket → grupo ─────────────────────────────────
+
+function navigateToGroup(letter) {
+  switchTab('grp');
+  grpSwitchSub('grupos');
+  if (!grpLoaded) {
+    grpLoaded = true;
+    loadGroups().then(() => scrollToGroup(letter));
+  } else {
+    scrollToGroup(letter);
+  }
+}
+
+function scrollToGroup(letter) {
+  // limpiar filtro activo para que el grupo sea visible
+  grpFilterLetter('');
+  setTimeout(() => {
+    document.getElementById('group-' + letter)?.scrollIntoView({ behavior:'smooth', block:'center' });
+  }, 80);
 }
 
 // ── Bracket visual ─────────────────────────────────────────────
@@ -91,6 +166,13 @@ function buildPMap() {
   return map;
 }
 
+function bktNavLabel(text) {
+  const letter = text.match(/[A-L]$/)?.[0];
+  return letter
+    ? `<span class="bkt-nav-link" onclick="navigateToGroup('${letter}')">${text}</span>`
+    : text;
+}
+
 function bktCard(code, pmap, extra='') {
   const m = pmap[code];
   if (!m) return `<div class="bkt-m${extra}"><div class="bkt-team">-</div><div class="bkt-div"></div><div class="bkt-team">-</div></div>`;
@@ -98,8 +180,8 @@ function bktCard(code, pmap, extra='') {
   let home = '-', away = '-';
   if (isR32) {
     const parts = m[2].split('·')[0].trim().split(' vs ');
-    home = parts[0]?.trim() || '-';
-    away = parts[1]?.trim() || '-';
+    home = bktNavLabel(parts[0]?.trim() || '-');
+    away = bktNavLabel(parts[1]?.trim() || '-');
   }
   return `<div class="bkt-m${extra}">
     <div class="bkt-team">${home}</div>

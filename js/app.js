@@ -79,7 +79,17 @@ let grpLoaded=false, stsLoaded=false, nwsLoaded=false, venLoaded=false;
 
 function switchTab(tab){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
-  ['hom','cal','grp','sts','nws','qnl','ven'].forEach(t=>document.getElementById(t+'-tab').classList.toggle('hidden',t!==tab));
+  ['hom','cal','grp','sts','nws','qnl','ven'].forEach(t=>{
+    const el=document.getElementById(t+'-tab');
+    if(t===tab){
+      el.classList.remove('hidden');
+      el.classList.remove('tab-fade');
+      void el.offsetWidth; // reflow para reiniciar animación
+      el.classList.add('tab-fade');
+    } else {
+      el.classList.add('hidden');
+    }
+  });
   if(tab==='grp' && !grpLoaded){ grpLoaded=true; loadGroups(); }
   if(tab==='sts' && !stsLoaded){ stsLoaded=true; loadStats(); }
   if(tab==='nws' && !nwsLoaded){ nwsLoaded=true; loadNews(); }
