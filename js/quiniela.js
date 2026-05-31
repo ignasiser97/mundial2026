@@ -59,6 +59,7 @@ function spainToUTC(dateStr, timeStr) {
 }
 
 function isBetOpen(m) {
+  if (m[0] !== spainToday() && m[0] > '2026-06-11') return false;
   return Date.now() < spainToUTC(m[0], m[1]) - 5*60*1000;
 }
 
