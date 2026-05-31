@@ -60,7 +60,7 @@ function spainToUTC(dateStr, timeStr) {
 }
 
 function isBetOpen(m) {
-  if (Date.now() >= MUNDIAL_START_MS && m[0] !== spainToday()) return false;
+  if (m[0] !== spainToday()) return false;
   return Date.now() < spainToUTC(m[0], m[1]) - 5*60*1000;
 }
 
@@ -469,30 +469,35 @@ async function renderTorneoClasificacion(el) {
   const betByUser = {};
   bets.forEach(b => { betByUser[b.user_id] = b; });
 
+  const torneoStarted = Date.now() >= MUNDIAL_START_MS;
+
   const rows = (users || [])
     .filter(u => betByUser[u.id])
     .sort((a, b) => a.name.localeCompare(b.name))
     .map(u => {
-      const b   = betByUser[u.id];
+      const b    = betByUser[u.id];
       const isMe = u.id === qnlUser?.id;
+      const details = (torneoStarted || isMe)
+        ? `<div class="torneo-lb-grid">
+            <span class="torneo-lb-item"><span class="torneo-lb-cat">🏆 Campeón</span>${b.winner||'—'}</span>
+            <span class="torneo-lb-item"><span class="torneo-lb-cat">🥈 Finalista</span>${b.finalist||'—'}</span>
+            <span class="torneo-lb-item"><span class="torneo-lb-cat">🇪🇸 España</span>${b.spain_round||'—'}</span>
+            <span class="torneo-lb-item"><span class="torneo-lb-cat">👟 Goleador</span>${b.top_scorer||'—'}</span>
+            <span class="torneo-lb-item"><span class="torneo-lb-cat">🧤 Portero</span>${b.best_keeper||'—'}</span>
+            <span class="torneo-lb-item"><span class="torneo-lb-cat">⭐ Sorpresa</span>${b.surprise||'—'}</span>
+          </div>`
+        : `<div style="font-size:11px;color:var(--muted);margin-top:4px">Apuesta enviada · Se revela al inicio del torneo</div>`;
       return `<div class="torneo-lb-row${isMe ? ' me' : ''}">
         <div class="torneo-lb-name">${u.name}${isMe ? ' 👈' : ''}</div>
-        <div class="torneo-lb-grid">
-          <span class="torneo-lb-item"><span class="torneo-lb-cat">🏆 Campeón</span>${b.winner||'—'}</span>
-          <span class="torneo-lb-item"><span class="torneo-lb-cat">🥈 Finalista</span>${b.finalist||'—'}</span>
-          <span class="torneo-lb-item"><span class="torneo-lb-cat">🇪🇸 España</span>${b.spain_round||'—'}</span>
-          <span class="torneo-lb-item"><span class="torneo-lb-cat">👟 Goleador</span>${b.top_scorer||'—'}</span>
-          <span class="torneo-lb-item"><span class="torneo-lb-cat">🧤 Portero</span>${b.best_keeper||'—'}</span>
-          <span class="torneo-lb-item"><span class="torneo-lb-cat">⭐ Sorpresa</span>${b.surprise||'—'}</span>
-        </div>
+        ${details}
       </div>`;
     }).join('');
 
-  el.innerHTML = `
-    <p style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center">
-      Los puntos se activarán al finalizar el torneo.
-    </p>
-    <div class="torneo-lb">${rows}</div>`;
+  const note = torneoStarted
+    ? `<p style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center">Los puntos se activarán al finalizar el torneo.</p>`
+    : `<p style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center">Las predicciones se revelan cuando empiece el primer partido.</p>`;
+
+  el.innerHTML = `${note}<div class="torneo-lb">${rows}</div>`;
 }
 
 async function renderQnlSubTab() {
@@ -559,13 +564,13 @@ async function renderApostar(el) {
         dropContent = `<div style="font-size:12px;color:var(--muted);text-align:center;padding:2px 0">Nadie ha apostado aún</div>`;
       } else {
         const rows = bets.map(b => {
-          const score = open
-            ? `<span class="bdrop-hidden">oculto</span>`
-            : `<span class="bdrop-score">${b.home_score} – ${b.away_score}</span>`;
+          const score = started
+            ? `<span class="bdrop-score">${b.home_score} – ${b.away_score}</span>`
+            : `<span class="bdrop-hidden">oculto</span>`;
           return `<div class="bdrop-row"><span>${b.users.name}</span>${score}</div>`;
         }).join('');
-        const note = open
-          ? `<div class="bdrop-note">Los marcadores se revelan al cerrar las apuestas</div>`
+        const note = !started
+          ? `<div class="bdrop-note">Los marcadores se revelan al inicio del partido</div>`
           : '';
         dropContent = rows + note;
       }
@@ -655,7 +660,10 @@ async function toggleGroupBets(mid, btn) {
     btn.textContent = 'Ver grupo';
     return;
   }
+
   btn.textContent = 'Cargando…';
+  const matchObj = MATCHES.find(m => matchId(m) === mid);
+  const betOpen  = matchObj ? isBetOpen(matchObj) : false;
 
   const [{ data: bets }, resultsMap] = await Promise.all([
     db.from('bets').select('home_score, away_score, user_id, users(name)').eq('match_id', mid),
@@ -677,17 +685,21 @@ async function toggleGroupBets(mid, btn) {
     : '';
 
   const rows = bets
-    .sort((a,b) => {
+    .sort((a, b) => {
       const pA = calcPoints(a, result) ?? -1;
       const pB = calcPoints(b, result) ?? -1;
       return pB - pA;
     })
     .map(b => {
-      const isMe = b.user_id === qnlUser?.id;
-      const pts  = calcPoints(b, result);
+      const isMe  = b.user_id === qnlUser?.id;
+      const pts   = calcPoints(b, result);
+      // Ocultar marcadores mientras las apuestas siguen abiertas, excepto la propia apuesta
+      const score = (!betOpen || isMe)
+        ? `${b.home_score} – ${b.away_score}`
+        : `<span style="color:var(--muted)">? – ?</span>`;
       return `<div class="group-bet-row">
         <span class="gb-name">${b.users.name}${isMe ? ' 👈' : ''}</span>
-        <span class="gb-score">${b.home_score} – ${b.away_score}</span>
+        <span class="gb-score">${score}</span>
         ${pts !== null ? ptsLabel(pts) : ''}
       </div>`;
     }).join('');
@@ -729,6 +741,8 @@ async function submitBet(mid) {
 // ── Mis apuestas ───────────────────────────────────────────────
 
 async function renderMisApuestas(el) {
+  qnlBetsDirty = true;
+  await loadMyBets();
   const myBets = Object.values(qnlBets);
   if (!myBets.length) {
     el.innerHTML = '<div class="empty">Todavía no has hecho ninguna apuesta.</div>';
