@@ -60,7 +60,9 @@ function spainToUTC(dateStr, timeStr) {
 }
 
 function isBetOpen(m) {
-  if (m[0] !== spainToday()) return false;
+  // El primer partido (11 jun) se puede apostar desde cualquier día antes del pitido
+  // El resto solo se puede apostar el mismo día del partido
+  if (m[0] !== spainToday() && m[0] > '2026-06-11') return false;
   return Date.now() < spainToUTC(m[0], m[1]) - 5*60*1000;
 }
 
@@ -317,7 +319,7 @@ function renderPartidosMode(el) {
 async function qnlSwitchSub(sub) {
   if (qnlSubTab === 'apostar' && sub !== 'apostar') {
     const hasUnsaved = [...document.querySelectorAll('.bet-score-input')]
-      .some(inp => inp.value !== '' && !inp.disabled);
+      .some(inp => inp.value !== '' && !inp.disabled && !inp.closest('.hidden'));
     if (hasUnsaved && !confirm('Tienes una apuesta sin guardar. ¿Salir igualmente?')) return;
   }
   qnlSubTab = sub;
@@ -580,19 +582,52 @@ async function renderApostar(el) {
         : '';
 
       let body;
-      if (open) {
+      if (open && saved) {
+        // Apuesta guardada + plazo abierto: lectura por defecto, edición al pulsar
+        body = `
+          <div id="ro-${mid}">
+            <div class="bet-score-row">
+              <span class="bet-team">${home}</span>
+              <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${saved.home_score}</span>
+              <span class="bet-dash">-</span>
+              <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${saved.away_score}</span>
+              <span class="bet-team">${away}</span>
+            </div>
+            <div class="bet-actions">
+              <span class="bet-saved">✓ Apuesta guardada</span>
+              <button class="bet-toggle-bets" onclick="enableBetEdit('${mid}')">✎ Editar</button>
+            </div>
+          </div>
+          <div id="ed-${mid}" class="hidden">
+            <div class="bet-score-row">
+              <span class="bet-team">${home}</span>
+              <input class="bet-score-input" type="number" min="0" max="20"
+                     id="h-${mid}" value="${saved.home_score}" placeholder="0">
+              <span class="bet-dash">-</span>
+              <input class="bet-score-input" type="number" min="0" max="20"
+                     id="a-${mid}" value="${saved.away_score}" placeholder="0">
+              <span class="bet-team">${away}</span>
+            </div>
+            <div class="bet-actions">
+              <button class="bet-submit" onclick="submitBet('${mid}')">✓ Guardar</button>
+              <button class="bet-toggle-bets" onclick="cancelBetEdit('${mid}')">✕ Cancelar</button>
+            </div>
+            <div class="bet-lock-info">Cierra 5 min antes del pitido</div>
+          </div>`;
+      } else if (open) {
+        // Sin apuesta previa: inputs directamente
         body = `
           <div class="bet-score-row">
             <span class="bet-team">${home}</span>
             <input class="bet-score-input" type="number" min="0" max="20"
-                   id="h-${mid}" value="${saved?.home_score ?? ''}" placeholder="0">
+                   id="h-${mid}" value="" placeholder="0">
             <span class="bet-dash">-</span>
             <input class="bet-score-input" type="number" min="0" max="20"
-                   id="a-${mid}" value="${saved?.away_score ?? ''}" placeholder="0">
+                   id="a-${mid}" value="" placeholder="0">
             <span class="bet-team">${away}</span>
           </div>
           <div class="bet-actions">
-            <button class="bet-submit" onclick="submitBet('${mid}')">${saved ? '✎ Actualizar' : '+ Apostar'}</button>
+            <button class="bet-submit" onclick="submitBet('${mid}')">+ Apostar</button>
           </div>
           <div class="bet-lock-info">Cierra 5 min antes del pitido</div>`;
       } else if (saved) {
@@ -709,6 +744,16 @@ async function toggleGroupBets(mid, btn) {
   btn.textContent = 'Ocultar';
 }
 
+function enableBetEdit(mid) {
+  document.getElementById('ro-' + mid)?.classList.add('hidden');
+  document.getElementById('ed-' + mid)?.classList.remove('hidden');
+}
+
+function cancelBetEdit(mid) {
+  document.getElementById('ro-' + mid)?.classList.remove('hidden');
+  document.getElementById('ed-' + mid)?.classList.add('hidden');
+}
+
 async function submitBet(mid) {
   const hEl = document.getElementById('h-' + mid);
   const aEl = document.getElementById('a-' + mid);
@@ -758,14 +803,67 @@ async function renderMisApuestas(el) {
   const lookup = {};
   MATCHES.forEach(m => { lookup[matchId(m)] = m; });
 
-  const cards = myBets.map(b => {
+  const hot = [], past = [];
+  myBets.forEach(b => {
     const m = lookup[b.match_id];
-    if (!m) return '';
-    const parts = m[2].split('·')[0].split(' vs ');
-    const home = parts[0]?.trim() || '';
-    const away = parts[1]?.trim() || '';
-    const result = resultMap[b.match_id];
-    const pts = calcPoints(b, result);
+    if (!m) return;
+    (isMatchStarted(m) ? past : hot).push(b);
+  });
+  hot.sort((a, b) => {
+    const ma = lookup[a.match_id], mb = lookup[b.match_id];
+    return (ma[0] + ma[1]).localeCompare(mb[0] + mb[1]);
+  });
+  past.sort((a, b) => {
+    const ma = lookup[a.match_id], mb = lookup[b.match_id];
+    return (mb[0] + mb[1]).localeCompare(ma[0] + ma[1]);
+  });
+
+  const hotCards = hot.map(b => {
+    const m    = lookup[b.match_id];
+    const mid  = b.match_id;
+    const open = isBetOpen(m);
+    const [home, away] = m[2].split('·')[0].split(' vs ').map(s => s.trim());
+    const hasBet = b.home_score !== undefined && b.home_score !== null;
+
+    // Primera vez sin apuesta y ventana abierta → formulario
+    const body = (!hasBet && open) ? `
+        <div class="bet-score-row" style="margin-top:10px">
+          <span class="bet-team">${home}</span>
+          <input class="bet-score-input" type="number" min="0" max="20"
+                 id="h-${mid}" value="" placeholder="0">
+          <span class="bet-dash">-</span>
+          <input class="bet-score-input" type="number" min="0" max="20"
+                 id="a-${mid}" value="" placeholder="0">
+          <span class="bet-team">${away}</span>
+        </div>
+        <div class="bet-actions">
+          <button class="bet-submit" onclick="submitBet('${mid}')">+ Apostar</button>
+        </div>
+        <div class="bet-lock-info">Cierra 5 min antes del pitido</div>` : `
+        <div class="bet-score-row" style="margin-top:10px">
+          <span class="bet-team">${home}</span>
+          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${b.home_score ?? '–'}</span>
+          <span class="bet-dash">-</span>
+          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${b.away_score ?? '–'}</span>
+          <span class="bet-team">${away}</span>
+        </div>
+        <div class="bet-actions">
+          ${hasBet ? '<span class="bet-saved">✓ Apuesta guardada</span>' : `<span class="bet-closed">Apuestas cerradas</span>`}
+        </div>`;
+    return `
+      <div class="bet-card" style="border-color:rgba(232,200,74,.35)">
+        <div class="bet-match-name">${home} vs ${away}</div>
+        <div class="bet-meta">${fmtDate(m[0])} · ${m[1]}</div>
+        ${body}
+      </div>`;
+  }).join('');
+
+  const pastCards = past.map(b => {
+    const m       = lookup[b.match_id];
+    const [home, away] = m[2].split('·')[0].split(' vs ').map(s => s.trim());
+    const result  = resultMap[b.match_id];
+    const pts     = calcPoints(b, result);
+    const started = isMatchStarted(m);
 
     const resultSection = result ? `
       <div class="bet-result-row">
@@ -773,7 +871,6 @@ async function renderMisApuestas(el) {
         ${ptsLabel(pts)}
       </div>` : '';
 
-    const started = isMatchStarted(m);
     const verGrupo = started ? `
       <div class="bet-actions" style="margin-top:10px">
         <button class="bet-toggle-bets" onclick="toggleGroupBets('${b.match_id}',this)">Ver apuestas del grupo</button>
@@ -783,7 +880,7 @@ async function renderMisApuestas(el) {
     return `
       <div class="bet-card">
         <div class="bet-match-name">${home} vs ${away}</div>
-        <div class="bet-meta">${m[0]} · ${m[1]}</div>
+        <div class="bet-meta">${fmtDate(m[0])} · ${m[1]}</div>
         <div class="bet-score-row" style="margin-top:10px">
           <span class="bet-team">${home}</span>
           <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${b.home_score}</span>
@@ -793,9 +890,14 @@ async function renderMisApuestas(el) {
         </div>
         ${resultSection}${verGrupo}
       </div>`;
-  }).filter(Boolean).join('');
+  }).join('');
 
-  el.innerHTML = cards || '<div class="empty">No se encontraron apuestas.</div>';
+  let html = '';
+  if (hot.length) html += `<div class="mis-section-title">🔥 Apuestas calientes</div>${hotCards}`;
+  html += `<div class="mis-section-title"${hot.length ? ' style="margin-top:20px"' : ''}>📋 Apuestas pasadas</div>`;
+  html += pastCards || '<div class="empty" style="margin-bottom:12px">Aún no tienes apuestas pasadas.</div>';
+
+  el.innerHTML = html;
 }
 
 // ── Clasificación ──────────────────────────────────────────────
