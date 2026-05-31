@@ -12,11 +12,28 @@ const GROUPS = [
   },
 ];
 
-let qnlUser    = null;
-let qnlGroup   = null;
-let qnlSubTab  = 'apostar';
-let qnlBets    = {};
-let qnlLoaded  = false;
+let qnlUser       = null;
+let qnlGroup      = null;
+let qnlMode       = 'home';   // 'home' | 'partidos' | 'torneo'
+let qnlSubTab     = 'apostar';
+let qnlTorneoSub  = 'apuesta';
+let qnlBets       = {};
+let qnlLoaded     = false;
+let qnlTorneoBet  = null;
+
+const SPAIN_ROUNDS = [
+  'Fase de grupos', '1/32 de final', 'Octavos de final',
+  'Cuartos de final', 'Semifinal', 'Finalista', 'Campeón 🏆',
+];
+
+const ALL_TEAMS = [...new Set(
+  MATCHES.filter(m => m[7] === 'groups')
+    .flatMap(m => m[2].split('·')[0].trim().split(' vs ').map(t => t.trim()))
+)].sort((a, b) => a.localeCompare(b, 'es'));
+
+function isTorneoOpen() {
+  return Date.now() < new Date('2026-06-11T19:00:00Z').getTime();
+}
 
 // ── Helpers ────────────────────────────────────────────────────
 
@@ -246,10 +263,50 @@ function renderQnlContainer() {
       <span class="qnl-user">Hola, ${qnlUser.name} 👋</span>
       <button class="qnl-logout" onclick="qnlLogout()">Cambiar usuario</button>
     </div>
+    <div id="qnl-mode-content"></div>`;
+  renderQnlModeContent();
+}
+
+function renderQnlModeContent() {
+  const el = document.getElementById('qnl-mode-content');
+  if (!el) return;
+  if (qnlMode === 'home')     renderQnlHome(el);
+  else if (qnlMode === 'partidos') renderPartidosMode(el);
+  else if (qnlMode === 'torneo')   renderTorneoMode(el);
+}
+
+function switchQnlMode(mode) {
+  qnlMode = mode;
+  renderQnlModeContent();
+}
+
+// ── Home: dos botones grandes ──────────────────────────────────
+
+function renderQnlHome(el) {
+  el.innerHTML = `
+    <div class="qnl-mode-grid">
+      <button class="qnl-mode-card" onclick="switchQnlMode('partidos')">
+        <div class="qnl-mode-icon">⚽</div>
+        <div class="qnl-mode-title">Partidos</div>
+        <div class="qnl-mode-desc">Apuesta el resultado de cada partido día a día</div>
+      </button>
+      <button class="qnl-mode-card" onclick="switchQnlMode('torneo')">
+        <div class="qnl-mode-icon">🏆</div>
+        <div class="qnl-mode-title">Torneo</div>
+        <div class="qnl-mode-desc">Predice el campeón, goleador, sorpresa y más</div>
+      </button>
+    </div>`;
+}
+
+// ── Modo Partidos ──────────────────────────────────────────────
+
+function renderPartidosMode(el) {
+  el.innerHTML = `
+    <button class="qnl-back" onclick="switchQnlMode('home')">← Inicio</button>
     <div class="qnl-subtabs">
-      <button class="qnl-stab ${qnlSubTab==='apostar'?'active':''}"        onclick="qnlSwitchSub('apostar')">Apostar</button>
-      <button class="qnl-stab ${qnlSubTab==='misapuestas'?'active':''}"    onclick="qnlSwitchSub('misapuestas')">Mis apuestas</button>
-      <button class="qnl-stab ${qnlSubTab==='clasificacion'?'active':''}"  onclick="qnlSwitchSub('clasificacion')">Clasificación</button>
+      <button class="qnl-stab ${qnlSubTab==='apostar'?'active':''}"       onclick="qnlSwitchSub('apostar')">Apostar</button>
+      <button class="qnl-stab ${qnlSubTab==='misapuestas'?'active':''}"   onclick="qnlSwitchSub('misapuestas')">Mis apuestas</button>
+      <button class="qnl-stab ${qnlSubTab==='clasificacion'?'active':''}" onclick="qnlSwitchSub('clasificacion')">Clasificación</button>
     </div>
     <div id="qnl-subcontent"></div>`;
   renderQnlSubTab();
@@ -257,10 +314,174 @@ function renderQnlContainer() {
 
 async function qnlSwitchSub(sub) {
   qnlSubTab = sub;
-  document.querySelectorAll('.qnl-stab').forEach((b,i) =>
+  document.querySelectorAll('.qnl-stab').forEach((b, i) =>
     b.classList.toggle('active', ['apostar','misapuestas','clasificacion'][i] === sub)
   );
   renderQnlSubTab();
+}
+
+// ── Modo Torneo ────────────────────────────────────────────────
+
+function renderTorneoMode(el) {
+  el.innerHTML = `
+    <button class="qnl-back" onclick="switchQnlMode('home')">← Inicio</button>
+    <div class="qnl-subtabs">
+      <button class="qnl-stab ${qnlTorneoSub==='apuesta'?'active':''}"        onclick="qnlTorneoSwitchSub('apuesta')">Mi apuesta</button>
+      <button class="qnl-stab ${qnlTorneoSub==='clasificacion'?'active':''}"  onclick="qnlTorneoSwitchSub('clasificacion')">Clasificación</button>
+    </div>
+    <div id="qnl-torneo-content"><div class="empty">Cargando…</div></div>`;
+  renderTorneoSubTab();
+}
+
+async function qnlTorneoSwitchSub(sub) {
+  qnlTorneoSub = sub;
+  document.querySelectorAll('.qnl-stab').forEach((b, i) =>
+    b.classList.toggle('active', ['apuesta','clasificacion'][i] === sub)
+  );
+  renderTorneoSubTab();
+}
+
+async function renderTorneoSubTab() {
+  const el = document.getElementById('qnl-torneo-content');
+  if (!el) return;
+  el.innerHTML = '<div class="empty">Cargando…</div>';
+  if (qnlTorneoSub === 'apuesta')       await renderTorneoApuesta(el);
+  else if (qnlTorneoSub === 'clasificacion') await renderTorneoClasificacion(el);
+}
+
+function teamOptions(selected = '') {
+  return ALL_TEAMS.map(t =>
+    `<option value="${t}"${t === selected ? ' selected' : ''}>${t}</option>`
+  ).join('');
+}
+
+async function renderTorneoApuesta(el) {
+  const { data } = await db.from('tournament_bets').select('*').eq('user_id', qnlUser.id).maybeSingle();
+  qnlTorneoBet = data;
+  const b = data || {};
+  const open = isTorneoOpen();
+
+  const roundOpts = SPAIN_ROUNDS.map(r =>
+    `<option value="${r}"${r === b.spain_round ? ' selected' : ''}>${r}</option>`
+  ).join('');
+
+  const savedMsg = data
+    ? `<div class="torneo-saved-msg">✓ Apuesta guardada${!open ? ' · Cerrada' : ''}</div>` : '';
+
+  el.innerHTML = `
+    ${savedMsg}
+    <div class="torneo-form">
+      <div class="torneo-field">
+        <label class="torneo-label">🏆 Campeón <span class="torneo-pts">5 pts</span></label>
+        <select class="qnl-input" id="tb-winner" ${!open?'disabled':''}>
+          <option value="">-- Elige un equipo --</option>${teamOptions(b.winner)}
+        </select>
+      </div>
+      <div class="torneo-field">
+        <label class="torneo-label">🥈 Finalista <span class="torneo-pts">3 pts</span></label>
+        <select class="qnl-input" id="tb-finalist" ${!open?'disabled':''}>
+          <option value="">-- Elige un equipo --</option>${teamOptions(b.finalist)}
+        </select>
+      </div>
+      <div class="torneo-field">
+        <label class="torneo-label">🇪🇸 España llega hasta… <span class="torneo-pts">2 pts</span></label>
+        <select class="qnl-input" id="tb-spain" ${!open?'disabled':''}>
+          <option value="">-- Elige fase --</option>${roundOpts}
+        </select>
+      </div>
+      <div class="torneo-field">
+        <label class="torneo-label">👟 Máximo goleador <span class="torneo-pts">3 pts</span></label>
+        <input class="qnl-input" id="tb-scorer" type="text" placeholder="Nombre del jugador"
+          value="${b.top_scorer||''}" maxlength="40" ${!open?'disabled':''}>
+      </div>
+      <div class="torneo-field">
+        <label class="torneo-label">🧤 Mejor portero (Guante de Oro) <span class="torneo-pts">2 pts</span></label>
+        <input class="qnl-input" id="tb-keeper" type="text" placeholder="Nombre del portero"
+          value="${b.best_keeper||''}" maxlength="40" ${!open?'disabled':''}>
+      </div>
+      <div class="torneo-field">
+        <label class="torneo-label">⭐ Sorpresa del torneo <span class="torneo-pts">2 pts</span></label>
+        <select class="qnl-input" id="tb-surprise" ${!open?'disabled':''}>
+          <option value="">-- Elige un equipo --</option>${teamOptions(b.surprise)}
+        </select>
+      </div>
+      ${open
+        ? `<button class="qnl-btn" style="margin-top:8px" onclick="saveTorneoBet()">
+             ${data ? '✎ Actualizar apuesta' : '+ Guardar apuesta'}
+           </button>`
+        : `<p style="text-align:center;font-size:12px;color:var(--muted);margin-top:12px">
+             Las apuestas cerraron al inicio del torneo.
+           </p>`
+      }
+      <div class="qnl-error" id="torneo-err"></div>
+    </div>`;
+}
+
+async function saveTorneoBet() {
+  const winner   = document.getElementById('tb-winner')?.value;
+  const finalist = document.getElementById('tb-finalist')?.value;
+  const spain    = document.getElementById('tb-spain')?.value;
+  const scorer   = document.getElementById('tb-scorer')?.value.trim();
+  const keeper   = document.getElementById('tb-keeper')?.value.trim();
+  const surprise = document.getElementById('tb-surprise')?.value;
+
+  if (!winner || !finalist || !spain || !scorer || !keeper || !surprise) {
+    document.getElementById('torneo-err').textContent = 'Rellena todos los campos.';
+    return;
+  }
+  if (winner === finalist) {
+    document.getElementById('torneo-err').textContent = 'El campeón y el finalista no pueden ser el mismo equipo.';
+    return;
+  }
+
+  const { error } = await db.from('tournament_bets').upsert(
+    { user_id: qnlUser.id, winner, finalist, spain_round: spain, top_scorer: scorer, best_keeper: keeper, surprise, updated_at: new Date().toISOString() },
+    { onConflict: 'user_id' }
+  );
+  if (error) { document.getElementById('torneo-err').textContent = 'Error al guardar.'; return; }
+  showToast('✓ Apuesta de torneo guardada');
+  const el = document.getElementById('qnl-torneo-content');
+  if (el) await renderTorneoApuesta(el);
+}
+
+async function renderTorneoClasificacion(el) {
+  const [{ data: users }, { data: bets }] = await Promise.all([
+    db.from('users').select('id, name'),
+    db.from('tournament_bets').select('*'),
+  ]);
+
+  if (!bets?.length) {
+    el.innerHTML = '<div class="empty">Nadie ha hecho su apuesta de torneo aún.</div>';
+    return;
+  }
+
+  const betByUser = {};
+  bets.forEach(b => { betByUser[b.user_id] = b; });
+
+  const rows = (users || [])
+    .filter(u => betByUser[u.id])
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map(u => {
+      const b   = betByUser[u.id];
+      const isMe = u.id === qnlUser?.id;
+      return `<div class="torneo-lb-row${isMe ? ' me' : ''}">
+        <div class="torneo-lb-name">${u.name}${isMe ? ' 👈' : ''}</div>
+        <div class="torneo-lb-grid">
+          <span class="torneo-lb-item"><span class="torneo-lb-cat">🏆 Campeón</span>${b.winner||'—'}</span>
+          <span class="torneo-lb-item"><span class="torneo-lb-cat">🥈 Finalista</span>${b.finalist||'—'}</span>
+          <span class="torneo-lb-item"><span class="torneo-lb-cat">🇪🇸 España</span>${b.spain_round||'—'}</span>
+          <span class="torneo-lb-item"><span class="torneo-lb-cat">👟 Goleador</span>${b.top_scorer||'—'}</span>
+          <span class="torneo-lb-item"><span class="torneo-lb-cat">🧤 Portero</span>${b.best_keeper||'—'}</span>
+          <span class="torneo-lb-item"><span class="torneo-lb-cat">⭐ Sorpresa</span>${b.surprise||'—'}</span>
+        </div>
+      </div>`;
+    }).join('');
+
+  el.innerHTML = `
+    <p style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center">
+      Los puntos se activarán al finalizar el torneo.
+    </p>
+    <div class="torneo-lb">${rows}</div>`;
 }
 
 async function renderQnlSubTab() {

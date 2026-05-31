@@ -25,6 +25,7 @@
 
 ### Quiniela Cachorros
 - [ ] Desarrollar más funcionalidad según avance el torneo
+- [ ] Puntuación apuestas de torneo — crear tabla `tournament_results` en Supabase con los resultados oficiales (campeón, finalista, goleador, portero, sorpresa, fase España) y calcular puntos automáticamente comparando con las predicciones de cada usuario
 
 ### Otros
 - [x] Filtro rápido "Solo España" en el calendario — botón/chip visible para ver solo los partidos de España
