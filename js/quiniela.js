@@ -7,7 +7,7 @@ const GROUPS = [
     id:      'cachorros',
     name:    'Cachorros',
     salt:    'mundial26',
-    hash:    '211939a94e7efb9ad5a16c120f91e23a03976b898395e49a5cd26cc40b65fb7e',
+    hash:    'b24ba0c12cce455ff311de58f936c129e1eea744e6cf37d0f93afb59ee1cfbc6',
     members: ['Nacho','Sergio','Edu','Alex','Javi','Jorge','Martín','Martinez','Ghobas','Portero','Gonza'],
   },
 ];
