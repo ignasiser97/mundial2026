@@ -69,22 +69,24 @@ function cpClear() {
   renderCalendar();
 }
 
+// ── Flags map (module scope — used in renderCalendar too) ─────
+const FLAGS_MAP = {
+  'México':'🇲🇽','Corea del Sur':'🇰🇷','Rep. Checa':'🇨🇿','Sudáfrica':'🇿🇦',
+  'Canadá':'🇨🇦','Suiza':'🇨🇭','Bosnia':'🇧🇦','Catar':'🇶🇦',
+  'Brasil':'🇧🇷','Marruecos':'🇲🇦','Escocia':'🏴󠁧󠁢󠁳󠁣󠁴󠁿','Haití':'🇭🇹',
+  'Estados Unidos':'🇺🇸','Australia':'🇦🇺','Turquía':'🇹🇷','Paraguay':'🇵🇾',
+  'Alemania':'🇩🇪','Costa de Marfil':'🇨🇮','Ecuador':'🇪🇨','Curazao':'🇨🇼',
+  'Países Bajos':'🇳🇱','Japón':'🇯🇵','Suecia':'🇸🇪','Túnez':'🇹🇳',
+  'Bélgica':'🇧🇪','Nueva Zelanda':'🇳🇿','RI de Irán':'🇮🇷','Egipto':'🇪🇬',
+  'España':'🇪🇸','Uruguay':'🇺🇾','Arabia Saudí':'🇸🇦','Cabo Verde':'🇨🇻',
+  'Francia':'🇫🇷','Senegal':'🇸🇳','Noruega':'🇳🇴','Irak':'🇮🇶',
+  'Argentina':'🇦🇷','Austria':'🇦🇹','Argelia':'🇩🇿','Jordania':'🇯🇴',
+  'Portugal':'🇵🇹','Colombia':'🇨🇴','RD Congo':'🇨🇩','Uzbekistán':'🇺🇿',
+  'Inglaterra':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Croacia':'🇭🇷','Ghana':'🇬🇭','Panamá':'🇵🇦',
+};
+
 // ── Team Search ────────────────────────────────────────────────
 function extractTeams() {
-  const FLAGS_MAP = {
-    'México':'🇲🇽','Corea del Sur':'🇰🇷','Rep. Checa':'🇨🇿','Sudáfrica':'🇿🇦',
-    'Canadá':'🇨🇦','Suiza':'🇨🇭','Bosnia':'🇧🇦','Catar':'🇶🇦',
-    'Brasil':'🇧🇷','Marruecos':'🇲🇦','Escocia':'🏴󠁧󠁢󠁳󠁣󠁴󠁿','Haití':'🇭🇹',
-    'Estados Unidos':'🇺🇸','Australia':'🇦🇺','Turquía':'🇹🇷','Paraguay':'🇵🇾',
-    'Alemania':'🇩🇪','Costa de Marfil':'🇨🇮','Ecuador':'🇪🇨','Curazao':'🇨🇼',
-    'Países Bajos':'🇳🇱','Japón':'🇯🇵','Suecia':'🇸🇪','Túnez':'🇹🇳',
-    'Bélgica':'🇧🇪','Nueva Zelanda':'🇳🇿','RI de Irán':'🇮🇷','Egipto':'🇪🇬',
-    'España':'🇪🇸','Uruguay':'🇺🇾','Arabia Saudí':'🇸🇦','Cabo Verde':'🇨🇻',
-    'Francia':'🇫🇷','Senegal':'🇸🇳','Noruega':'🇳🇴','Irak':'🇮🇶',
-    'Argentina':'🇦🇷','Austria':'🇦🇹','Argelia':'🇩🇿','Jordania':'🇯🇴',
-    'Portugal':'🇵🇹','Colombia':'🇨🇴','RD Congo':'🇨🇩','Uzbekistán':'🇺🇿',
-    'Inglaterra':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Croacia':'🇭🇷','Ghana':'🇬🇭','Panamá':'🇵🇦',
-  };
   const seen=new Set(); const list=[];
   for(const [,,label,,,,,phase] of MATCHES){
     if(phase!=='groups') continue;
@@ -176,19 +178,39 @@ function renderCalendar() {
     for(const m of byDay[vd]){
       const [date,time,label,venue,,ch,flags,phase]=m;
       if(phase!==lastPhase){ html+=`<div class="phase-banner">${PHASES[phase]||phase}</div>`; lastPhase=phase; }
-      const night=isNight(time);
+      const night = isNight(time);
       const groupLetter = phase==='groups' ? (label.match(/Grupo ([A-L])/)?.[1] || null) : null;
-      const rowCls=['match-row',flags===1?'spain':flags===2?'spain-pos':'',groupLetter?'match-row-link':''].filter(Boolean).join(' ');
-      const timeCls='time'+(night?' night':'');
-      const spanFlag=flags===1?'🇪🇸 ':flags===2?'⭐ ':'';
-      const badges=(ch.includes('d')?'<span class="badge bd">DAZN</span>':'')+(ch.includes('l')?'<span class="badge bl">LA 1</span>':'');
-      const onclick=groupLetter?` onclick="navigateToGroup('${groupLetter}')"`:' ';
-      html+=`<div class="${rowCls}"${onclick}>
-        <div class="${timeCls}">${time}<small>ESP${night?' 🌙':''}</small></div>
-        <div class="match-info">
-          <div class="match-name">${spanFlag}${badges} ${label}</div>
-          <div class="match-meta">${venue}${groupLetter?` · <span class="match-grp-link">Grupo ${groupLetter} →</span>`:''}</div>
+      const rowCls = ['match-row',flags===1?'spain':flags===2?'spain-pos':'',groupLetter?'match-row-link':''].filter(Boolean).join(' ');
+      const onclick = groupLetter ? ` onclick="navigateToGroup('${groupLetter}')"` : '';
+
+      const raw = label.split('·')[0].trim();
+      const hasVs = raw.includes(' vs ');
+      const homeTeam = hasVs ? raw.split(' vs ')[0].trim() : raw;
+      const awayTeam = hasVs ? raw.split(' vs ')[1].trim() : '';
+      const homeFlag = FLAGS_MAP[homeTeam] || '';
+      const awayFlag = FLAGS_MAP[awayTeam] || '';
+
+      const badges = (ch.includes('d') ? '<span class="badge bd">DAZN</span>' : '') +
+                     (ch.includes('l') ? '<span class="badge bl">LA 1</span>' : '');
+      const spainBadge = flags===1 ? ' 🇪🇸' : flags===2 ? ' ⭐' : '';
+      const timeCls = 'mrow-time' + (night ? ' night' : '');
+      const venueName = venue.split(',')[0];
+      const metaRight = groupLetter ? ` · <span class="match-grp-link">Grupo ${groupLetter} →</span>` : '';
+
+      html += `<div class="${rowCls}"${onclick}>
+        <div class="mrow-home">
+          ${homeFlag ? `<span class="mrow-flag">${homeFlag}</span>` : ''}
+          <span class="mrow-tname">${homeTeam}</span>
         </div>
+        <div class="mrow-center">
+          <div class="${timeCls}">${time}</div>
+          <div class="mrow-sub">ESP${night?' 🌙':''}${spainBadge}</div>
+        </div>
+        <div class="mrow-away">
+          <span class="mrow-tname">${awayTeam}</span>
+          ${awayFlag ? `<span class="mrow-flag">${awayFlag}</span>` : ''}
+        </div>
+        <div class="mrow-meta">${badges} ${venueName}${metaRight}</div>
       </div>`;
     }
   }

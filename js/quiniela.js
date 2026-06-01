@@ -1,3 +1,15 @@
+function betRow(home, away, centerHtml, cls) {
+  const FM = typeof FLAGS_MAP !== 'undefined' ? FLAGS_MAP : {};
+  const hf = FM[home] || '';
+  const af = FM[away] || '';
+  const rowCls = cls ? `bet-score-row ${cls}` : 'bet-score-row';
+  return `<div class="${rowCls}">
+    <div class="bsr-home">${hf ? `<span class="bsr-flag">${hf}</span>` : ''}<span class="bsr-tname">${home}</span></div>
+    <div class="bsr-center">${centerHtml}</div>
+    <div class="bsr-away"><span class="bsr-tname">${away}</span>${af ? `<span class="bsr-flag">${af}</span>` : ''}</div>
+  </div>`;
+}
+
 const SUPABASE_URL = 'https://zdghmnaiuqcqoezvaxum.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkZ2htbmFpdXFjcW9lenZheHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNDkxMDEsImV4cCI6MjA5NTYyNTEwMX0.o9Y_dKF2fqVkjROW4iOMQ5rE_FH3TXZJPWctkALPbw0';
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -354,7 +366,7 @@ async function renderTorneoSubTab() {
   const el = document.getElementById('qnl-torneo-content');
   if (!el) return;
   el.innerHTML = '<div class="empty">Cargando…</div>';
-  if (qnlTorneoSub === 'apuesta')       await renderTorneoApuesta(el);
+  if (qnlTorneoSub === 'apuesta')            await renderTorneoApuesta(el);
   else if (qnlTorneoSub === 'clasificacion') await renderTorneoClasificacion(el);
 }
 
@@ -457,10 +469,29 @@ async function saveTorneoBet() {
   if (el) await renderTorneoApuesta(el);
 }
 
+// Calcula puntos de torneo: campeón +5, finalista +3, España +2, goleador +3, portero +2, sorpresa +2
+function calcTorneoPoints(bet, res) {
+  if (!res || !bet) return null;
+  const pts = {};
+  const norm = s => (s||'').toLowerCase().trim();
+  if (bet.winner   && res.winner   && bet.winner === res.winner)           pts.winner   = 5;
+  if (bet.finalist && res.finalist && bet.finalist === res.finalist)       pts.finalist = 3;
+  if (bet.spain_round && res.spain_round && bet.spain_round === res.spain_round) pts.spain_round = 2;
+  if (bet.top_scorer  && res.top_scorer  && norm(bet.top_scorer)  === norm(res.top_scorer))  pts.top_scorer  = 3;
+  if (bet.best_keeper && res.best_keeper && norm(bet.best_keeper) === norm(res.best_keeper)) pts.best_keeper = 2;
+  if (bet.surprise && res.surprise && bet.surprise === res.surprise)       pts.surprise = 2;
+  return pts;
+}
+
+function torneoTotal(pts) {
+  return pts ? Object.values(pts).reduce((a, b) => a + b, 0) : 0;
+}
+
 async function renderTorneoClasificacion(el) {
-  const [{ data: users }, { data: bets }] = await Promise.all([
+  const [{ data: users }, { data: bets }, { data: results }] = await Promise.all([
     db.from('users').select('id, name'),
     db.from('tournament_bets').select('*'),
+    db.from('tournament_results').select('*').eq('id', 1).maybeSingle(),
   ]);
 
   if (!bets?.length) {
@@ -472,35 +503,62 @@ async function renderTorneoClasificacion(el) {
   bets.forEach(b => { betByUser[b.user_id] = b; });
 
   const torneoStarted = Date.now() >= MUNDIAL_START_MS;
+  const hasResults    = results && Object.values(results).some(v => v && v !== '' && typeof v === 'string');
 
-  const rows = (users || [])
-    .filter(u => betByUser[u.id])
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .map(u => {
-      const b    = betByUser[u.id];
-      const isMe = u.id === qnlUser?.id;
-      const details = (torneoStarted || isMe)
-        ? `<div class="torneo-lb-grid">
-            <span class="torneo-lb-item"><span class="torneo-lb-cat">🏆 Campeón</span>${b.winner||'—'}</span>
-            <span class="torneo-lb-item"><span class="torneo-lb-cat">🥈 Finalista</span>${b.finalist||'—'}</span>
-            <span class="torneo-lb-item"><span class="torneo-lb-cat">🇪🇸 España</span>${b.spain_round||'—'}</span>
-            <span class="torneo-lb-item"><span class="torneo-lb-cat">👟 Goleador</span>${b.top_scorer||'—'}</span>
-            <span class="torneo-lb-item"><span class="torneo-lb-cat">🧤 Portero</span>${b.best_keeper||'—'}</span>
-            <span class="torneo-lb-item"><span class="torneo-lb-cat">⭐ Sorpresa</span>${b.surprise||'—'}</span>
-          </div>`
-        : `<div style="font-size:11px;color:var(--muted);margin-top:4px">Apuesta enviada · Se revela al inicio del torneo</div>`;
-      return `<div class="torneo-lb-row${isMe ? ' me' : ''}">
+  const FIELDS = [
+    { key:'winner',      label:'🏆 Campeón',  pts:5 },
+    { key:'finalist',    label:'🥈 Finalista', pts:3 },
+    { key:'spain_round', label:'🇪🇸 España',   pts:2 },
+    { key:'top_scorer',  label:'👟 Goleador',  pts:3 },
+    { key:'best_keeper', label:'🧤 Portero',   pts:2 },
+    { key:'surprise',    label:'⭐ Sorpresa',  pts:2 },
+  ];
+
+  const usersWithBets = (users || []).filter(u => betByUser[u.id]);
+  const scored = usersWithBets.map(u => {
+    const b   = betByUser[u.id];
+    const pts = hasResults ? calcTorneoPoints(b, results) : null;
+    return { u, b, pts, total: torneoTotal(pts) };
+  }).sort((a, b) => b.total - a.total || a.u.name.localeCompare(b.u.name));
+
+  const rows = scored.map(({ u, b, pts }) => {
+    const isMe = u.id === qnlUser?.id;
+    const show = torneoStarted || isMe;
+    const total = torneoTotal(pts);
+
+    const details = show
+      ? `<div class="torneo-lb-grid">
+          ${FIELDS.map(f => {
+            const val    = b[f.key] || '—';
+            const earned = pts?.[f.key];
+            const hit    = earned != null;
+            return `<span class="torneo-lb-item">
+              <span class="torneo-lb-cat">${f.label}</span>
+              <span style="${hit ? 'color:var(--pos)' : ''}">${val}</span>
+              ${hit ? `<span class="torneo-lb-pts">+${earned}</span>` : ''}
+            </span>`;
+          }).join('')}
+        </div>`
+      : `<div style="font-size:11px;color:var(--muted);margin-top:4px">Apuesta enviada · Se revela al inicio del torneo</div>`;
+
+    return `<div class="torneo-lb-row${isMe ? ' me' : ''}">
+      <div style="display:flex;justify-content:space-between;align-items:center">
         <div class="torneo-lb-name">${u.name}${isMe ? ' 👈' : ''}</div>
-        ${details}
-      </div>`;
-    }).join('');
+        ${hasResults && show ? `<div class="torneo-total-pts">${total} pts</div>` : ''}
+      </div>
+      ${details}
+    </div>`;
+  }).join('');
 
-  const note = torneoStarted
-    ? `<p style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center">Los puntos se activarán al finalizar el torneo.</p>`
-    : `<p style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center">Las predicciones se revelan cuando empiece el primer partido.</p>`;
+  const note = hasResults
+    ? ''
+    : torneoStarted
+      ? `<p style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center">Puntos pendientes de resultados oficiales.</p>`
+      : `<p style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center">Las predicciones se revelan cuando empiece el primer partido.</p>`;
 
   el.innerHTML = `${note}<div class="torneo-lb">${rows}</div>`;
 }
+
 
 async function renderQnlSubTab() {
   const el = document.getElementById('qnl-subcontent');
@@ -586,28 +644,14 @@ async function renderApostar(el) {
         // Apuesta guardada + plazo abierto: lectura por defecto, edición al pulsar
         body = `
           <div id="ro-${mid}">
-            <div class="bet-score-row">
-              <span class="bet-team">${home}</span>
-              <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${saved.home_score}</span>
-              <span class="bet-dash">-</span>
-              <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${saved.away_score}</span>
-              <span class="bet-team">${away}</span>
-            </div>
+            ${betRow(home, away, `<span class="bsr-score">${saved.home_score}</span><span class="bet-dash">–</span><span class="bsr-score">${saved.away_score}</span>`)}
             <div class="bet-actions">
               <span class="bet-saved">✓ Apuesta guardada</span>
               <button class="bet-toggle-bets" onclick="enableBetEdit('${mid}')">✎ Editar</button>
             </div>
           </div>
           <div id="ed-${mid}" class="hidden">
-            <div class="bet-score-row">
-              <span class="bet-team">${home}</span>
-              <input class="bet-score-input" type="number" min="0" max="20"
-                     id="h-${mid}" value="${saved.home_score}" placeholder="0">
-              <span class="bet-dash">-</span>
-              <input class="bet-score-input" type="number" min="0" max="20"
-                     id="a-${mid}" value="${saved.away_score}" placeholder="0">
-              <span class="bet-team">${away}</span>
-            </div>
+            ${betRow(home, away, `<input class="bet-score-input" type="number" min="0" max="20" id="h-${mid}" value="${saved.home_score}" placeholder="0"><span class="bet-dash">–</span><input class="bet-score-input" type="number" min="0" max="20" id="a-${mid}" value="${saved.away_score}" placeholder="0">`)}
             <div class="bet-actions">
               <button class="bet-submit" onclick="submitBet('${mid}')">✓ Guardar</button>
               <button class="bet-toggle-bets" onclick="cancelBetEdit('${mid}')">✕ Cancelar</button>
@@ -617,39 +661,19 @@ async function renderApostar(el) {
       } else if (open) {
         // Sin apuesta previa: inputs directamente
         body = `
-          <div class="bet-score-row">
-            <span class="bet-team">${home}</span>
-            <input class="bet-score-input" type="number" min="0" max="20"
-                   id="h-${mid}" value="" placeholder="0">
-            <span class="bet-dash">-</span>
-            <input class="bet-score-input" type="number" min="0" max="20"
-                   id="a-${mid}" value="" placeholder="0">
-            <span class="bet-team">${away}</span>
-          </div>
+          ${betRow(home, away, `<input class="bet-score-input" type="number" min="0" max="20" id="h-${mid}" value="" placeholder="0"><span class="bet-dash">–</span><input class="bet-score-input" type="number" min="0" max="20" id="a-${mid}" value="" placeholder="0">`)}
           <div class="bet-actions">
             <button class="bet-submit" onclick="submitBet('${mid}')">+ Apostar</button>
           </div>
           <div class="bet-lock-info">Cierra 5 min antes del pitido</div>`;
       } else if (saved) {
         body = `
-          <div class="bet-score-row">
-            <span class="bet-team">${home}</span>
-            <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${saved.home_score}</span>
-            <span class="bet-dash">-</span>
-            <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${saved.away_score}</span>
-            <span class="bet-team">${away}</span>
-          </div>
+          ${betRow(home, away, `<span class="bsr-score">${saved.home_score}</span><span class="bet-dash">–</span><span class="bsr-score">${saved.away_score}</span>`)}
           <div class="bet-actions"><span class="bet-saved">✓ Apuesta guardada</span>${verGrupoBtn}</div>
           <div id="gbets-${mid}" class="hidden"></div>`;
       } else {
         body = `
-          <div class="bet-score-row" style="opacity:.45">
-            <span class="bet-team">${home}</span>
-            <span style="font-family:'Bebas Neue';font-size:28px;color:var(--muted)">-</span>
-            <span class="bet-dash">-</span>
-            <span style="font-family:'Bebas Neue';font-size:28px;color:var(--muted)">-</span>
-            <span class="bet-team">${away}</span>
-          </div>
+          ${betRow(home, away, `<span class="bsr-score" style="color:var(--muted)">–</span><span class="bet-dash">–</span><span class="bsr-score" style="color:var(--muted)">–</span>`, 'opacity45')}
           <div class="bet-actions"><span class="bet-closed">${started ? 'Partido en juego' : 'Apuestas cerradas'}</span>${verGrupoBtn}</div>
           <div id="gbets-${mid}" class="hidden"></div>`;
       }
@@ -658,7 +682,6 @@ async function renderApostar(el) {
         <div class="bet-card">
           ${badge}
           <div class="bet-card-header" onclick="toggleBetDropdown('${mid}')">
-            <div class="bet-match-name">${home} vs ${away}</div>
             <div class="bet-meta">${m[1]} · ${m[3].split(',').pop().trim()}</div>
           </div>
           <div id="bdrop-${mid}" class="bet-dropdown hidden">${dropContent}</div>
@@ -827,32 +850,17 @@ async function renderMisApuestas(el) {
 
     // Primera vez sin apuesta y ventana abierta → formulario
     const body = (!hasBet && open) ? `
-        <div class="bet-score-row" style="margin-top:10px">
-          <span class="bet-team">${home}</span>
-          <input class="bet-score-input" type="number" min="0" max="20"
-                 id="h-${mid}" value="" placeholder="0">
-          <span class="bet-dash">-</span>
-          <input class="bet-score-input" type="number" min="0" max="20"
-                 id="a-${mid}" value="" placeholder="0">
-          <span class="bet-team">${away}</span>
-        </div>
+        ${betRow(home, away, `<input class="bet-score-input" type="number" min="0" max="20" id="h-${mid}" value="" placeholder="0"><span class="bet-dash">–</span><input class="bet-score-input" type="number" min="0" max="20" id="a-${mid}" value="" placeholder="0">`)}
         <div class="bet-actions">
           <button class="bet-submit" onclick="submitBet('${mid}')">+ Apostar</button>
         </div>
         <div class="bet-lock-info">Cierra 5 min antes del pitido</div>` : `
-        <div class="bet-score-row" style="margin-top:10px">
-          <span class="bet-team">${home}</span>
-          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${b.home_score ?? '–'}</span>
-          <span class="bet-dash">-</span>
-          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${b.away_score ?? '–'}</span>
-          <span class="bet-team">${away}</span>
-        </div>
+        ${betRow(home, away, `<span class="bsr-score">${b.home_score ?? '–'}</span><span class="bet-dash">–</span><span class="bsr-score">${b.away_score ?? '–'}</span>`)}
         <div class="bet-actions">
           ${hasBet ? '<span class="bet-saved">✓ Apuesta guardada</span>' : `<span class="bet-closed">Apuestas cerradas</span>`}
         </div>`;
     return `
       <div class="bet-card" style="border-color:rgba(232,200,74,.35)">
-        <div class="bet-match-name">${home} vs ${away}</div>
         <div class="bet-meta">${fmtDate(m[0])} · ${m[1]}</div>
         ${body}
       </div>`;
@@ -879,15 +887,8 @@ async function renderMisApuestas(el) {
 
     return `
       <div class="bet-card">
-        <div class="bet-match-name">${home} vs ${away}</div>
         <div class="bet-meta">${fmtDate(m[0])} · ${m[1]}</div>
-        <div class="bet-score-row" style="margin-top:10px">
-          <span class="bet-team">${home}</span>
-          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${b.home_score}</span>
-          <span class="bet-dash">-</span>
-          <span style="font-family:'Bebas Neue';font-size:28px;color:var(--accent)">${b.away_score}</span>
-          <span class="bet-team">${away}</span>
-        </div>
+        ${betRow(home, away, `<span class="bsr-score">${b.home_score}</span><span class="bet-dash">–</span><span class="bsr-score">${b.away_score}</span>`)}
         ${resultSection}${verGrupo}
       </div>`;
   }).join('');

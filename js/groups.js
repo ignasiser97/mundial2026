@@ -95,17 +95,52 @@ function grpTeamSearch(val) {
   if (grid) grid.style.gridTemplateColumns = visible === 1 ? '1fr' : '';
 }
 
+function teamMatchesHtml(team) {
+  const ms = MATCHES.filter(m => {
+    if (m[7] !== 'groups') return false;
+    return m[2].split('·')[0].split(' vs ').map(s => s.trim()).includes(team);
+  });
+  if (!ms.length) return '<div style="font-size:11px;color:var(--muted);padding:4px 0">Sin partidos</div>';
+  return '<div class="tpanel-inner">' + ms.map(m => {
+    const [date, time, label, venue, , ch] = m;
+    const parts = label.split('·')[0].split(' vs ').map(s => s.trim());
+    const rival = parts[0] === team ? parts[1] : parts[0];
+    const rivalFlag = (typeof FLAGS_MAP !== 'undefined' ? FLAGS_MAP[rival] : '') || '';
+    const night = isNight(time);
+    const badges = (ch.includes('d') ? '<span class="badge bd">DAZN</span>' : '') +
+                   (ch.includes('l') ? '<span class="badge bl">LA 1</span>' : '');
+    return `<div class="tpanel-row">
+      <span class="tpanel-time${night ? ' night' : ''}">${time}</span>
+      <span class="tpanel-date">${fmtDate(date)}</span>
+      <span class="tpanel-rival">${rivalFlag} ${rival}</span>
+      <span class="tpanel-meta">${venue.split(',')[0]} ${badges}</span>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function toggleTeamPanel(team) {
+  const id = 'tpanel-' + team.replace(/[^a-zA-Z0-9]/g, '_');
+  document.getElementById(id)?.classList.toggle('hidden');
+}
+
 function renderGroup(letter, teams) {
-  const rows = teams.map(t => {
+  const rows = teams.map((t, idx) => {
     const dgVal = t.dg ?? 0;
     const dgCls = dgVal > 0 ? 'pos' : dgVal < 0 ? 'neg' : '';
     const dg    = dgVal > 0 ? '+' + dgVal : dgVal;
     const isSpain = t.team === 'España';
-    return `<tr${isSpain ? ' class="spain-row"' : ''}>
+    const topCls = idx < 2 ? ' top2' : '';
+    const safeid = t.team.replace(/[^a-zA-Z0-9]/g, '_');
+    const rowCls = ['grp-team-row', isSpain ? 'spain-row' : '', topCls.trim()].filter(Boolean).join(' ');
+    const escapedTeam = t.team.replace(/'/g, "\\'");
+    return `<tr class="${rowCls}" onclick="toggleTeamPanel('${escapedTeam}')">
       <td class="tnm">${t.flag||''} ${t.team}</td>
       <td>${t.pj}</td><td class="pts">${t.pts}</td>
       <td>${t.gf}</td><td>${t.gc}</td>
       <td class="${dgCls}">${dg}</td>
+    </tr>
+    <tr class="team-panel hidden" id="tpanel-${safeid}">
+      <td colspan="6">${teamMatchesHtml(t.team)}</td>
     </tr>`;
   }).join('');
   return `<div class="group-card" id="group-${letter}">
@@ -173,6 +208,11 @@ function bktNavLabel(text) {
     : text;
 }
 
+function bktGoToDate(date) {
+  switchTab('cal');
+  requestAnimationFrame(() => cpSelect(date));
+}
+
 function bktCard(code, pmap, extra='') {
   const m = pmap[code];
   if (!m) return `<div class="bkt-m${extra}"><div class="bkt-team">-</div><div class="bkt-div"></div><div class="bkt-team">-</div></div>`;
@@ -183,7 +223,7 @@ function bktCard(code, pmap, extra='') {
     home = bktNavLabel(parts[0]?.trim() || '-');
     away = bktNavLabel(parts[1]?.trim() || '-');
   }
-  return `<div class="bkt-m${extra}">
+  return `<div class="bkt-m${extra} clickable" onclick="bktGoToDate('${m[0]}')">
     <div class="bkt-team">${home}</div>
     <div class="bkt-div"></div>
     <div class="bkt-team">${away}</div>
