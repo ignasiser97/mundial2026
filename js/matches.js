@@ -140,4 +140,38 @@ function fmtDate(ds) {
   return `${DAYS_ES[dt.getUTCDay()]} ${d} de ${MONTHS_ES[m-1]}`;
 }
 
+// ── Shared utilities (usadas en calendar, groups, quiniela) ────
+
+// ID único de partido — mismo formato en toda la app
+function matchId(m) {
+  const label = m[2].split('·')[0].trim().replace(/\s+vs\s+/g,'_vs_').replace(/\s/g,'');
+  return `${m[0]}_${m[1]}_${label}`;
+}
+
+// Extrae [local, visitante] de una entrada MATCHES
+function matchTeams(m) {
+  const parts = m[2].split('·')[0].trim().split(' vs ');
+  return [parts[0]?.trim() || '', parts[1]?.trim() || ''];
+}
+
+// Escapa HTML para contenido externo/usuarios
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Cache compartida de resultados de partidos (standings.json → matchResults)
+let _matchResults = null;
+async function getMatchResults() {
+  if (_matchResults !== null) return _matchResults;
+  try {
+    const res = await fetch('./standings.json?t=' + Date.now());
+    const data = await res.json();
+    _matchResults = data.matchResults || {};
+  } catch { _matchResults = {}; }
+  return _matchResults;
+}
+function clearMatchResultsCache() { _matchResults = null; }
+
 function isNight(t) { return +t.split(':')[0] <= 6; }

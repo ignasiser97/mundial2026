@@ -8,10 +8,6 @@ const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
 let newsFilter = '';
 let allNews    = [];
 
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
 function timeAgo(date) {
   const s = (Date.now() - date.getTime()) / 1000;
   if (s < 60)    return 'ahora mismo';

@@ -1,7 +1,6 @@
 function betRow(home, away, centerHtml, cls) {
-  const FM = typeof FLAGS_MAP !== 'undefined' ? FLAGS_MAP : {};
-  const hf = FM[home] || '';
-  const af = FM[away] || '';
+  const hf = FLAGS_MAP[home] || '';
+  const af = FLAGS_MAP[away] || '';
   const rowCls = cls ? `bet-score-row ${cls}` : 'bet-score-row';
   return `<div class="${rowCls}">
     <div class="bsr-home">${hf ? `<span class="bsr-flag">${hf}</span>` : ''}<span class="bsr-tname">${home}</span></div>
@@ -49,11 +48,6 @@ function isTorneoOpen() {
 }
 
 // ── Helpers ────────────────────────────────────────────────────
-
-function matchId(m) {
-  const label = m[2].split('·')[0].trim().replace(/\s+vs\s+/g,'_vs_').replace(/\s/g,'');
-  return `${m[0]}_${m[1]}_${label}`;
-}
 
 // Devuelve la fecha de hoy en hora española ('YYYY-MM-DD')
 function spainToday() {
@@ -276,7 +270,7 @@ function renderQnlContainer() {
   if (!wrap) return;
   wrap.innerHTML = `
     <div class="qnl-header">
-      <span class="qnl-user">Hola, ${qnlUser.name} 👋</span>
+      <span class="qnl-user">Hola, ${escHtml(qnlUser.name)} 👋</span>
       <button class="qnl-logout" onclick="qnlLogout()">Cambiar usuario</button>
     </div>
     <div id="qnl-mode-content"></div>`;
@@ -612,9 +606,7 @@ async function renderApostar(el) {
       const saved   = qnlBets[mid];
       const open    = isBetOpen(m);
       const started = isMatchStarted(m);
-      const parts   = m[2].split('·')[0].split(' vs ');
-      const home    = parts[0]?.trim() || '';
-      const away    = parts[1]?.trim() || '';
+      const [home, away] = matchTeams(m);
       const bets    = groupBetsMap[mid] || [];
 
       const badge = `<span class="bet-count-badge">${bets.length}/${memberCount}</span>`;
@@ -697,18 +689,6 @@ async function renderApostar(el) {
 
 function toggleBetDropdown(mid) {
   document.getElementById('bdrop-' + mid)?.classList.toggle('hidden');
-}
-
-let _matchResults = null; // cache de standings.json matchResults
-
-async function getMatchResults() {
-  if (_matchResults) return _matchResults;
-  try {
-    const res = await fetch('./standings.json?t=' + Date.now());
-    const data = await res.json();
-    _matchResults = data.matchResults || {};
-  } catch { _matchResults = {}; }
-  return _matchResults;
 }
 
 async function toggleGroupBets(mid, btn) {
@@ -845,7 +825,7 @@ async function renderMisApuestas(el) {
     const m    = lookup[b.match_id];
     const mid  = b.match_id;
     const open = isBetOpen(m);
-    const [home, away] = m[2].split('·')[0].split(' vs ').map(s => s.trim());
+    const [home, away] = matchTeams(m);
     const hasBet = b.home_score !== undefined && b.home_score !== null;
 
     // Primera vez sin apuesta y ventana abierta → formulario
@@ -868,14 +848,15 @@ async function renderMisApuestas(el) {
 
   const pastCards = past.map(b => {
     const m       = lookup[b.match_id];
-    const [home, away] = m[2].split('·')[0].split(' vs ').map(s => s.trim());
+    const [home, away] = matchTeams(m);
     const result  = resultMap[b.match_id];
     const pts     = calcPoints(b, result);
     const started = isMatchStarted(m);
 
     const resultSection = result ? `
       <div class="bet-result-row">
-        <span style="color:var(--muted)">Resultado: <strong style="color:var(--text)">${result.home_score} – ${result.away_score}</strong></span>
+        <span class="bet-result-label">Resultado</span>
+        <span class="bet-result-score">${result.home_score} – ${result.away_score}</span>
         ${ptsLabel(pts)}
       </div>` : '';
 

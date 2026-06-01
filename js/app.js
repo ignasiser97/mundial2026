@@ -32,6 +32,7 @@
     el.classList.add('snap');
     el.style.transform = `translateY(-${H}px)`;
     if (!triggered) return;
+    clearMatchResultsCache();
     const tab = document.querySelector('.tab-btn.active')?.dataset.tab;
     if      (tab === 'grp') { tabLoaded.grp=false; loadGroups(); }
     else if (tab === 'sts') { tabLoaded.sts=false; loadStats(); }

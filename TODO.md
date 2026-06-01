@@ -7,6 +7,8 @@
 - [x] Diseño tipo marcador en Calendario — filas home | hora | away con banderas grandes
 - [x] Diseño tipo marcador en Apuestas — tarjetas con layout home | marcador | away y banderas
 - [x] Interactividad: equipo en Grupos → panel con sus partidos; bracket → navega al calendario; Inicio → link al primer partido; Stats → expand con ratio por partido
+- [x] Preparar renderizado de resultados en Calendario y Apuestas (activo cuando standings.json tenga datos)
+- [x] Refactor: matchId/matchTeams/escHtml/getMatchResults centralizados en matches.js; grpLoaded declarado; XSS en qnlUser.name arreglado; CSS muerto eliminado
 
 ## Pendiente
 

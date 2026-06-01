@@ -69,6 +69,7 @@ function cpClear() {
   renderCalendar();
 }
 
+// ── Match results cache ────────────────────────────────────────
 // ── Flags map (module scope — used in renderCalendar too) ─────
 const FLAGS_MAP = {
   'México':'🇲🇽','Corea del Sur':'🇰🇷','Rep. Checa':'🇨🇿','Sudáfrica':'🇿🇦',
@@ -150,7 +151,8 @@ document.addEventListener('click', e => {
 });
 
 // ── Render calendario ──────────────────────────────────────────
-function renderCalendar() {
+async function renderCalendar() {
+  const results = await getMatchResults();
   const filtered = MATCHES.filter(([date,time,label,,,ch,flags])=>{
     const vd=viewDate(date,time);
     if(fDate && vd!==fDate) return false;
@@ -183,10 +185,7 @@ function renderCalendar() {
       const rowCls = ['match-row',flags===1?'spain':flags===2?'spain-pos':'',groupLetter?'match-row-link':''].filter(Boolean).join(' ');
       const onclick = groupLetter ? ` onclick="navigateToGroup('${groupLetter}')"` : '';
 
-      const raw = label.split('·')[0].trim();
-      const hasVs = raw.includes(' vs ');
-      const homeTeam = hasVs ? raw.split(' vs ')[0].trim() : raw;
-      const awayTeam = hasVs ? raw.split(' vs ')[1].trim() : '';
+      const [homeTeam, awayTeam] = matchTeams(m);
       const homeFlag = FLAGS_MAP[homeTeam] || '';
       const awayFlag = FLAGS_MAP[awayTeam] || '';
 
@@ -197,15 +196,17 @@ function renderCalendar() {
       const venueName = venue.split(',')[0];
       const metaRight = groupLetter ? ` · <span class="match-grp-link">Grupo ${groupLetter} →</span>` : '';
 
+      const result = results[matchId(m)];
+      const centerHtml = result
+        ? `<div class="mrow-result"><span class="mrow-score-num">${result.home}</span><span class="mrow-rdash">–</span><span class="mrow-score-num">${result.away}</span></div><div class="mrow-fin">FIN</div>`
+        : `<div class="${timeCls}">${time}</div><div class="mrow-sub">ESP${night?' 🌙':''}${spainBadge}</div>`;
+
       html += `<div class="${rowCls}"${onclick}>
         <div class="mrow-home">
           ${homeFlag ? `<span class="mrow-flag">${homeFlag}</span>` : ''}
           <span class="mrow-tname">${homeTeam}</span>
         </div>
-        <div class="mrow-center">
-          <div class="${timeCls}">${time}</div>
-          <div class="mrow-sub">ESP${night?' 🌙':''}${spainBadge}</div>
-        </div>
+        <div class="mrow-center">${centerHtml}</div>
         <div class="mrow-away">
           <span class="mrow-tname">${awayTeam}</span>
           ${awayFlag ? `<span class="mrow-flag">${awayFlag}</span>` : ''}

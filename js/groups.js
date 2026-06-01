@@ -1,5 +1,6 @@
 let grpSubTab    = 'grupos';
 let bracketPhase = 'r32';
+let grpLoaded    = false;
 
 const BRACKET_PHASES = [
   { key:'r32',   label:'1/32'   },
@@ -102,10 +103,10 @@ function teamMatchesHtml(team) {
   });
   if (!ms.length) return '<div style="font-size:11px;color:var(--muted);padding:4px 0">Sin partidos</div>';
   return '<div class="tpanel-inner">' + ms.map(m => {
-    const [date, time, label, venue, , ch] = m;
-    const parts = label.split('·')[0].split(' vs ').map(s => s.trim());
-    const rival = parts[0] === team ? parts[1] : parts[0];
-    const rivalFlag = (typeof FLAGS_MAP !== 'undefined' ? FLAGS_MAP[rival] : '') || '';
+    const [date, time, , venue, , ch] = m;
+    const [home, away] = matchTeams(m);
+    const rival = home === team ? away : home;
+    const rivalFlag = FLAGS_MAP[rival] || '';
     const night = isNight(time);
     const badges = (ch.includes('d') ? '<span class="badge bd">DAZN</span>' : '') +
                    (ch.includes('l') ? '<span class="badge bl">LA 1</span>' : '');
@@ -219,9 +220,7 @@ function bktCard(code, pmap, extra='') {
   const isR32 = m[7] === 'r32';
   let home = '-', away = '-';
   if (isR32) {
-    const parts = m[2].split('·')[0].trim().split(' vs ');
-    home = bktNavLabel(parts[0]?.trim() || '-');
-    away = bktNavLabel(parts[1]?.trim() || '-');
+    [home, away] = matchTeams(m).map(bktNavLabel);
   }
   return `<div class="bkt-m${extra} clickable" onclick="bktGoToDate('${m[0]}')">
     <div class="bkt-team">${home}</div>
