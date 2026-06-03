@@ -25,7 +25,7 @@ const GROUPS = [
     id:      'pracas',
     name:    'Prrrrrrrraaaaaacaaas🐶👑👑👑',
     salt:    'mundial26',
-    hash:    'a345b078db094bccc89ad34630ffde2e01352f777c8a51b6f871d9250b6a283f',
+    hash:    '2f5f36432f865d91bb992b083081db3e5c96ffe37f806f5149be701b8703cde3',
     members: ['Crossfitero 1','Crossfitero 2','Gutcemaniaco','Xaxofon2000','Chiqui Ibai','Mª Escudero','JAME JAMENEI','AFELLAY','The Small One','xNanoXz'],
   },
 ];
