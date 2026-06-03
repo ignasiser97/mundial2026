@@ -236,7 +236,15 @@ async function qnlPickFriend(name) {
   document.querySelectorAll('.qnl-picker-btn').forEach(b => b.disabled = true);
   const errEl = document.getElementById('qnl-pick-err');
 
-  const { data: existing } = await db.from('users').select('*').eq('name', name).eq('group_id', qnlGroup.id).maybeSingle();
+  // Busca por nombre + grupo; también acepta filas legacy con group_id null
+  let { data: existing } = await db.from('users').select('*').eq('name', name).eq('group_id', qnlGroup.id).maybeSingle();
+  if (!existing) {
+    const { data: legacy } = await db.from('users').select('*').eq('name', name).is('group_id', null).maybeSingle();
+    if (legacy) {
+      await db.from('users').update({ group_id: qnlGroup.id }).eq('id', legacy.id);
+      existing = { ...legacy, group_id: qnlGroup.id };
+    }
+  }
   if (existing) {
     qnlUser = existing;
   } else {
