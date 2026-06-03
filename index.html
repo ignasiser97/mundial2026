@@ -412,9 +412,17 @@ html,body { overscroll-behavior-y: contain; }
 .qnl-header-actions { display:flex; align-items:center; gap:8px; }
 .qnl-logout { font-size:11px; color:var(--muted); background:none; border:1px solid var(--border); border-radius:4px; padding:4px 10px; cursor:pointer; }
 .qnl-logout:hover { color:var(--text); }
-.qnl-backup-btn { font-size:11px; color:var(--accent); background:none; border:1px solid var(--accent); border-radius:4px; padding:4px 10px; cursor:pointer; opacity:.7; }
-.qnl-backup-btn:hover { opacity:1; }
-.qnl-backup-btn:disabled { opacity:.4; cursor:default; }
+.qnl-admin-section { padding:24px 0 16px; text-align:center; }
+.qnl-admin-toggle { font-size:11px; color:var(--muted); background:none; border:none; cursor:pointer; opacity:.4; padding:4px 8px; }
+.qnl-admin-toggle:hover { opacity:.8; }
+.qnl-admin-form { display:flex; gap:8px; justify-content:center; align-items:center; margin-top:6px; }
+.qnl-admin-input { font-size:13px; padding:7px 12px; border:1px solid var(--border); border-radius:6px; background:var(--card); color:var(--text); width:180px; }
+.qnl-admin-submit { font-size:12px; padding:7px 14px; background:none; border:1px solid var(--border); color:var(--muted); border-radius:6px; cursor:pointer; }
+.qnl-admin-submit:hover { border-color:var(--accent); color:var(--accent); }
+.qnl-admin-err { font-size:11px; color:#e05; margin-top:6px; }
+.qnl-admin-export { font-size:13px; padding:10px 24px; background:none; border:1px solid var(--accent); color:var(--accent); border-radius:8px; cursor:pointer; }
+.qnl-admin-export:hover { background:var(--accent); color:#000; }
+.qnl-admin-export:disabled { opacity:.4; cursor:default; }
 .qnl-register { text-align:center; padding:48px 24px 32px; }
 .qnl-register h2 { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:3px; color:var(--accent); margin-bottom:8px; }
 .qnl-register p { color:var(--muted); font-size:13px; line-height:1.6; margin-bottom:28px; }
@@ -818,6 +826,7 @@ html,body { overscroll-behavior-y: contain; }
   <div class="qnl-wrap" id="qnl-inner">
     <div class="empty">Cargando quiniela…</div>
   </div>
+  <div id="qnl-admin-section"></div>
 </div>
 
 <!-- ══ SEDES ══ -->

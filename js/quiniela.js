@@ -30,6 +30,10 @@ const GROUPS = [
   },
 ];
 
+const ADMIN_HASH = 'f353bf263d36c03aa634957ae550b9d24fb8ee38ca4b672ed61997d4934cb29d';
+const ADMIN_SALT = 'admin26';
+let qnlAdminUnlocked = false;
+
 let qnlUser       = null;
 let qnlGroup      = null;
 let qnlMode       = 'home';   // 'home' | 'partidos' | 'torneo'
@@ -131,6 +135,7 @@ async function hashStr(s) {
 async function loadQuiniela() {
   const wrap = document.getElementById('qnl-inner');
   if (!wrap) return;
+  renderQnlAdmin();
   if (qnlLoaded && qnlUser) { renderQnlContainer(); return; }
   wrap.innerHTML = '<div class="empty">Cargando…</div>';
   const uid = localStorage.getItem('qnl_uid');
@@ -275,13 +280,10 @@ async function loadMyBets() {
 function renderQnlContainer() {
   const wrap = document.getElementById('qnl-inner');
   if (!wrap) return;
-  const adminBtn = qnlUser.name === 'Nacho'
-    ? `<button class="qnl-backup-btn" onclick="exportBackup(this)" title="Descargar backup de todas las apuestas">Backup</button>`
-    : '';
   wrap.innerHTML = `
     <div class="qnl-header">
       <span class="qnl-user">Hola, ${escHtml(qnlUser.name)} 👋</span>
-      <div class="qnl-header-actions">${adminBtn}<button class="qnl-logout" onclick="qnlLogout()">Cambiar usuario</button></div>
+      <div class="qnl-header-actions"><button class="qnl-logout" onclick="qnlLogout()">Cambiar usuario</button></div>
     </div>
     <div id="qnl-mode-content"></div>`;
   renderQnlModeContent();
@@ -957,7 +959,50 @@ async function renderClasificacion(el) {
     </table>`;
 }
 
-// ── Admin: backup ──────────────────────────────────────────────
+// ── Admin: login + backup ──────────────────────────────────────
+
+function renderQnlAdmin() {
+  const el = document.getElementById('qnl-admin-section');
+  if (!el) return;
+  if (qnlAdminUnlocked) {
+    el.innerHTML = `
+      <div class="qnl-admin-section">
+        <button class="qnl-admin-export" onclick="exportBackup(this)">↓ Descargar backup completo</button>
+      </div>`;
+    return;
+  }
+  el.innerHTML = `
+    <div class="qnl-admin-section">
+      <button class="qnl-admin-toggle" onclick="qnlShowAdminForm()">admin</button>
+    </div>`;
+}
+
+function qnlShowAdminForm() {
+  const el = document.getElementById('qnl-admin-section');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="qnl-admin-section">
+      <div class="qnl-admin-form">
+        <input type="password" class="qnl-admin-input" id="qnl-admin-pass" placeholder="Contraseña admin"
+          onkeydown="if(event.key==='Enter')qnlAdminLogin()">
+        <button class="qnl-admin-submit" onclick="qnlAdminLogin()">Entrar</button>
+      </div>
+      <div class="qnl-admin-err" id="qnl-admin-err"></div>
+    </div>`;
+  document.getElementById('qnl-admin-pass')?.focus();
+}
+
+async function qnlAdminLogin() {
+  const val = document.getElementById('qnl-admin-pass')?.value;
+  if (!val) return;
+  const hash = await hashStr(val + ADMIN_SALT);
+  if (hash !== ADMIN_HASH) {
+    document.getElementById('qnl-admin-err').textContent = 'Contraseña incorrecta.';
+    return;
+  }
+  qnlAdminUnlocked = true;
+  renderQnlAdmin();
+}
 
 async function exportBackup(btn) {
   if (btn) { btn.disabled = true; btn.textContent = 'Exportando…'; }
