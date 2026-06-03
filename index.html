@@ -409,8 +409,12 @@ html,body { overscroll-behavior-y: contain; }
 .qnl-wrap { max-width:700px; margin:0 auto; padding:14px 12px 24px; }
 .qnl-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
 .qnl-user { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--accent); letter-spacing:1px; }
+.qnl-header-actions { display:flex; align-items:center; gap:8px; }
 .qnl-logout { font-size:11px; color:var(--muted); background:none; border:1px solid var(--border); border-radius:4px; padding:4px 10px; cursor:pointer; }
 .qnl-logout:hover { color:var(--text); }
+.qnl-backup-btn { font-size:11px; color:var(--accent); background:none; border:1px solid var(--accent); border-radius:4px; padding:4px 10px; cursor:pointer; opacity:.7; }
+.qnl-backup-btn:hover { opacity:1; }
+.qnl-backup-btn:disabled { opacity:.4; cursor:default; }
 .qnl-register { text-align:center; padding:48px 24px 32px; }
 .qnl-register h2 { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:3px; color:var(--accent); margin-bottom:8px; }
 .qnl-register p { color:var(--muted); font-size:13px; line-height:1.6; margin-bottom:28px; }

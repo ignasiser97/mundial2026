@@ -224,11 +224,11 @@ async function qnlPickFriend(name) {
   document.querySelectorAll('.qnl-picker-btn').forEach(b => b.disabled = true);
   const errEl = document.getElementById('qnl-pick-err');
 
-  const { data: existing } = await db.from('users').select('*').eq('name', name).maybeSingle();
+  const { data: existing } = await db.from('users').select('*').eq('name', name).eq('group_id', qnlGroup.id).maybeSingle();
   if (existing) {
     qnlUser = existing;
   } else {
-    const { data, error } = await db.from('users').insert({ name }).select().maybeSingle();
+    const { data, error } = await db.from('users').insert({ name, group_id: qnlGroup.id }).select().maybeSingle();
     if (error || !data) {
       if (errEl) errEl.textContent = error?.message || error?.code || 'Error desconocido';
       document.querySelectorAll('.qnl-picker-btn').forEach(b => b.disabled = false);
@@ -268,10 +268,13 @@ async function loadMyBets() {
 function renderQnlContainer() {
   const wrap = document.getElementById('qnl-inner');
   if (!wrap) return;
+  const adminBtn = qnlUser.name === 'Nacho'
+    ? `<button class="qnl-backup-btn" onclick="exportBackup(this)" title="Descargar backup de todas las apuestas">Backup</button>`
+    : '';
   wrap.innerHTML = `
     <div class="qnl-header">
       <span class="qnl-user">Hola, ${escHtml(qnlUser.name)} 👋</span>
-      <button class="qnl-logout" onclick="qnlLogout()">Cambiar usuario</button>
+      <div class="qnl-header-actions">${adminBtn}<button class="qnl-logout" onclick="qnlLogout()">Cambiar usuario</button></div>
     </div>
     <div id="qnl-mode-content"></div>`;
   renderQnlModeContent();
@@ -945,4 +948,58 @@ async function renderClasificacion(el) {
       </tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
+}
+
+// ── Admin: backup ──────────────────────────────────────────────
+
+async function exportBackup(btn) {
+  if (btn) { btn.disabled = true; btn.textContent = 'Exportando…'; }
+
+  const [usersRes, betsRes, torneoRes] = await Promise.all([
+    db.from('users').select('*'),
+    db.from('bets').select('*'),
+    db.from('tournament_bets').select('*'),
+  ]);
+
+  const userMap = {};
+  (usersRes.data || []).forEach(u => { userMap[u.id] = u; });
+
+  const backup = { exported: new Date().toISOString(), groups: {} };
+  GROUPS.forEach(g => { backup.groups[g.id] = { name: g.name, users: {} }; });
+
+  (usersRes.data || []).forEach(u => {
+    const gid = u.group_id || 'sin_grupo';
+    if (!backup.groups[gid]) backup.groups[gid] = { name: gid, users: {} };
+    backup.groups[gid].users[u.name] = { bets: {}, torneo: null };
+  });
+
+  (betsRes.data || []).forEach(b => {
+    const u = userMap[b.user_id];
+    if (!u) return;
+    const gid = u.group_id || 'sin_grupo';
+    if (!backup.groups[gid]?.users[u.name]) return;
+    backup.groups[gid].users[u.name].bets[b.match_id] = { home: b.home_score, away: b.away_score };
+  });
+
+  (torneoRes.data || []).forEach(t => {
+    const u = userMap[t.user_id];
+    if (!u) return;
+    const gid = u.group_id || 'sin_grupo';
+    if (!backup.groups[gid]?.users[u.name]) return;
+    backup.groups[gid].users[u.name].torneo = {
+      winner: t.winner, finalist: t.finalist, spain_round: t.spain_round,
+      top_scorer: t.top_scorer, best_keeper: t.best_keeper, surprise: t.surprise,
+    };
+  });
+
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `backup_apuestas_${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  if (btn) { btn.disabled = false; btn.textContent = 'Backup'; }
+  showToast('Backup descargado');
 }
