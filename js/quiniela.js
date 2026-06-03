@@ -21,6 +21,13 @@ const GROUPS = [
     hash:    'b24ba0c12cce455ff311de58f936c129e1eea744e6cf37d0f93afb59ee1cfbc6',
     members: ['Nacho','Sergio','Edu','Alex','Javi','Jorge','Martín','Martinez','Ghobas','Portero','Gonza'],
   },
+  {
+    id:      'pracas',
+    name:    'Prrrrrrrraaaaaacaaas🐶👑👑👑',
+    salt:    'mundial26',
+    hash:    'a345b078db094bccc89ad34630ffde2e01352f777c8a51b6f871d9250b6a283f',
+    members: ['Crossfitero 1','Crossfitero 2','Gutcemaniaco','Xaxofon2000','Chiqui Ibai','Mª Escudero','JAME JAMENEI','AFELLAY','The Small One','xNanoXz'],
+  },
 ];
 
 let qnlUser       = null;

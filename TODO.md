@@ -10,6 +10,7 @@
 - [x] Preparar renderizado de resultados en Calendario y Apuestas (activo cuando standings.json tenga datos)
 - [x] Refactor: matchId/matchTeams/escHtml/getMatchResults centralizados en matches.js; grpLoaded declarado; XSS en qnlUser.name arreglado; CSS muerto eliminado
 - [x] Backup de apuestas — botón admin (solo Nacho) exporta JSON con todas las apuestas organizadas por grupo; group_id añadido a tabla users para soporte multi-grupo
+- [x] Nuevo grupo: Prrrrrrrraaaaaacaaas🐶👑👑👑 (id: pracas, 10 miembros)
 
 ## Pendiente
 
