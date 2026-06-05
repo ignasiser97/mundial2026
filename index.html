@@ -206,8 +206,13 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .mrow-meta { grid-column:1/4; font-size:11px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:center; }
 .match-row-link { cursor:pointer; }
 .match-grp-link { color:var(--accent); opacity:.7; }
-.mrow-odds { color:var(--muted); }
-.mrow-odds-val { color:var(--text); font-weight:500; }
+.odds-row { grid-column:1/4; display:flex; justify-content:center; align-items:center; gap:5px; padding:0 0 9px; }
+.odds-chip { display:inline-flex; align-items:baseline; gap:3px; background:rgba(255,255,255,.05); border:1px solid var(--border); border-radius:5px; padding:2px 7px; }
+.odds-chip.odds-fav { border-color:rgba(232,200,74,.4); background:rgba(232,200,74,.07); }
+.odds-lbl { font-size:9px; color:var(--muted); font-weight:700; letter-spacing:.4px; }
+.odds-num { font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:.3px; color:var(--text); }
+.odds-chip.odds-fav .odds-num { color:var(--accent); }
+.odds-src { font-size:9px; color:var(--muted); padding-left:2px; }
 .empty { text-align:center; padding:40px 16px; color:var(--muted); font-size:13px; }
 
 /* GRUPOS */
@@ -477,8 +482,7 @@ html,body { overscroll-behavior-y: contain; }
 .bet-saved { color:var(--pos); font-size:12px; font-weight:600; }
 .bet-closed { color:var(--muted); font-size:11px; }
 .bet-lock-info { font-size:10px; color:var(--muted); text-align:center; margin-top:6px; }
-.bet-odds { font-size:11px; color:var(--muted); text-align:center; padding:4px 0 2px; letter-spacing:.2px; }
-.bet-odds-val { color:var(--text); font-weight:500; }
+.bet-odds { display:flex; justify-content:center; align-items:center; gap:5px; padding:6px 0 2px; }
 .lb-table { width:100%; border-collapse:collapse; font-size:13px; }
 .lb-table th { padding:7px 8px; color:var(--muted); font-size:10px; font-weight:600; letter-spacing:.5px; text-align:center; background:rgba(255,255,255,.03); border-bottom:1px solid var(--border); }
 .lb-table th.lb-name { text-align:left; }

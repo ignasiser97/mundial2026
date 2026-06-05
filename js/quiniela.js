@@ -750,9 +750,7 @@ async function renderApostar(el) {
       }
 
       const o = !started && allOdds[mid];
-      const oddsLine = o
-        ? `<div class="bet-odds"><span class="bet-odds-val">${o.home.toFixed(2)}</span> · ${o.draw != null ? `X<span class="bet-odds-val">${o.draw.toFixed(2)}</span> · ` : ''}<span class="bet-odds-val">${o.away.toFixed(2)}</span> <span style="font-size:10px">${o.bookmaker}</span></div>`
-        : '';
+      const oddsLine = o ? `<div class="bet-odds">${oddsChips(o)}</div>` : '';
 
       return `
         <div class="bet-card">

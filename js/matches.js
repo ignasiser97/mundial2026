@@ -205,3 +205,16 @@ function openDropdown(id)  { document.getElementById(id)?.classList.remove('hidd
 function closeDropdown(id) { document.getElementById(id)?.classList.add('hidden'); }
 
 function isNight(t) { return +t.split(':')[0] <= 6; }
+
+// ── Odds chips (Calendar + Quiniela) ─────────────────────────
+function oddsChips(o) {
+  const vals  = [o.home, o.draw, o.away].filter(v => v != null);
+  const minV  = Math.min(...vals);
+  const chip  = (lbl, val) => {
+    if (val == null) return '';
+    const fav = val === minV ? ' odds-fav' : '';
+    return `<span class="odds-chip${fav}"><span class="odds-lbl">${lbl}</span><span class="odds-num">${val.toFixed(2)}</span></span>`;
+  };
+  return chip('1', o.home) + chip('X', o.draw) + chip('2', o.away)
+    + `<span class="odds-src">${o.bookmaker}</span>`;
+}

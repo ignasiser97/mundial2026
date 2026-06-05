@@ -189,9 +189,7 @@ async function renderCalendar() {
       const mid = matchId(m);
       const result = results[mid];
       const o = !result && allOdds[mid];
-      const oddsHtml = o
-        ? ` · <span class="mrow-odds"><span class="mrow-odds-val">${o.home.toFixed(2)}</span> · ${o.draw != null ? `X<span class="mrow-odds-val">${o.draw.toFixed(2)}</span> · ` : ''}<span class="mrow-odds-val">${o.away.toFixed(2)}</span></span>`
-        : '';
+      const oddsHtml = o ? `<div class="odds-row">${oddsChips(o)}</div>` : '';
       const centerHtml = result
         ? `<div class="mrow-result"><span class="mrow-score-num">${result.home}</span><span class="mrow-rdash">–</span><span class="mrow-score-num">${result.away}</span></div><div class="mrow-fin">FIN</div>`
         : `<div class="${timeCls}">${time}</div><div class="mrow-sub">ESP${night?' 🌙':''}${spainBadge}</div>`;
@@ -211,7 +209,8 @@ async function renderCalendar() {
           <span class="${awayTnCls}"${awayTnClick}>${awayTeam}</span>
           ${awayFlag ? `<span class="mrow-flag">${awayFlag}</span>` : ''}
         </div>
-        <div class="mrow-meta">${badges} ${venueName}${metaRight}${oddsHtml}</div>
+        <div class="mrow-meta">${badges} ${venueName}${metaRight}</div>
+        ${oddsHtml}
       </div>`;
     }
   }
