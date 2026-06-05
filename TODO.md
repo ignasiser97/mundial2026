@@ -11,6 +11,7 @@
 - [x] Refactor: matchId/matchTeams/escHtml/getMatchResults centralizados en matches.js; grpLoaded declarado; XSS en qnlUser.name arreglado; CSS muerto eliminado
 - [x] Backup de apuestas — login admin independiente (abajo del tab Apuestas) con contraseña propia; exporta JSON con todas las apuestas organizadas por grupo; group_id en tabla users para soporte multi-grupo
 - [x] Nuevo grupo: Prrrrrrrraaaaaacaaas🐶👑👑👑 (id: pracas, 10 miembros)
+- [x] Tab Equipos — convocatorias de las 48 selecciones (Wikipedia scraper → squads.json); filtros por país, club (buscador) y jugador; desplegable por jugador con DOB, edad, internacionales y goles; acceso directo desde nombres de equipos en el Calendario
 
 ## Pendiente
 

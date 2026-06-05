@@ -76,11 +76,11 @@ function applyUpdate() {
 }
 
 // ── Tabs ───────────────────────────────────────────────────────
-const tabLoaded = { grp: false, sts: false, nws: false, ven: false };
+const tabLoaded = { grp: false, sts: false, nws: false, ven: false, sqd: false };
 
 function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-  ['hom','cal','grp','sts','nws','qnl','ven'].forEach(t => {
+  ['hom','cal','grp','sts','sqd','nws','qnl','ven'].forEach(t => {
     const el = document.getElementById(t + '-tab');
     if (t === tab) {
       el.classList.remove('hidden');
@@ -93,6 +93,7 @@ function switchTab(tab) {
   });
   if (tab === 'grp' && !tabLoaded.grp) { tabLoaded.grp = true; loadGroups(); }
   if (tab === 'sts' && !tabLoaded.sts) { tabLoaded.sts = true; loadStats(); }
+  if (tab === 'sqd' && !tabLoaded.sqd) { tabLoaded.sqd = true; initSquads(); }
   if (tab === 'nws' && !tabLoaded.nws) { tabLoaded.nws = true; loadNews(); }
   if (tab === 'qnl') { loadQuiniela(); }
   if (tab === 'ven' && !tabLoaded.ven) { tabLoaded.ven = true; renderVenues(); }

@@ -201,14 +201,19 @@ async function renderCalendar() {
         ? `<div class="mrow-result"><span class="mrow-score-num">${result.home}</span><span class="mrow-rdash">–</span><span class="mrow-score-num">${result.away}</span></div><div class="mrow-fin">FIN</div>`
         : `<div class="${timeCls}">${time}</div><div class="mrow-sub">ESP${night?' 🌙':''}${spainBadge}</div>`;
 
+      const homeTnCls = homeFlag ? 'mrow-tname mrow-tname-link' : 'mrow-tname';
+      const awayTnCls = awayFlag ? 'mrow-tname mrow-tname-link' : 'mrow-tname';
+      const homeTnClick = homeFlag ? ` onclick="sqdGoToTeam('${homeTeam}');event.stopPropagation()"` : '';
+      const awayTnClick = awayFlag ? ` onclick="sqdGoToTeam('${awayTeam}');event.stopPropagation()"` : '';
+
       html += `<div class="${rowCls}"${onclick}>
         <div class="mrow-home">
           ${homeFlag ? `<span class="mrow-flag">${homeFlag}</span>` : ''}
-          <span class="mrow-tname">${homeTeam}</span>
+          <span class="${homeTnCls}"${homeTnClick}>${homeTeam}</span>
         </div>
         <div class="mrow-center">${centerHtml}</div>
         <div class="mrow-away">
-          <span class="mrow-tname">${awayTeam}</span>
+          <span class="${awayTnCls}"${awayTnClick}>${awayTeam}</span>
           ${awayFlag ? `<span class="mrow-flag">${awayFlag}</span>` : ''}
         </div>
         <div class="mrow-meta">${badges} ${venueName}${metaRight}</div>

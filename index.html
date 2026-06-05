@@ -197,6 +197,8 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .mrow-away { display:flex; align-items:center; gap:6px; justify-content:flex-end; min-width:0; }
 .mrow-flag { font-size:22px; flex-shrink:0; }
 .mrow-tname { font-size:12px; font-weight:600; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.mrow-tname-link { cursor:pointer; }
+@media (hover:hover) { .mrow-tname-link:hover { color:var(--accent); text-decoration:underline; text-underline-offset:2px; } }
 .match-row.spain .mrow-tname { color:#fff; }
 .mrow-center { text-align:center; flex-shrink:0; }
 .mrow-time { font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--accent); letter-spacing:1px; line-height:1; }
@@ -680,6 +682,68 @@ html,body { overscroll-behavior-y: contain; }
 .stat-detail-row td { padding:0; border-bottom:none !important; }
 .stat-detail-inner { padding:6px 12px 10px; display:flex; gap:14px; flex-wrap:wrap; font-size:11px; color:var(--muted); background:rgba(8,14,28,.7); border-bottom:1px solid var(--border); }
 .stat-detail-inner strong { color:var(--accent); font-size:13px; }
+
+/* ── CONVOCADOS ─────────────────────────────────────── */
+.sqd-wrap { padding-bottom:80px; }
+.sqd-filters { display:flex; flex-wrap:wrap; gap:8px; padding:12px 12px 10px; }
+.sqd-select {
+  flex:1 1 120px; min-width:0; padding:9px 10px; background:var(--card);
+  border:1px solid var(--border); border-radius:8px; color:var(--text);
+  font-size:14px; font-family:'DM Sans',sans-serif; cursor:pointer;
+  appearance:none; -webkit-appearance:none;
+}
+.sqd-select:focus { outline:none; border-color:var(--accent); }
+.sqd-club-wrap { flex:1 1 120px; min-width:0; }
+.sqd-club-wrap .ts-input { width:100%; box-sizing:border-box; }
+.sqd-search-input {
+  flex:1 1 120px; min-width:0; padding:9px 10px; background:var(--card);
+  border:1px solid var(--border); border-radius:8px; color:var(--text);
+  font-size:14px; font-family:'DM Sans',sans-serif; outline:none;
+}
+.sqd-search-input:focus { border-color:var(--accent); }
+.sqd-team-header {
+  display:flex; align-items:center; gap:10px; padding:14px 16px 12px;
+  background:var(--surface); border-bottom:2px solid var(--border);
+}
+.sqd-team-flag { font-size:28px; line-height:1; }
+.sqd-team-name { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px; }
+.sqd-team-count { margin-left:auto; font-size:11px; color:var(--muted); }
+.sqd-pos-header {
+  padding:6px 16px; font-size:10px; font-weight:700; letter-spacing:1.5px;
+  text-transform:uppercase; background:rgba(255,255,255,.025);
+  border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+}
+.sqd-ph-gk { color:#e8c84a; } .sqd-ph-df { color:#4a90e8; }
+.sqd-ph-mf { color:#4ae88c; } .sqd-ph-fw { color:#e86b4a; }
+.sqd-row {
+  display:grid; grid-template-columns:28px 38px 1fr auto 16px;
+  align-items:center; gap:8px; padding:10px 16px;
+  border-bottom:1px solid rgba(30,45,69,.45);
+}
+.sqd-search-row { grid-template-columns:38px 1fr 16px; }
+.sqd-row:last-child { border-bottom:none; }
+.sqd-shirt { font-family:'Bebas Neue',sans-serif; font-size:16px; color:var(--muted); text-align:right; }
+.sqd-badge {
+  display:inline-block; padding:2px 6px; border-radius:4px; text-align:center;
+  font-size:10px; font-weight:700; letter-spacing:.5px;
+}
+.sqd-b-gk { background:rgba(232,200,74,.15); color:#e8c84a; }
+.sqd-b-df { background:rgba(74,144,232,.15); color:#4a90e8; }
+.sqd-b-mf { background:rgba(74,232,140,.15); color:#4ae88c; }
+.sqd-b-fw { background:rgba(232,107,74,.15); color:#e86b4a; }
+.sqd-name  { font-size:14px; font-weight:600; }
+.sqd-club  { font-size:11px; color:var(--muted); text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:130px; }
+.sqd-cap   { display:inline-block; margin-left:5px; padding:1px 4px; background:var(--accent); color:#111; border-radius:3px; font-size:9px; font-weight:900; vertical-align:middle; }
+.sqd-clickable { cursor:pointer; transition:background .12s; }
+@media (hover:hover) { .sqd-clickable:hover { background:rgba(232,200,74,.05); } }
+.sqd-chevron { font-size:16px; color:var(--muted); text-align:center; transition:transform .2s; display:inline-block; }
+.sqd-chevron-open { transform:rotate(90deg); color:var(--accent); }
+.sqd-detail { background:rgba(8,14,28,.7); border-bottom:1px solid var(--border); }
+.sqd-detail-inner { display:flex; flex-wrap:wrap; gap:12px 20px; padding:8px 16px 10px; font-size:11px; color:var(--muted); }
+.sqd-detail-inner strong { color:var(--accent); font-size:13px; }
+.sqd-search-meta { padding:10px 16px; font-size:12px; color:var(--muted); }
+.sqd-search-info { display:flex; flex-direction:column; gap:2px; min-width:0; }
+.sqd-search-sub  { font-size:11px; color:var(--muted); }
 </style>
 </head>
 <body>
@@ -714,6 +778,10 @@ html,body { overscroll-behavior-y: contain; }
   <button class="tab-btn" data-tab="sts" onclick="switchTab('sts')">
     <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg></span>
     Stats
+  </button>
+  <button class="tab-btn" data-tab="sqd" onclick="switchTab('sqd')">
+    <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>
+    Equipos
   </button>
   <button class="tab-btn" data-tab="nws" onclick="switchTab('nws')">
     <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg></span>
@@ -809,6 +877,13 @@ html,body { overscroll-behavior-y: contain; }
   </div>
 </div>
 
+<!-- ══ CONVOCADOS ══ -->
+<div id="sqd-tab" class="hidden">
+  <div class="sqd-wrap">
+    <div id="sqd-content"><div class="empty">Cargando convocados…</div></div>
+  </div>
+</div>
+
 <!-- ══ NOTICIAS ══ -->
 <div id="nws-tab" class="hidden">
   <div class="news-wrap">
@@ -856,6 +931,7 @@ html,body { overscroll-behavior-y: contain; }
 <script src="js/news.js"></script>
 <script src="js/quiniela.js"></script>
 <script src="js/venues.js"></script>
+<script src="js/squads.js"></script>
 <script src="js/app.js"></script>
 <script src="js/push.js"></script>
 
