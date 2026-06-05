@@ -76,11 +76,18 @@ function applyUpdate() {
 }
 
 // ── Tabs ───────────────────────────────────────────────────────
-const tabLoaded = { grp: false, sts: false, nws: false, ven: false, sqd: false };
+const tabLoaded = { grp: false, sts: false, nws: false, ven: false, sqd: false, sim: false };
+const MORE_TABS  = new Set(['sts','sim','nws','ven']);
 
 function switchTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-  ['hom','cal','grp','sts','sqd','nws','qnl','ven'].forEach(t => {
+  const inMore = MORE_TABS.has(tab);
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    if (b.id === 'more-btn') b.classList.toggle('active', inMore);
+    else b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  document.querySelectorAll('.more-item').forEach(b =>
+    b.classList.toggle('more-item-active', b.dataset.tab === tab));
+  ['hom','cal','grp','sts','sim','sqd','nws','qnl','ven'].forEach(t => {
     const el = document.getElementById(t + '-tab');
     if (t === tab) {
       el.classList.remove('hidden');
@@ -93,11 +100,25 @@ function switchTab(tab) {
   });
   if (tab === 'grp' && !tabLoaded.grp) { tabLoaded.grp = true; loadGroups(); }
   if (tab === 'sts' && !tabLoaded.sts) { tabLoaded.sts = true; loadStats(); }
+  if (tab === 'sim' && !tabLoaded.sim) { tabLoaded.sim = true; simInit(); }
   if (tab === 'sqd' && !tabLoaded.sqd) { tabLoaded.sqd = true; initSquads(); }
   if (tab === 'nws' && !tabLoaded.nws) { tabLoaded.nws = true; loadNews(); }
   if (tab === 'qnl') { loadQuiniela(); }
   if (tab === 'ven' && !tabLoaded.ven) { tabLoaded.ven = true; renderVenues(); }
   else if (tab === 'ven') { initVenueMap(); }
+}
+
+function toggleMoreMenu() {
+  const menu     = document.getElementById('more-menu');
+  const backdrop = document.getElementById('more-backdrop');
+  const opening  = !menu.classList.contains('more-open');
+  menu.classList.toggle('more-open', opening);
+  backdrop.classList.toggle('hidden', !opening);
+}
+
+function closeMoreMenu() {
+  document.getElementById('more-menu').classList.remove('more-open');
+  document.getElementById('more-backdrop').classList.add('hidden');
 }
 
 // ── Filtro España ──────────────────────────────────────────────
