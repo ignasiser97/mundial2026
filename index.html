@@ -681,6 +681,29 @@ html,body { overscroll-behavior-y: contain; }
 .stat-detail-row td { padding:0; border-bottom:none !important; }
 .stat-detail-inner { padding:6px 12px 10px; display:flex; gap:14px; flex-wrap:wrap; font-size:11px; color:var(--muted); background:rgba(8,14,28,.7); border-bottom:1px solid var(--border); }
 .stat-detail-inner strong { color:var(--accent); font-size:13px; }
+/* ── HINTS PRIMER USO ───────────────────────────────── */
+.hint-banner {
+  display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+  padding:10px 14px; background:rgba(232,200,74,.1);
+  border-bottom:1px solid rgba(232,200,74,.2);
+  animation:hintIn .3s ease;
+}
+.hint-lines { display:flex; flex-direction:column; gap:4px; }
+.hint-line { font-size:13px; color:var(--text); line-height:1.4; }
+.hint-close { background:none; border:none; color:var(--muted); font-size:16px; cursor:pointer; flex-shrink:0; padding:0 2px; line-height:1; margin-top:1px; }
+.hint-close:hover { color:var(--text); }
+.hint-out { opacity:0; transition:opacity .3s ease; }
+@keyframes hintIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── TIPS ───────────────────────────────────────────── */
+.tips-wrap { padding:20px 12px 100px; }
+.tips-title { font-family:'Bebas Neue',sans-serif; font-size:14px; letter-spacing:1.5px; color:var(--muted); margin-bottom:10px; padding-left:2px; }
+.tips-list { display:flex; flex-direction:column; gap:6px; }
+.tip-item { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; background:var(--card); border-radius:10px; border:1px solid var(--border); }
+.tip-ico { font-size:18px; line-height:1.4; flex-shrink:0; }
+.tip-text { font-size:13px; line-height:1.55; color:var(--muted); }
+.tip-text strong { color:var(--text); font-weight:600; }
+
 /* ── MÁS MENÚ ───────────────────────────────────────── */
 .more-backdrop { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,.45); }
 .more-menu {
@@ -885,6 +908,43 @@ html,body { overscroll-behavior-y: contain; }
 <div id="hom-tab">
   <div class="home-wrap" id="home-content"></div>
   <div id="push-section"></div>
+  <div class="tips-wrap">
+    <div class="tips-title">¿Sabías que...?</div>
+    <div class="tips-list">
+      <div class="tip-item">
+        <span class="tip-ico">🗓</span>
+        <div class="tip-text"><strong>Calendario</strong> — Pulsa el nombre de un equipo para ir directo a su convocatoria</div>
+      </div>
+      <div class="tip-item">
+        <span class="tip-ico">🗓</span>
+        <div class="tip-text"><strong>Calendario</strong> — Pulsa "Grupo X →" en un partido para saltar a su clasificación</div>
+      </div>
+      <div class="tip-item">
+        <span class="tip-ico">📊</span>
+        <div class="tip-text"><strong>Grupos</strong> — Pulsa un equipo en la clasificación para ver sus 3 partidos del grupo</div>
+      </div>
+      <div class="tip-item">
+        <span class="tip-ico">📊</span>
+        <div class="tip-text"><strong>Grupos · Bracket</strong> — Pulsa cualquier tarjeta para saltar al Calendario en esa fecha</div>
+      </div>
+      <div class="tip-item">
+        <span class="tip-ico">🔮</span>
+        <div class="tip-text"><strong>Simulador</strong> — Pon marcadores hipotéticos y ve quién clasifica en tiempo real hasta la Gran Final</div>
+      </div>
+      <div class="tip-item">
+        <span class="tip-ico">👥</span>
+        <div class="tip-text"><strong>Equipos</strong> — Pulsa cualquier jugador para ver su edad, internacionales y goles con su selección</div>
+      </div>
+      <div class="tip-item">
+        <span class="tip-ico">👥</span>
+        <div class="tip-text"><strong>Equipos</strong> — Busca por club y encuentra todos los convocados del Mundial en ese equipo</div>
+      </div>
+      <div class="tip-item">
+        <span class="tip-ico">🎯</span>
+        <div class="tip-text"><strong>Apuestas</strong> — Pulsa un partido para ver lo que apostó cada miembro del grupo</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ══ CALENDARIO ══ -->

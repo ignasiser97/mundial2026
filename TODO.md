@@ -14,6 +14,7 @@
 - [x] Tab Equipos — convocatorias de las 48 selecciones (Wikipedia scraper → squads.json); filtros por país, club (buscador) y jugador; desplegable por jugador con DOB, edad, internacionales y goles; acceso directo desde nombres de equipos en el Calendario
 - [x] Simulador de grupos y bracket — score inputs por partido → clasificación en tiempo real (Pts/DG/GF); ranking mejores terceros; bracket clickable R32→Final con cascada de limpieza
 - [x] Navegación "Más" — 5 tabs fijos (Inicio/Calendario/Grupos/Apuestas/Equipos) + bottom sheet animado con Stats/Simulador/Noticias/Sedes
+- [x] Descubrimiento de features — sección "¿Sabías que...?" en Inicio + hints de primer uso por tab (se guardan en localStorage, desaparecen solos a los 6s)
 
 ## Pendiente
 

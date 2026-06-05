@@ -98,6 +98,7 @@ function switchTab(tab) {
       el.classList.add('hidden');
     }
   });
+  showHint(tab);
   if (tab === 'grp' && !tabLoaded.grp) { tabLoaded.grp = true; loadGroups(); }
   if (tab === 'sts' && !tabLoaded.sts) { tabLoaded.sts = true; loadStats(); }
   if (tab === 'sim' && !tabLoaded.sim) { tabLoaded.sim = true; simInit(); }
@@ -106,6 +107,52 @@ function switchTab(tab) {
   if (tab === 'qnl') { loadQuiniela(); }
   if (tab === 'ven' && !tabLoaded.ven) { tabLoaded.ven = true; renderVenues(); }
   else if (tab === 'ven') { initVenueMap(); }
+}
+
+// ── Hints de primer uso ────────────────────────────────────────
+const HINTS = {
+  cal: [
+    '💡 Pulsa el nombre de un equipo para ver su convocatoria',
+    '💡 Pulsa "Grupo X →" en un partido para saltar a su clasificación',
+  ],
+  grp: [
+    '💡 Pulsa un equipo en la clasificación para ver sus 3 partidos del grupo',
+    '💡 Bracket: pulsa cualquier tarjeta para saltar al Calendario en esa fecha',
+  ],
+  sim: [
+    '💡 Pon marcadores hipotéticos y ve quién clasifica en tiempo real hasta la Gran Final',
+  ],
+  sqd: [
+    '💡 Pulsa cualquier jugador para ver edad, internacionales y goles con su selección',
+    '💡 Busca por club para ver todos los convocados del Mundial en ese equipo',
+  ],
+  qnl: [
+    '💡 Pulsa un partido para ver lo que apostó cada miembro del grupo',
+  ],
+};
+
+function showHint(tab) {
+  const lines = HINTS[tab];
+  const key   = 'hint-' + tab;
+  if (!lines || localStorage.getItem(key)) return;
+
+  const tabEl = document.getElementById(tab + '-tab');
+  if (!tabEl || tabEl.querySelector('.hint-banner')) return;
+
+  const items = lines.map(t => `<div class="hint-line">${t}</div>`).join('');
+  const div = document.createElement('div');
+  div.className = 'hint-banner';
+  div.innerHTML = `<div class="hint-lines">${items}</div><button class="hint-close" onclick="dismissHint('${key}',this.parentElement)">✕</button>`;
+  tabEl.prepend(div);
+
+  setTimeout(() => dismissHint(key, div), 6000);
+}
+
+function dismissHint(key, el) {
+  if (!el || !el.parentElement) return;
+  localStorage.setItem(key, '1');
+  el.classList.add('hint-out');
+  setTimeout(() => el.remove(), 300);
 }
 
 function toggleMoreMenu() {
