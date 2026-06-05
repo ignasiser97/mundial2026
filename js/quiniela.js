@@ -967,17 +967,37 @@ async function renderMisApuestas(el) {
 
 // ── Clasificación ──────────────────────────────────────────────
 
+let lbScope = 'group';
+
+async function setLbScope(scope) {
+  lbScope = scope;
+  const el = document.getElementById('qnl-subcontent');
+  if (!el) return;
+  el.innerHTML = '<div class="empty">Cargando clasificación…</div>';
+  await renderClasificacion(el);
+}
+
 async function renderClasificacion(el) {
-  const [{ data: users }, { data: bets }, raw] = await Promise.all([
-    db.from('users').select('id, name'),
+  const [{ data: allUsers }, { data: bets }, raw] = await Promise.all([
+    db.from('users').select('id, name, group_id'),
     db.from('bets').select('user_id, match_id, home_score, away_score'),
     getMatchResults(),
   ]);
 
-  if (!users?.length) {
+  if (!allUsers?.length) {
     el.innerHTML = '<div class="empty">Aún no hay participantes.</div>';
     return;
   }
+
+  const users = lbScope === 'group'
+    ? allUsers.filter(u => u.group_id === qnlGroup?.id)
+    : allUsers;
+
+  const toggle = `
+    <div class="lb-scope-bar">
+      <button class="lb-scope-btn${lbScope==='group'?' active':''}" onclick="setLbScope('group')">Mi grupo</button>
+      <button class="lb-scope-btn${lbScope==='all'?' active':''}" onclick="setLbScope('all')">Todos</button>
+    </div>`;
 
   const resultMap = {};
   Object.entries(raw).forEach(([id, r]) => {
@@ -986,7 +1006,7 @@ async function renderClasificacion(el) {
   const hasResults = Object.keys(raw).length > 0;
 
   const stats = {};
-  (users || []).forEach(u => { stats[u.id] = { id: u.id, name: u.name, apuestas: 0, exactos: 0, pts: 0 }; });
+  users.forEach(u => { stats[u.id] = { id: u.id, name: u.name, group_id: u.group_id, apuestas: 0, exactos: 0, pts: 0 }; });
   (bets || []).forEach(b => {
     if (!stats[b.user_id]) return;
     stats[b.user_id].apuestas++;
@@ -1003,9 +1023,12 @@ async function renderClasificacion(el) {
 
   const rows = board.map((u, i) => {
     const isMe = u.id === qnlUser?.id;
+    const groupBadge = lbScope === 'all'
+      ? `<span class="lb-group-badge">${GROUPS.find(g => g.id === u.group_id)?.id || '?'}</span>`
+      : '';
     return `<tr${isMe ? ' class="me"' : ''}>
       <td class="lb-rank">${i+1}</td>
-      <td class="lb-name">${u.name}${isMe ? ' 👈' : ''}</td>
+      <td class="lb-name">${u.name}${isMe ? ' 👈' : ''}${groupBadge}</td>
       <td>${u.apuestas}</td>
       <td>${u.exactos}</td>
       <td class="lb-pts">${u.pts}</td>
@@ -1017,6 +1040,7 @@ async function renderClasificacion(el) {
     : '';
 
   el.innerHTML = `
+    ${toggle}
     ${note}
     <table class="lb-table">
       <thead><tr>
