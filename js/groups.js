@@ -30,9 +30,8 @@ let grpActiveLetter = '';
 async function loadGroups() {
   const el = document.getElementById('groups-content');
   try {
-    const res  = await fetch('./standings.json?t=' + Date.now());
-    if (!res.ok) throw new Error(res.status);
-    const data = await res.json();
+    const data = await getStandingsData();
+    if (!data?.groups) throw new Error('no data');
     const upd  = new Date(data.updated);
     document.getElementById('last-updated').textContent =
       'Actualizado: ' + upd.toLocaleDateString('es-ES') + ' ' +

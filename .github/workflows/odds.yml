@@ -1,0 +1,39 @@
+name: Actualizar cuotas
+
+on:
+  # Una vez al día a las 17:00 España (15:00 UTC en CEST)
+  # Solo durante el torneo: 11 jun – 19 jul 2026
+  # ~39 requests totales en el free tier (límite: 500/mes)
+  schedule:
+    - cron: '0 15 11-30 6 *'   # Junio 11–30
+    - cron: '0 15 1-19  7 *'   # Julio 1–19
+  workflow_dispatch:
+
+jobs:
+  odds:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: pip install -r scraper/requirements.txt
+
+      - name: Actualizar odds.json
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python scraper/update_odds.py
+
+      - name: Commit y push (solo si hay cambios)
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add odds.json
+          git diff --staged --quiet && echo "Sin cambios." || \
+            git commit -m "chore: cuotas $(date -u '+%Y-%m-%d %H:%M UTC')" && git push

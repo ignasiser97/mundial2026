@@ -266,6 +266,7 @@ async function qnlPickFriend(name) {
 
 function qnlLogout() {
   if (!confirm('¿Cambiar de usuario?')) return;
+  if (_urgentInterval) { clearInterval(_urgentInterval); _urgentInterval = null; }
   localStorage.removeItem('qnl_uid');
   localStorage.removeItem('qnl_gid');
   qnlUser   = null;
@@ -310,10 +311,41 @@ function switchQnlMode(mode) {
   renderQnlModeContent();
 }
 
-// ── Home: dos botones grandes ──────────────────────────────────
+// ── Home: urgente + dos botones grandes ───────────────────────
+
+let _urgentInterval = null;
 
 function renderQnlHome(el) {
+  if (_urgentInterval) { clearInterval(_urgentInterval); _urgentInterval = null; }
+
+  // Partidos hoy con apuesta aún abierta y sin apostar
+  const pending = MATCHES.filter(m => isBetOpen(m) && !qnlBets[matchId(m)])
+    .sort((a, b) => spainToUTC(a[0], a[1]) - spainToUTC(b[0], b[1]));
+
+  const next   = pending[0] || null;
+  const extras = pending.length - 1;
+
+  let urgentHtml = '';
+  if (next) {
+    const [home, away] = matchTeams(next);
+    const hf = FLAGS_MAP[home] || '';
+    const af = FLAGS_MAP[away] || '';
+    const subLabel = extras > 0
+      ? `+${extras} partido${extras > 1 ? 's' : ''} más sin apostar hoy`
+      : 'Sin apostar · toca para ir a Partidos';
+    urgentHtml = `
+      <div class="qnl-urgent" onclick="switchQnlMode('partidos')">
+        <div class="qnl-urgent-left">
+          <div class="qnl-urgent-match">${hf} ${home} – ${away} ${af}</div>
+          <div class="qnl-urgent-sub">${subLabel}</div>
+        </div>
+        <span class="qnl-urgent-cd" id="qnl-urgent-cd">…</span>
+        <span class="qnl-urgent-arrow">›</span>
+      </div>`;
+  }
+
   el.innerHTML = `
+    ${urgentHtml}
     <div class="qnl-mode-grid">
       <button class="qnl-mode-card" onclick="switchQnlMode('partidos')">
         <div class="qnl-mode-icon">⚽</div>
@@ -326,6 +358,32 @@ function renderQnlHome(el) {
         <div class="qnl-mode-desc">Predice el campeón, goleador, sorpresa y más</div>
       </button>
     </div>`;
+
+  if (next) startUrgentCountdown(next);
+}
+
+function startUrgentCountdown(m) {
+  const deadline = spainToUTC(m[0], m[1]) - 5 * 60 * 1000;
+
+  function tick() {
+    const cdEl = document.getElementById('qnl-urgent-cd');
+    if (!cdEl) { clearInterval(_urgentInterval); _urgentInterval = null; return; }
+    const diff = deadline - Date.now();
+    if (diff <= 0) {
+      clearInterval(_urgentInterval); _urgentInterval = null;
+      cdEl.closest('.qnl-urgent')?.remove();
+      return;
+    }
+    const h = Math.floor(diff / 3600000);
+    const min = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    cdEl.textContent = h > 0
+      ? `${h}h ${String(min).padStart(2, '0')}m`
+      : `${min}m ${String(s).padStart(2, '0')}s`;
+  }
+
+  tick();
+  _urgentInterval = setInterval(tick, 1000);
 }
 
 // ── Modo Partidos ──────────────────────────────────────────────
@@ -606,10 +664,11 @@ async function renderApostar(el) {
     .flatMap(date => MATCHES.filter(m => m[0] === date))
     .map(m => matchId(m));
 
-  const { data: groupBetsRaw } = await db
-    .from('bets')
-    .select('match_id, home_score, away_score, users(name)')
-    .in('match_id', displayedIds);
+  const [{ data: groupBetsRaw }, oddsData] = await Promise.all([
+    db.from('bets').select('match_id, home_score, away_score, users(name)').in('match_id', displayedIds),
+    getOddsData(),
+  ]);
+  const allOdds = oddsData.odds || {};
 
   const groupBetsMap = {};
   (groupBetsRaw || []).forEach(b => {
@@ -690,12 +749,18 @@ async function renderApostar(el) {
           <div id="gbets-${mid}" class="hidden"></div>`;
       }
 
+      const o = !started && allOdds[mid];
+      const oddsLine = o
+        ? `<div class="bet-odds"><span class="bet-odds-val">${o.home.toFixed(2)}</span> · ${o.draw != null ? `X<span class="bet-odds-val">${o.draw.toFixed(2)}</span> · ` : ''}<span class="bet-odds-val">${o.away.toFixed(2)}</span> <span style="font-size:10px">${o.bookmaker}</span></div>`
+        : '';
+
       return `
         <div class="bet-card">
           ${badge}
           <div class="bet-card-header" onclick="toggleBetDropdown('${mid}')">
             <div class="bet-meta">${m[1]} · ${m[3].split(',').pop().trim()}</div>
           </div>
+          ${oddsLine}
           <div id="bdrop-${mid}" class="bet-dropdown hidden">${dropContent}</div>
           ${body}
         </div>`;

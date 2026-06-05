@@ -116,32 +116,21 @@ function tsInit() {
     ul.appendChild(li);
   }
 }
-function tsFilter() {
-  const q=document.getElementById('ts-input').value.toLowerCase();
-  const dd=document.getElementById('ts-dropdown');
-  dd.classList.remove('hidden');
-  for(const li of dd.querySelectorAll('li'))
-    li.hidden = q!=='' && !li.textContent.toLowerCase().includes(q);
-}
-function tsOpen() {
-  closeAll();
-  document.getElementById('ts-dropdown').classList.remove('hidden');
-}
-function tsKey(e) {
-  if(e.key==='Escape') document.getElementById('ts-dropdown').classList.add('hidden');
-}
+function tsFilter() { filterDropdown('ts-input', 'ts-dropdown'); }
+function tsOpen()   { closeAll(); openDropdown('ts-dropdown'); }
+function tsKey(e)   { if (e.key === 'Escape') closeDropdown('ts-dropdown'); }
 function tsSelect(value, label) {
-  fTeam=value; tsSelected=value;
+  fTeam = value; tsSelected = value;
   document.getElementById('ts-input').value = value ? label : '';
   document.getElementById('ts-input').placeholder = value ? '' : '🔍 Todos los equipos';
-  document.getElementById('ts-dropdown').classList.add('hidden');
+  closeDropdown('ts-dropdown');
   applyFilters();
 }
 
 // ── Close popups ───────────────────────────────────────────────
 function closeAll() {
-  document.getElementById('cp-popup').classList.add('hidden');
-  document.getElementById('ts-dropdown').classList.add('hidden');
+  closeDropdown('cp-popup');
+  closeDropdown('ts-dropdown');
 }
 document.addEventListener('click', e => {
   if(!document.getElementById('cp-wrap').contains(e.target))
@@ -152,7 +141,8 @@ document.addEventListener('click', e => {
 
 // ── Render calendario ──────────────────────────────────────────
 async function renderCalendar() {
-  const results = await getMatchResults();
+  const [results, oddsData] = await Promise.all([getMatchResults(), getOddsData()]);
+  const allOdds = oddsData.odds || {};
   const filtered = MATCHES.filter(([date,time,label,,,ch,flags])=>{
     const vd=viewDate(date,time);
     if(fDate && vd!==fDate) return false;
@@ -178,7 +168,7 @@ async function renderCalendar() {
   for(const vd of Object.keys(byDay).sort()){
     html+=`<div class="day-header">${fmtDate(vd)}</div>`;
     for(const m of byDay[vd]){
-      const [date,time,label,venue,,ch,flags,phase]=m;
+      const [,time,label,venue,,ch,flags,phase]=m;
       if(phase!==lastPhase){ html+=`<div class="phase-banner">${PHASES[phase]||phase}</div>`; lastPhase=phase; }
       const night = isNight(time);
       const groupLetter = phase==='groups' ? (label.match(/Grupo ([A-L])/)?.[1] || null) : null;
@@ -196,7 +186,12 @@ async function renderCalendar() {
       const venueName = venue.split(',')[0];
       const metaRight = groupLetter ? ` · <span class="match-grp-link">Grupo ${groupLetter} →</span>` : '';
 
-      const result = results[matchId(m)];
+      const mid = matchId(m);
+      const result = results[mid];
+      const o = !result && allOdds[mid];
+      const oddsHtml = o
+        ? ` · <span class="mrow-odds"><span class="mrow-odds-val">${o.home.toFixed(2)}</span> · ${o.draw != null ? `X<span class="mrow-odds-val">${o.draw.toFixed(2)}</span> · ` : ''}<span class="mrow-odds-val">${o.away.toFixed(2)}</span></span>`
+        : '';
       const centerHtml = result
         ? `<div class="mrow-result"><span class="mrow-score-num">${result.home}</span><span class="mrow-rdash">–</span><span class="mrow-score-num">${result.away}</span></div><div class="mrow-fin">FIN</div>`
         : `<div class="${timeCls}">${time}</div><div class="mrow-sub">ESP${night?' 🌙':''}${spainBadge}</div>`;
@@ -216,7 +211,7 @@ async function renderCalendar() {
           <span class="${awayTnCls}"${awayTnClick}>${awayTeam}</span>
           ${awayFlag ? `<span class="mrow-flag">${awayFlag}</span>` : ''}
         </div>
-        <div class="mrow-meta">${badges} ${venueName}${metaRight}</div>
+        <div class="mrow-meta">${badges} ${venueName}${metaRight}${oddsHtml}</div>
       </div>`;
     }
   }

@@ -15,6 +15,9 @@
 - [x] Simulador de grupos y bracket — score inputs por partido → clasificación en tiempo real (Pts/DG/GF); ranking mejores terceros; bracket clickable R32→Final con cascada de limpieza
 - [x] Navegación "Más" — 5 tabs fijos (Inicio/Calendario/Grupos/Apuestas/Equipos) + bottom sheet animado con Stats/Simulador/Noticias/Sedes
 - [x] Descubrimiento de features — sección "¿Sabías que...?" en Inicio + hints de primer uso por tab (se guardan en localStorage, desaparecen solos a los 6s)
+- [x] Cuotas de casas de apuestas — odds.json actualizado diariamente vía GitHub Actions (The Odds API, Betfair/William Hill); visible en Calendario y en tarjetas de Apostar
+- [x] Refactor: standings.json cacheado una sola vez (getStandingsData); helpers de dropdown compartidos (filterDropdown/openDropdown/closeDropdown)
+- [x] Próxima apuesta que cierra — bloque urgente en home de Quiniela con countdown en tiempo real
 
 ## Pendiente
 
@@ -34,6 +37,5 @@
 - [ ] "Yo estuve aquí" — botón por partido, activo solo durante la ventana del partido (mismo criterio que el chat: día del partido hasta kickoff +3h). Un click por usuario por partido. Al final del mundial, contador de partidos vistos visible en Apuestas. Auth: login de Apuestas. Tabla: `checkins (id, match_id, user_id, created_at)`, unique constraint en (match_id, user_id).
 - [ ] Chat por partido — comentarios en tiempo real (Supabase Realtime). Ventana: día del partido hasta kickoff +3h. Auth: login de Apuestas (solo lectura si no estás logueado). Tabla: `comments (id, match_id, user_id, text varchar(140), created_at)`. UI: icono 💬 en fila del Calendario cuando el chat está activo.
 - [ ] Alineaciones por partido — investigar fuente de datos (API-Football /fixtures/lineups, Wikipedia, Sofascore scraping)
-- [ ] Predictor/simulador de grupos (quién pasa)
 - [ ] Widget de "próximo partido de España" para compartir como imagen
 - [ ] Historial de ediciones anteriores del Mundial

@@ -142,28 +142,16 @@ function renderSquadsShell(data) {
 
 // ── Club dropdown ──────────────────────────────────────────────
 function sqdClubFilter() {
-  const q  = document.getElementById('sqd-club-input').value.toLowerCase();
-  const dd = document.getElementById('sqd-club-dropdown');
-  dd.classList.remove('hidden');
-  for (const li of dd.querySelectorAll('li'))
-    li.hidden = q !== '' && !li.textContent.toLowerCase().includes(q);
-  // Si vaciaron el input, limpiar resultados
-  if (!q) { sqdSelectClub(''); }
+  filterDropdown('sqd-club-input', 'sqd-club-dropdown');
+  if (!document.getElementById('sqd-club-input').value) sqdSelectClub('');
 }
-
-function sqdClubOpen() {
-  document.getElementById('sqd-club-dropdown').classList.remove('hidden');
-}
-
-function sqdClubKey(e) {
-  if (e.key === 'Escape') document.getElementById('sqd-club-dropdown').classList.add('hidden');
-}
-
+function sqdClubOpen() { openDropdown('sqd-club-dropdown'); }
+function sqdClubKey(e) { if (e.key === 'Escape') closeDropdown('sqd-club-dropdown'); }
 function sqdClubSelect(club, label) {
   const input = document.getElementById('sqd-club-input');
   input.value = label ?? '';
   input.placeholder = label ? '' : '🏟 Club…';
-  document.getElementById('sqd-club-dropdown').classList.add('hidden');
+  closeDropdown('sqd-club-dropdown');
   sqdSelectClub(club);
 }
 

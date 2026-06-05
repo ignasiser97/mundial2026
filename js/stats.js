@@ -5,9 +5,8 @@ function toggleStatDetail(id) {
 async function loadStats() {
   const el=document.getElementById('stats-content');
   try{
-    const res=await fetch('./standings.json?t='+Date.now());
-    if(!res.ok) throw new Error(res.status);
-    const data=await res.json();
+    const data=await getStandingsData();
+    if(!data?.updated) throw new Error('no data');
     const upd=new Date(data.updated);
     document.getElementById('last-updated-sts').textContent=
       'Actualizado: '+upd.toLocaleDateString('es-ES')+' '+

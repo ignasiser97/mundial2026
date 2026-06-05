@@ -161,17 +161,47 @@ function escHtml(s) {
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-// Cache compartida de resultados de partidos (standings.json → matchResults)
+// ── Standings cache (compartida por groups, stats, calendar) ──
+let _standingsData = null;
+async function getStandingsData() {
+  if (_standingsData !== null) return _standingsData;
+  try {
+    const res = await fetch('./standings.json?t=' + Date.now());
+    _standingsData = await res.json();
+  } catch { _standingsData = {}; }
+  return _standingsData;
+}
+
 let _matchResults = null;
 async function getMatchResults() {
   if (_matchResults !== null) return _matchResults;
-  try {
-    const res = await fetch('./standings.json?t=' + Date.now());
-    const data = await res.json();
-    _matchResults = data.matchResults || {};
-  } catch { _matchResults = {}; }
+  const data = await getStandingsData();
+  _matchResults = data.matchResults || {};
   return _matchResults;
 }
-function clearMatchResultsCache() { _matchResults = null; }
+
+let _oddsData = null;
+async function getOddsData() {
+  if (_oddsData !== null) return _oddsData;
+  try {
+    const res = await fetch('./odds.json');
+    _oddsData = await res.json();
+  } catch { _oddsData = { odds: {} }; }
+  return _oddsData;
+}
+
+function clearMatchResultsCache() { _standingsData = null; _matchResults = null; _oddsData = null; }
+
+// ── Dropdown helpers (calendar team-search + squads club-search) ──
+function filterDropdown(inputId, dropdownId) {
+  const q  = document.getElementById(inputId)?.value.toLowerCase() || '';
+  const dd = document.getElementById(dropdownId);
+  if (!dd) return;
+  dd.classList.remove('hidden');
+  for (const li of dd.querySelectorAll('li'))
+    li.hidden = q !== '' && !li.textContent.toLowerCase().includes(q);
+}
+function openDropdown(id)  { document.getElementById(id)?.classList.remove('hidden'); }
+function closeDropdown(id) { document.getElementById(id)?.classList.add('hidden'); }
 
 function isNight(t) { return +t.split(':')[0] <= 6; }
