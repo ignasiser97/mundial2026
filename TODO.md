@@ -19,6 +19,7 @@
 - [x] Refactor: standings.json cacheado una sola vez (getStandingsData); helpers de dropdown compartidos (filterDropdown/openDropdown/closeDropdown)
 - [x] Próxima apuesta que cierra — bloque urgente en home de Quiniela con countdown en tiempo real
 - [x] Quiniela multigrupo: clasificación de torneo con filtro Mi grupo/Todos; apuestas de partido filtradas al grupo propio (Ver grupo, dropdown contador)
+- [x] Live scores: CF Worker proxy (mundial-live-scores.ignasiser97.workers.dev) + polling 60s en home + status live/ft en calendar, home y quiniela
 
 ## Pendiente
 

@@ -127,7 +127,9 @@ def fetch_results() -> dict:
 
     for fix in data.get("response", []):
         status = fix.get("fixture", {}).get("status", {}).get("short", "")
-        if status not in ("FT", "AET", "PEN"):
+        LIVE_STATUSES     = {"1H", "HT", "2H", "ET", "BT", "P", "LIVE"}
+        FINISHED_STATUSES = {"FT", "AET", "PEN"}
+        if status not in LIVE_STATUSES | FINISHED_STATUSES:
             continue
 
         goals = fix.get("goals", {})
@@ -158,7 +160,8 @@ def fetch_results() -> dict:
         label = label.replace(" ", "")
         match_id = f"{date_str}_{time_str}_{label}"
 
-        results[match_id] = {"home": int(home_score), "away": int(away_score)}
+        result_status = "live" if status in LIVE_STATUSES else "ft"
+        results[match_id] = {"home": int(home_score), "away": int(away_score), "status": result_status}
 
     return results
 

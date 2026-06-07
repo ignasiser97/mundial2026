@@ -190,8 +190,9 @@ async function renderCalendar() {
       const result = results[mid];
       const o = !result && allOdds[mid];
       const oddsHtml = o ? `<div class="odds-row">${oddsChips(o)}</div>` : '';
+      const isLive = result?.status === 'live';
       const centerHtml = result
-        ? `<div class="mrow-result"><span class="mrow-score-num">${result.home}</span><span class="mrow-rdash">–</span><span class="mrow-score-num">${result.away}</span></div><div class="mrow-fin">FIN</div>`
+        ? `<div class="mrow-result"><span class="mrow-score-num">${result.home}</span><span class="mrow-rdash">–</span><span class="mrow-score-num">${result.away}</span></div><div class="mrow-fin${isLive?' live':''}">${isLive?'● EN VIVO':'FIN'}</div>`
         : `<div class="${timeCls}">${time}</div><div class="mrow-sub">ESP${night?' 🌙':''}${spainBadge}</div>`;
 
       const homeTnCls = homeFlag ? 'mrow-tname mrow-tname-link' : 'mrow-tname';

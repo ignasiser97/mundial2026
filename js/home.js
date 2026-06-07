@@ -1,6 +1,11 @@
 const MUNDIAL_START_MS = new Date('2026-06-11T19:00:00Z').getTime();
 
+// ← true = preview del home en vivo (para pruebas antes del torneo)
+//   false = comportamiento real: cuenta atrás hasta la fecha, live después
+const HOME_PREVIEW_STARTED = false;
+
 let _homeInterval = null;
+let _liveInterval = null;
 
 const BALL_SVG = `<svg class="ball-svg" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
   <defs><clipPath id="bc"><circle cx="30" cy="30" r="26.5"/></clipPath></defs>
@@ -20,6 +25,13 @@ function renderHome() {
   const el = document.getElementById('home-content');
   if (!el) return;
   if (_homeInterval) { clearInterval(_homeInterval); _homeInterval = null; }
+  if (_liveInterval) { clearInterval(_liveInterval); _liveInterval = null; }
+
+  if (HOME_PREVIEW_STARTED || Date.now() >= MUNDIAL_START_MS) {
+    renderHomeLive(el);
+    return;
+  }
+
   tick();
   _homeInterval = setInterval(tick, 1000);
 
@@ -28,11 +40,7 @@ function renderHome() {
 
     if (diff <= 0) {
       clearInterval(_homeInterval); _homeInterval = null;
-      el.innerHTML = `
-        <div class="home-countdown">
-          <div class="home-title">EL MUNDIAL HA COMENZADO</div>
-          <div class="home-sub">¡Disfruta del torneo!</div>
-        </div>`;
+      renderHomeLive(el);
       return;
     }
 
@@ -65,4 +73,116 @@ function renderHome() {
     document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
     document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
   }
+}
+
+async function renderHomeLive(el) {
+  el.innerHTML = '<div class="empty" style="margin-top:48px">Cargando…</div>';
+
+  await refreshLiveResults();
+  const [results, oddsData] = await Promise.all([getMatchResults(), getOddsData()]);
+  const allOdds = oddsData.odds || {};
+  const today = spainToday();
+  const now = Date.now();
+
+  const todayMatches = MATCHES.filter(m => viewDate(m[0], m[1]) === today);
+  const nextMatch = MATCHES.find(m => spainToUTC(m[0], m[1]) > now);
+
+  // Día del torneo (Día 1 = 11 jun)
+  const startDay = new Date('2026-06-11T00:00:00Z');
+  const todayUTC = new Date(today + 'T00:00:00Z');
+  const dayNum   = Math.floor((todayUTC - startDay) / 86400000) + 1;
+
+  // Fase actual: la del último partido ya iniciado
+  const startedMatches = MATCHES.filter(m => spainToUTC(m[0], m[1]) <= now);
+  const currentPhase   = startedMatches.length
+    ? (PHASES[startedMatches[startedMatches.length - 1][7]] || 'Fase de grupos')
+    : 'Fase de grupos';
+
+  const header = `
+    <div class="home-live-header">
+      <div class="home-badge">MUNDIAL 2026</div>
+      <div class="home-live-day">DÍA ${dayNum > 0 ? dayNum : '—'} · ${currentPhase.toUpperCase()}</div>
+    </div>`;
+
+  let matchSection = '';
+  if (todayMatches.length) {
+    const cards = todayMatches.map(m => _homeLiveRow(m, results, allOdds)).join('');
+    matchSection = `
+      <div class="home-section-label">Partidos de hoy</div>
+      <div class="home-live-matches">${cards}</div>`;
+  } else if (nextMatch) {
+    const [home, away] = matchTeams(nextMatch);
+    const hf = FLAGS_MAP[home] || '';
+    const af = FLAGS_MAP[away] || '';
+    matchSection = `
+      <div class="home-section-label">Próximo partido</div>
+      <div class="home-next-card">
+        <div class="home-next-teams">${hf} ${home} – ${away} ${af}</div>
+        <div class="home-next-when">${fmtDate(nextMatch[0])} · ${nextMatch[1]}</div>
+      </div>`;
+  } else {
+    matchSection = `<div class="empty" style="margin:40px 0">El torneo ha finalizado. ¡Hasta 2030! ⚽</div>`;
+  }
+
+  const links = `
+    <div class="home-quick-links">
+      <button class="home-ql-btn" onclick="switchTab('qnl')">⚽<span>Apuestas</span></button>
+      <button class="home-ql-btn" onclick="switchTab('grp')">📊<span>Grupos</span></button>
+      <button class="home-ql-btn" onclick="switchTab('cal')">📅<span>Calendario</span></button>
+    </div>`;
+
+  el.innerHTML = header + matchSection + links;
+
+  // Auto-refresh while any match is in the ~130-min live window
+  const now = Date.now();
+  const hasLive = MATCHES.some(m => {
+    const start = spainToUTC(m[0], m[1]);
+    return start <= now && now < start + 130 * 60 * 1000;
+  });
+  if (hasLive && !_liveInterval) {
+    _liveInterval = setInterval(async () => {
+      const target = document.getElementById('home-content');
+      if (target) await renderHomeLive(target);
+    }, 60_000);
+  } else if (!hasLive && _liveInterval) {
+    clearInterval(_liveInterval); _liveInterval = null;
+  }
+}
+
+function _homeLiveRow(m, results, allOdds) {
+  const mid    = matchId(m);
+  const result = results[mid];
+  const [homeTeam, awayTeam] = matchTeams(m);
+  const hf      = FLAGS_MAP[homeTeam] || '';
+  const af      = FLAGS_MAP[awayTeam] || '';
+  const night   = isNight(m[1]);
+  const started = Date.now() >= spainToUTC(m[0], m[1]);
+
+  const isLive = result?.status === 'live';
+  const centerHtml = result
+    ? `<div class="mrow-result"><span class="mrow-score-num">${result.home}</span><span class="mrow-rdash">–</span><span class="mrow-score-num">${result.away}</span></div><div class="mrow-fin${isLive?' live':''}">${isLive?'● EN VIVO':'FIN'}</div>`
+    : started
+      ? `<div class="mrow-time" style="color:var(--pos)">EN VIVO</div><div class="mrow-sub">● EN DIRECTO</div>`
+      : `<div class="mrow-time${night?' night':''}">${m[1]}</div><div class="mrow-sub">ESP${night?' 🌙':''}</div>`;
+
+  const o = !result && !started && allOdds[mid];
+  const oddsHtml = o ? `<div class="odds-row">${oddsChips(o)}</div>` : '';
+
+  const flags  = m[6];
+  const rowCls = ['match-row match-row-link', flags===1?'spain':flags===2?'spain-pos':''].filter(Boolean).join(' ');
+  const vd = viewDate(m[0], m[1]);
+
+  return `<div class="${rowCls}" onclick="switchTab('cal');requestAnimationFrame(()=>cpSelect('${vd}'))">
+    <div class="mrow-home">
+      ${hf ? `<span class="mrow-flag">${hf}</span>` : ''}
+      <span class="mrow-tname">${homeTeam}</span>
+    </div>
+    <div class="mrow-center">${centerHtml}</div>
+    <div class="mrow-away">
+      <span class="mrow-tname">${awayTeam}</span>
+      ${af ? `<span class="mrow-flag">${af}</span>` : ''}
+    </div>
+    <div class="mrow-meta">${m[3].split(',')[0]} · ${PHASES[m[7]]||m[7]}</div>
+    ${oddsHtml}
+  </div>`;
 }

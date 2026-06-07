@@ -100,7 +100,7 @@ function nextUpcomingMatch() {
 
 // 3 pts resultado exacto · 1 pt ganador correcto · 0 pts fallo
 function calcPoints(bet, result) {
-  if (!result) return null;
+  if (!result || result.status === 'live') return null;
   if (bet.home_score === result.home_score && bet.away_score === result.away_score) return 3;
   const bOut = Math.sign(bet.home_score - bet.away_score);
   const rOut = Math.sign(result.home_score - result.away_score);
@@ -817,7 +817,7 @@ async function toggleGroupBets(mid, btn) {
     .select('home_score, away_score, user_id, users(name)')
     .eq('match_id', mid)
     .in('user_id', groupUserIds);
-  const result = resultsMap[mid] ? { home_score: resultsMap[mid].home, away_score: resultsMap[mid].away } : null;
+  const result = resultsMap[mid] ? { home_score: resultsMap[mid].home, away_score: resultsMap[mid].away, status: resultsMap[mid].status } : null;
 
   if (!bets?.length) {
     el.innerHTML = '<div class="group-bets-list"><p style="font-size:12px;color:var(--muted);text-align:center;padding:4px">Nadie ha apostado en este partido</p></div>';
@@ -826,9 +826,10 @@ async function toggleGroupBets(mid, btn) {
     return;
   }
 
+  const isLiveResult = result?.status === 'live';
   const resultHeader = result
-    ? `<div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:8px">
-         Resultado: <strong style="color:var(--text)">${result.home_score} – ${result.away_score}</strong>
+    ? `<div style="font-size:11px;color:${isLiveResult?'var(--pos)':'var(--muted)'};text-align:center;margin-bottom:8px">
+         ${isLiveResult ? '● En vivo' : 'Resultado'}: <strong style="color:var(--text)">${result.home_score} – ${result.away_score}</strong>
        </div>`
     : '';
 
@@ -910,7 +911,7 @@ async function renderMisApuestas(el) {
   const raw = await getMatchResults();
   const resultMap = {};
   Object.entries(raw).forEach(([id, r]) => {
-    resultMap[id] = { home_score: r.home, away_score: r.away };
+    resultMap[id] = { home_score: r.home, away_score: r.away, status: r.status };
   });
 
   const lookup = {};
@@ -963,9 +964,10 @@ async function renderMisApuestas(el) {
     const pts     = calcPoints(b, result);
     const started = isMatchStarted(m);
 
+    const isLiveBet = result?.status === 'live';
     const resultSection = result ? `
       <div class="bet-result-row">
-        <span class="bet-result-label">Resultado</span>
+        <span class="bet-result-label" style="${isLiveBet?'color:var(--pos)':''}">${isLiveBet?'● En vivo':'Resultado'}</span>
         <span class="bet-result-score">${result.home_score} – ${result.away_score}</span>
         ${ptsLabel(pts)}
       </div>` : '';
@@ -1037,7 +1039,7 @@ async function renderClasificacion(el) {
 
   const resultMap = {};
   Object.entries(raw).forEach(([id, r]) => {
-    resultMap[id] = { home_score: r.home, away_score: r.away };
+    resultMap[id] = { home_score: r.home, away_score: r.away, status: r.status };
   });
   const hasResults = Object.keys(raw).length > 0;
 
