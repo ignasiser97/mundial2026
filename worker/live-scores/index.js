@@ -87,7 +87,7 @@ function parseESPN({ data, wc_only }) {
 
     const home = comp.competitors?.find(c => c.homeAway === 'home');
     const away = comp.competitors?.find(c => c.homeAway === 'away');
-    if (!home || !away) continue;
+    if (!home?.team?.displayName || !away?.team?.displayName) continue;
 
     const homeEs = NAMES_ES[home.team.displayName] ?? home.team.displayName;
     const awayEs = NAMES_ES[away.team.displayName] ?? away.team.displayName;
@@ -95,8 +95,8 @@ function parseESPN({ data, wc_only }) {
     const mid = toMatchId(homeEs, awayEs, date, time);
 
     matchResults[mid] = {
-      home:   parseInt(home.score ?? '0', 10),
-      away:   parseInt(away.score ?? '0', 10),
+      home:   parseInt(home.score || '0', 10),
+      away:   parseInt(away.score || '0', 10),
       status: state === 'in' ? 'live' : 'ft',
     };
   }

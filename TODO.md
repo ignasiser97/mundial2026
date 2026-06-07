@@ -35,6 +35,15 @@
 - [ ] Notificaciones push — infraestructura lista (SW, push.js, GitHub Actions cron, tablas Supabase), pendiente depurar inyección VAPID key y activar botón (#push-section oculto por CSS)
 - [ ] Comparador de estadísticas entre jugadores
 
+## Cuando empiece el Mundial (11 jun)
+
+- [ ] **Activar home live**: cambiar `HOME_PREVIEW_STARTED = false` → el switch es automático por fecha, no hay que tocarlo
+- [ ] **Verificar ESPN scoreboard**: comprobar si `site.api.espn.com/apis/site/v2/sports/soccer/fifa.world-cup/scoreboard` devuelve solo partidos de hoy o el historial completo del torneo. Si devuelve historial, eliminar `matchResults` del scraper y usar únicamente el CF Worker (una sola fuente, sin merge). Si no, mantener el merge actual.
+- [ ] **Verificar slug ESPN**: confirmar que el slug `fifa.world-cup` es correcto en producción o descubrir el definitivo (el Worker tiene fallback al scoreboard general)
+- [ ] **Comprobar match_id del Worker**: verificar que los IDs generados por el CF Worker (ESPN) coinciden exactamente con los de `matchId()` en el frontend para al menos los primeros partidos
+- [ ] **Ajustar ventana de live polling**: actualmente `_liveInterval` se activa si un partido está dentro de los 130 min desde el kickoff — verificar que cubre prórrogas y penaltis correctamente
+- [ ] **Activar botón de notificaciones push**: descomentar `#push-section` en CSS y depurar inyección de VAPID key en el deploy
+
 ## Ideas a valorar
 - [ ] "Yo estuve aquí" — botón por partido, activo solo durante la ventana del partido (mismo criterio que el chat: día del partido hasta kickoff +3h). Un click por usuario por partido. Al final del mundial, contador de partidos vistos visible en Apuestas. Auth: login de Apuestas. Tabla: `checkins (id, match_id, user_id, created_at)`, unique constraint en (match_id, user_id).
 - [ ] Chat por partido — comentarios en tiempo real (Supabase Realtime). Ventana: día del partido hasta kickoff +3h. Auth: login de Apuestas (solo lectura si no estás logueado). Tabla: `comments (id, match_id, user_id, text varchar(140), created_at)`. UI: icono 💬 en fila del Calendario cuando el chat está activo.

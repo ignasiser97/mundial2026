@@ -80,61 +80,64 @@ async function renderHomeLive(el) {
   _liveRendering = true;
   el.innerHTML = '<div class="empty" style="margin-top:48px">Cargando…</div>';
 
-  await refreshLiveResults();
-  const [results, oddsData] = await Promise.all([getMatchResults(), getOddsData()]);
-  const allOdds = oddsData.odds || {};
-  const today = spainToday();
-  const now = Date.now();
+  try {
+    await refreshLiveResults();
+    const [results, oddsData] = await Promise.all([getMatchResults(), getOddsData()]);
+    const allOdds = oddsData.odds || {};
+    const today = spainToday();
+    const now = Date.now();
 
-  const todayMatches = MATCHES.filter(m => viewDate(m[0], m[1]) === today);
-  const nextMatch = MATCHES.find(m => spainToUTC(m[0], m[1]) > now);
+    const todayMatches = MATCHES.filter(m => viewDate(m[0], m[1]) === today);
+    const nextMatch = MATCHES.find(m => spainToUTC(m[0], m[1]) > now);
 
-  // Día del torneo (Día 1 = 11 jun)
-  const startDay = new Date('2026-06-11T00:00:00Z');
-  const todayUTC = new Date(today + 'T00:00:00Z');
-  const dayNum   = Math.floor((todayUTC - startDay) / 86400000) + 1;
+    // Día del torneo (Día 1 = 11 jun)
+    const startDay = new Date('2026-06-11T00:00:00Z');
+    const todayUTC = new Date(today + 'T00:00:00Z');
+    const dayNum   = Math.floor((todayUTC - startDay) / 86400000) + 1;
 
-  // Fase actual: la del último partido ya iniciado
-  const startedMatches = MATCHES.filter(m => spainToUTC(m[0], m[1]) <= now);
-  const currentPhase   = startedMatches.length
-    ? (PHASES[startedMatches[startedMatches.length - 1][7]] || 'Fase de grupos')
-    : 'Fase de grupos';
+    // Fase actual: la del último partido ya iniciado
+    const startedMatches = MATCHES.filter(m => spainToUTC(m[0], m[1]) <= now);
+    const currentPhase   = startedMatches.length
+      ? (PHASES[startedMatches[startedMatches.length - 1][7]] || 'Fase de grupos')
+      : 'Fase de grupos';
 
-  const header = `
-    <div class="home-live-header">
-      <div class="home-badge">MUNDIAL 2026</div>
-      <div class="home-live-day">DÍA ${dayNum > 0 ? dayNum : '—'} · ${currentPhase.toUpperCase()}</div>
-    </div>`;
-
-  let matchSection = '';
-  if (todayMatches.length) {
-    const cards = todayMatches.map(m => _homeLiveRow(m, results, allOdds)).join('');
-    matchSection = `
-      <div class="home-section-label">Partidos de hoy</div>
-      <div class="home-live-matches">${cards}</div>`;
-  } else if (nextMatch) {
-    const [home, away] = matchTeams(nextMatch);
-    const hf = FLAGS_MAP[home] || '';
-    const af = FLAGS_MAP[away] || '';
-    matchSection = `
-      <div class="home-section-label">Próximo partido</div>
-      <div class="home-next-card">
-        <div class="home-next-teams">${hf} ${home} – ${away} ${af}</div>
-        <div class="home-next-when">${fmtDate(nextMatch[0])} · ${nextMatch[1]}</div>
+    const header = `
+      <div class="home-live-header">
+        <div class="home-badge">MUNDIAL 2026</div>
+        <div class="home-live-day">DÍA ${dayNum > 0 ? dayNum : '—'} · ${currentPhase.toUpperCase()}</div>
       </div>`;
-  } else {
-    matchSection = `<div class="empty" style="margin:40px 0">El torneo ha finalizado. ¡Hasta 2030! ⚽</div>`;
+
+    let matchSection = '';
+    if (todayMatches.length) {
+      const cards = todayMatches.map(m => _homeLiveRow(m, results, allOdds)).join('');
+      matchSection = `
+        <div class="home-section-label">Partidos de hoy</div>
+        <div class="home-live-matches">${cards}</div>`;
+    } else if (nextMatch) {
+      const [home, away] = matchTeams(nextMatch);
+      const hf = FLAGS_MAP[home] || '';
+      const af = FLAGS_MAP[away] || '';
+      matchSection = `
+        <div class="home-section-label">Próximo partido</div>
+        <div class="home-next-card">
+          <div class="home-next-teams">${hf} ${home} – ${away} ${af}</div>
+          <div class="home-next-when">${fmtDate(nextMatch[0])} · ${nextMatch[1]}</div>
+        </div>`;
+    } else {
+      matchSection = `<div class="empty" style="margin:40px 0">El torneo ha finalizado. ¡Hasta 2030! ⚽</div>`;
+    }
+
+    const links = `
+      <div class="home-quick-links">
+        <button class="home-ql-btn" onclick="switchTab('qnl')">⚽<span>Apuestas</span></button>
+        <button class="home-ql-btn" onclick="switchTab('grp')">📊<span>Grupos</span></button>
+        <button class="home-ql-btn" onclick="switchTab('cal')">📅<span>Calendario</span></button>
+      </div>`;
+
+    el.innerHTML = header + matchSection + links;
+  } finally {
+    _liveRendering = false;
   }
-
-  const links = `
-    <div class="home-quick-links">
-      <button class="home-ql-btn" onclick="switchTab('qnl')">⚽<span>Apuestas</span></button>
-      <button class="home-ql-btn" onclick="switchTab('grp')">📊<span>Grupos</span></button>
-      <button class="home-ql-btn" onclick="switchTab('cal')">📅<span>Calendario</span></button>
-    </div>`;
-
-  el.innerHTML = header + matchSection + links;
-  _liveRendering = false;
 
   // Auto-refresh while any match is in the ~130-min live window
   const nowTs = Date.now();
