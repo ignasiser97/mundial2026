@@ -34,15 +34,16 @@ const ADMIN_HASH = 'f353bf263d36c03aa634957ae550b9d24fb8ee38ca4b672ed61997d4934c
 const ADMIN_SALT = 'admin26';
 let qnlAdminUnlocked = false;
 
-let qnlUser       = null;
-let qnlGroup      = null;
-let qnlMode       = 'home';   // 'home' | 'partidos' | 'torneo'
-let qnlSubTab     = 'apostar';
-let qnlTorneoSub  = 'apuesta';
-let qnlBets       = {};
-let qnlLoaded     = false;
-let qnlTorneoBet  = null;
-let qnlBetsDirty  = true;
+let qnlUser         = null;
+let qnlGroup        = null;
+let qnlMode         = 'home';   // 'home' | 'partidos' | 'torneo'
+let qnlSubTab       = 'apostar';
+let qnlTorneoSub    = 'apuesta';
+let qnlBets         = {};
+let qnlLoaded       = false;
+let qnlTorneoBet    = null;
+let qnlBetsDirty    = true;
+let qnlGroupUserIds = null;
 
 const SPAIN_ROUNDS = [
   'Fase de grupos', '1/32 de final', 'Octavos de final',
@@ -270,10 +271,11 @@ function qnlLogout() {
   if (_urgentInterval) { clearInterval(_urgentInterval); _urgentInterval = null; }
   localStorage.removeItem('qnl_uid');
   localStorage.removeItem('qnl_gid');
-  qnlUser   = null;
-  qnlGroup  = null;
-  qnlBets   = {};
-  qnlLoaded = false;
+  qnlUser         = null;
+  qnlGroup        = null;
+  qnlBets         = {};
+  qnlLoaded       = false;
+  qnlGroupUserIds = null;
   renderQnlGroupSelect();
 }
 
@@ -283,6 +285,13 @@ async function loadMyBets() {
   qnlBets = {};
   (data || []).forEach(b => { qnlBets[b.match_id] = b; });
   qnlBetsDirty = false;
+}
+
+async function ensureGroupUserIds() {
+  if (qnlGroupUserIds) return qnlGroupUserIds;
+  const { data } = await db.from('users').select('id').eq('group_id', qnlGroup.id);
+  qnlGroupUserIds = (data || []).map(u => u.id);
+  return qnlGroupUserIds;
 }
 
 // ── Render shell ───────────────────────────────────────────────
@@ -562,13 +571,19 @@ function torneoTotal(pts) {
 
 async function renderTorneoClasificacion(el) {
   const [{ data: users }, { data: bets }, { data: results }] = await Promise.all([
-    db.from('users').select('id, name'),
+    db.from('users').select('id, name, group_id'),
     db.from('tournament_bets').select('*'),
     db.from('tournament_results').select('*').eq('id', 1).maybeSingle(),
   ]);
 
+  const toggle = `
+    <div class="lb-scope-bar">
+      <button class="lb-scope-btn${torneoLbScope==='group'?' active':''}" onclick="setTorneoLbScope('group')">Mi grupo</button>
+      <button class="lb-scope-btn${torneoLbScope==='all'?' active':''}" onclick="setTorneoLbScope('all')">Todos</button>
+    </div>`;
+
   if (!bets?.length) {
-    el.innerHTML = '<div class="empty">Nadie ha hecho su apuesta de torneo aún.</div>';
+    el.innerHTML = `${toggle}<div class="empty">Nadie ha hecho su apuesta de torneo aún.</div>`;
     return;
   }
 
@@ -587,7 +602,10 @@ async function renderTorneoClasificacion(el) {
     { key:'surprise',    label:'⭐ Sorpresa',  pts:2 },
   ];
 
-  const usersWithBets = (users || []).filter(u => betByUser[u.id]);
+  const usersWithBets = (users || []).filter(u => {
+    if (!betByUser[u.id]) return false;
+    return torneoLbScope === 'group' ? u.group_id === qnlGroup?.id : true;
+  });
   const scored = usersWithBets.map(u => {
     const b   = betByUser[u.id];
     const pts = hasResults ? calcTorneoPoints(b, results) : null;
@@ -598,6 +616,9 @@ async function renderTorneoClasificacion(el) {
     const isMe = u.id === qnlUser?.id;
     const show = torneoStarted || isMe;
     const total = torneoTotal(pts);
+    const groupBadge = torneoLbScope === 'all'
+      ? `<span class="lb-group-badge">${GROUPS.find(g => g.id === u.group_id)?.id || '?'}</span>`
+      : '';
 
     const details = show
       ? `<div class="torneo-lb-grid">
@@ -616,7 +637,7 @@ async function renderTorneoClasificacion(el) {
 
     return `<div class="torneo-lb-row${isMe ? ' me' : ''}">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <div class="torneo-lb-name">${u.name}${isMe ? ' 👈' : ''}</div>
+        <div class="torneo-lb-name">${u.name}${isMe ? ' 👈' : ''}${groupBadge}</div>
         ${hasResults && show ? `<div class="torneo-total-pts">${total} pts</div>` : ''}
       </div>
       ${details}
@@ -629,7 +650,7 @@ async function renderTorneoClasificacion(el) {
       ? `<p style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center">Puntos pendientes de resultados oficiales.</p>`
       : `<p style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center">Las predicciones se revelan cuando empiece el primer partido.</p>`;
 
-  el.innerHTML = `${note}<div class="torneo-lb">${rows}</div>`;
+  el.innerHTML = `${toggle}${note}<div class="torneo-lb">${rows}</div>`;
 }
 
 
@@ -665,14 +686,15 @@ async function renderApostar(el) {
     .flatMap(date => MATCHES.filter(m => m[0] === date))
     .map(m => matchId(m));
 
-  const [{ data: groupBetsRaw }, oddsData] = await Promise.all([
-    db.from('bets').select('match_id, home_score, away_score, users(name)').in('match_id', displayedIds),
+  const [{ data: groupBetsRaw }, oddsData, groupUserIds] = await Promise.all([
+    db.from('bets').select('match_id, home_score, away_score, user_id, users(name)').in('match_id', displayedIds),
     getOddsData(),
+    ensureGroupUserIds(),
   ]);
   const allOdds = oddsData.odds || {};
 
   const groupBetsMap = {};
-  (groupBetsRaw || []).forEach(b => {
+  (groupBetsRaw || []).filter(b => groupUserIds.includes(b.user_id)).forEach(b => {
     if (!groupBetsMap[b.match_id]) groupBetsMap[b.match_id] = [];
     groupBetsMap[b.match_id].push(b);
   });
@@ -787,10 +809,14 @@ async function toggleGroupBets(mid, btn) {
   const matchObj = MATCHES.find(m => matchId(m) === mid);
   const betOpen  = matchObj ? isBetOpen(matchObj) : false;
 
-  const [{ data: bets }, resultsMap] = await Promise.all([
-    db.from('bets').select('home_score, away_score, user_id, users(name)').eq('match_id', mid),
+  const [groupUserIds, resultsMap] = await Promise.all([
+    ensureGroupUserIds(),
     getMatchResults(),
   ]);
+  const { data: bets } = await db.from('bets')
+    .select('home_score, away_score, user_id, users(name)')
+    .eq('match_id', mid)
+    .in('user_id', groupUserIds);
   const result = resultsMap[mid] ? { home_score: resultsMap[mid].home, away_score: resultsMap[mid].away } : null;
 
   if (!bets?.length) {
@@ -969,6 +995,7 @@ async function renderMisApuestas(el) {
 // ── Clasificación ──────────────────────────────────────────────
 
 let lbScope = 'group';
+let torneoLbScope = 'group';
 
 async function setLbScope(scope) {
   lbScope = scope;
@@ -976,6 +1003,14 @@ async function setLbScope(scope) {
   if (!el) return;
   el.innerHTML = '<div class="empty">Cargando clasificación…</div>';
   await renderClasificacion(el);
+}
+
+async function setTorneoLbScope(scope) {
+  torneoLbScope = scope;
+  const el = document.getElementById('qnl-torneo-content');
+  if (!el) return;
+  el.innerHTML = '<div class="empty">Cargando…</div>';
+  await renderTorneoClasificacion(el);
 }
 
 async function renderClasificacion(el) {

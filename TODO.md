@@ -18,6 +18,7 @@
 - [x] Cuotas de casas de apuestas — odds.json actualizado diariamente vía GitHub Actions (The Odds API, Betfair/William Hill); visible en Calendario y en tarjetas de Apostar
 - [x] Refactor: standings.json cacheado una sola vez (getStandingsData); helpers de dropdown compartidos (filterDropdown/openDropdown/closeDropdown)
 - [x] Próxima apuesta que cierra — bloque urgente en home de Quiniela con countdown en tiempo real
+- [x] Quiniela multigrupo: clasificación de torneo con filtro Mi grupo/Todos; apuestas de partido filtradas al grupo propio (Ver grupo, dropdown contador)
 
 ## Pendiente
 
