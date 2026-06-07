@@ -134,10 +134,10 @@ async function renderHomeLive(el) {
   el.innerHTML = header + matchSection + links;
 
   // Auto-refresh while any match is in the ~130-min live window
-  const now = Date.now();
+  const nowTs = Date.now();
   const hasLive = MATCHES.some(m => {
     const start = spainToUTC(m[0], m[1]);
-    return start <= now && now < start + 130 * 60 * 1000;
+    return start <= nowTs && nowTs < start + 130 * 60 * 1000;
   });
   if (hasLive && !_liveInterval) {
     _liveInterval = setInterval(async () => {
