@@ -4,8 +4,9 @@ const MUNDIAL_START_MS = new Date('2026-06-11T19:00:00Z').getTime();
 //   false = comportamiento real: cuenta atrás hasta la fecha, live después
 const HOME_PREVIEW_STARTED = false;
 
-let _homeInterval = null;
-let _liveInterval = null;
+let _homeInterval  = null;
+let _liveInterval  = null;
+let _liveRendering = false;
 
 const BALL_SVG = `<svg class="ball-svg" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
   <defs><clipPath id="bc"><circle cx="30" cy="30" r="26.5"/></clipPath></defs>
@@ -76,6 +77,7 @@ function renderHome() {
 }
 
 async function renderHomeLive(el) {
+  _liveRendering = true;
   el.innerHTML = '<div class="empty" style="margin-top:48px">Cargando…</div>';
 
   await refreshLiveResults();
@@ -132,6 +134,7 @@ async function renderHomeLive(el) {
     </div>`;
 
   el.innerHTML = header + matchSection + links;
+  _liveRendering = false;
 
   // Auto-refresh while any match is in the ~130-min live window
   const nowTs = Date.now();
@@ -141,6 +144,7 @@ async function renderHomeLive(el) {
   });
   if (hasLive && !_liveInterval) {
     _liveInterval = setInterval(async () => {
+      if (_liveRendering) return;
       const target = document.getElementById('home-content');
       if (target) await renderHomeLive(target);
     }, 60_000);

@@ -186,13 +186,21 @@ async function refreshLiveResults() {
   } catch { /* keep previous value */ }
 }
 
-async function getMatchResults() {
-  if (_matchResults !== null) {
-    return _liveResults ? { ..._matchResults, ..._liveResults } : _matchResults;
+function _mergeLive(base) {
+  if (!_liveResults) return base;
+  const merged = { ...base };
+  for (const [mid, live] of Object.entries(_liveResults)) {
+    // Never let a stale 'live' entry overwrite a finished 'ft' result from standings.json
+    if (!merged[mid] || merged[mid].status !== 'ft') merged[mid] = live;
   }
+  return merged;
+}
+
+async function getMatchResults() {
+  if (_matchResults !== null) return _mergeLive(_matchResults);
   const data = await getStandingsData();
   _matchResults = data.matchResults || {};
-  return _liveResults ? { ..._matchResults, ..._liveResults } : _matchResults;
+  return _mergeLive(_matchResults);
 }
 
 let _oddsData = null;
@@ -205,7 +213,7 @@ async function getOddsData() {
   return _oddsData;
 }
 
-function clearMatchResultsCache() { _standingsData = null; _matchResults = null; _oddsData = null; }
+function clearMatchResultsCache() { _standingsData = null; _matchResults = null; _oddsData = null; _liveResults = null; }
 
 // ── Dropdown helpers (calendar team-search + squads club-search) ──
 function filterDropdown(inputId, dropdownId) {

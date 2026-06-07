@@ -122,13 +122,13 @@ def fetch_results() -> dict:
     resp.raise_for_status()
     data = resp.json()
 
-    CEST = timezone(timedelta(hours=2))
+    CEST              = timezone(timedelta(hours=2))
+    LIVE_STATUSES     = {"1H", "HT", "2H", "ET", "BT", "P", "LIVE"}
+    FINISHED_STATUSES = {"FT", "AET", "PEN"}
     results = {}
 
     for fix in data.get("response", []):
         status = fix.get("fixture", {}).get("status", {}).get("short", "")
-        LIVE_STATUSES     = {"1H", "HT", "2H", "ET", "BT", "P", "LIVE"}
-        FINISHED_STATUSES = {"FT", "AET", "PEN"}
         if status not in LIVE_STATUSES | FINISHED_STATUSES:
             continue
 
