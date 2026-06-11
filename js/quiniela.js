@@ -78,9 +78,10 @@ function spainToUTC(dateStr, timeStr) {
 }
 
 function isBetOpen(m) {
-  // El primer partido (11 jun) se puede apostar desde cualquier día antes del pitido
-  // El resto solo se puede apostar el mismo día del partido
-  if (m[0] !== spainToday() && m[0] > '2026-06-11') return false;
+  const today = spainToday();
+  const [y, mo, d] = today.split('-').map(Number);
+  const limit = new Date(Date.UTC(y, mo - 1, d + 2)).toISOString().slice(0, 10);
+  if (m[0] > limit) return false;
   return Date.now() < spainToUTC(m[0], m[1]) - 5*60*1000;
 }
 
