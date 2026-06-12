@@ -159,20 +159,28 @@ async function renderCalendar() {
     document.getElementById('cal-content').innerHTML='<p class="empty">No hay partidos con estos filtros.</p>';
     return;
   }
+  const today = spainToday();
   const byDay={};
   for(const m of filtered){
     const vd=viewDate(m[0],m[1]);
     (byDay[vd]=byDay[vd]||[]).push(m);
   }
+  // Primer día >= hoy para el ancla de scroll
+  const anchorDay = Object.keys(byDay).sort().find(vd => vd >= today) || '';
+
   let html='', lastPhase='';
   for(const vd of Object.keys(byDay).sort()){
-    html+=`<div class="day-header">${fmtDate(vd)}</div>`;
+    const isPast    = vd < today;
+    const isToday   = vd === today;
+    const anchorId  = vd === anchorDay ? ' id="cal-today"' : '';
+    const dayCls    = isPast ? ' past-day' : isToday ? ' today-day' : '';
+    html+=`<div class="day-header${dayCls}"${anchorId}>${fmtDate(vd)}${isToday ? ' <span class="day-today-badge">HOY</span>' : ''}</div>`;
     for(const m of byDay[vd]){
       const [,time,label,venue,,ch,flags,phase]=m;
       if(phase!==lastPhase){ html+=`<div class="phase-banner">${PHASES[phase]||phase}</div>`; lastPhase=phase; }
       const night = isNight(time);
       const groupLetter = phase==='groups' ? (label.match(/Grupo ([A-L])/)?.[1] || null) : null;
-      const rowCls = ['match-row',flags===1?'spain':flags===2?'spain-pos':'',groupLetter?'match-row-link':''].filter(Boolean).join(' ');
+      const rowCls = ['match-row',isPast?'past-match':'',flags===1?'spain':flags===2?'spain-pos':'',groupLetter?'match-row-link':''].filter(Boolean).join(' ');
       const onclick = groupLetter ? ` onclick="navigateToGroup('${groupLetter}')"` : '';
 
       const [homeTeam, awayTeam] = matchTeams(m);
@@ -191,9 +199,12 @@ async function renderCalendar() {
       const o = !result && allOdds[mid];
       const oddsHtml = o ? `<div class="odds-row">${oddsChips(o)}</div>` : '';
       const isLive = result?.status === 'live';
+      const started = isPast || Date.now() >= spainToUTC(m[0], m[1]);
       const centerHtml = result
         ? `<div class="mrow-result"><span class="mrow-score-num">${result.home}</span><span class="mrow-rdash">–</span><span class="mrow-score-num">${result.away}</span></div><div class="mrow-fin${isLive?' live':''}">${isLive?'● EN VIVO':'FIN'}</div>`
-        : `<div class="${timeCls}">${time}</div><div class="mrow-sub">ESP${night?' 🌙':''}${spainBadge}</div>`;
+        : started
+          ? `<div class="mrow-result mrow-result-unknown"><span class="mrow-score-num">–</span><span class="mrow-rdash">:</span><span class="mrow-score-num">–</span></div><div class="mrow-fin">FIN</div>`
+          : `<div class="${timeCls}">${time}</div><div class="mrow-sub">ESP${night?' 🌙':''}${spainBadge}</div>`;
 
       const homeTnCls = homeFlag ? 'mrow-tname mrow-tname-link' : 'mrow-tname';
       const awayTnCls = awayFlag ? 'mrow-tname mrow-tname-link' : 'mrow-tname';
@@ -216,4 +227,11 @@ async function renderCalendar() {
     }
   }
   document.getElementById('cal-content').innerHTML=html;
+
+  // Sin filtro de fecha → scroll automático al día de hoy
+  if(!fDate && anchorDay){
+    requestAnimationFrame(()=>{
+      document.getElementById('cal-today')?.scrollIntoView({ block:'start' });
+    });
+  }
 }

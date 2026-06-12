@@ -182,7 +182,14 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
   background:#0e1625; padding:6px 16px;
   font-size:10px; font-weight:600; letter-spacing:1.5px; color:var(--muted);
   text-transform:uppercase; border-left:3px solid var(--border); margin-top:2px;
+  display:flex; align-items:center; gap:8px;
 }
+.day-header.today-day { border-left-color:var(--accent); color:var(--accent); }
+.day-header.past-day  { opacity:.7; }
+.day-today-badge { font-size:9px; background:var(--accent); color:#000; border-radius:3px; padding:1px 5px; letter-spacing:.5px; }
+.past-match { opacity:.75; }
+.mrow-result-unknown .mrow-score-num { color:var(--muted); font-size:14px; }
+.mrow-result-unknown + .mrow-fin    { color:var(--muted); opacity:.5; }
 .match-row {
   display:grid; grid-template-columns:1fr auto 1fr;
   grid-template-rows:auto auto;
