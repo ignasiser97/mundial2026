@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-12T07:32:41Z",
+  "updated": "2026-06-12T07:33:47Z",
   "groups": {
     "A": [
       {
@@ -602,8 +602,52 @@
       }
     ]
   },
-  "topScorers": [],
-  "topAssists": [],
+  "topScorers": [
+    {
+      "player": "Julián Quiñones",
+      "team": "México",
+      "flag": "🇲🇽",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Hwang In-Beom",
+      "team": "Corea del Sur",
+      "flag": "🇰🇷",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Oh Hyeon-Gyu",
+      "team": "Corea del Sur",
+      "flag": "🇰🇷",
+      "goals": 1,
+      "assists": 0
+    }
+  ],
+  "topAssists": [
+    {
+      "player": "Érik Lira",
+      "team": "México",
+      "flag": "🇲🇽",
+      "goals": 0,
+      "assists": 1
+    },
+    {
+      "player": "Lee Kang-In",
+      "team": "Corea del Sur",
+      "flag": "🇰🇷",
+      "goals": 0,
+      "assists": 1
+    },
+    {
+      "player": "Hwang In-Beom",
+      "team": "Corea del Sur",
+      "flag": "🇰🇷",
+      "goals": 0,
+      "assists": 1
+    }
+  ],
   "matchResults": {
     "2026-06-11_21:00_México_vs_Sudáfrica": {
       "home": 2,

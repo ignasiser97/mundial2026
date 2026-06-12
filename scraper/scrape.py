@@ -80,8 +80,10 @@ def fetch_scoreboard(dates_param: str) -> dict:
     return resp.json()
 
 
-def parse_scoreboard(data: dict) -> dict:
-    results = {}
+def parse_scoreboard(data: dict) -> tuple:
+    """Returns (results_dict, event_ids for ft matches)."""
+    results   = {}
+    event_ids = []
     for event in data.get("events", []):
         comp  = event.get("competitions", [{}])[0]
         state = comp.get("status", {}).get("type", {}).get("state", "")
@@ -101,38 +103,92 @@ def parse_scoreboard(data: dict) -> dict:
         except Exception:
             continue
 
-        mid = to_match_id(home_es, away_es, date_str, time_str)
+        mid    = to_match_id(home_es, away_es, date_str, time_str)
+        status = "live" if state == "in" else "ft"
         results[mid] = {
             "home":   int(home.get("score") or 0),
             "away":   int(away.get("score") or 0),
-            "status": "live" if state == "in" else "ft",
+            "status": status,
         }
-    return results
+        if status == "ft":
+            event_ids.append(event["id"])
+    return results, event_ids
 
 
-def fetch_all_results(existing: dict) -> dict:
-    """Recorre día a día desde el 11 jun hasta hoy."""
+def fetch_summary(event_id: str) -> dict:
+    resp = requests.get(
+        f"{BASE}/summary",
+        headers=HEADERS,
+        params={"event": event_id},
+        timeout=15,
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+
+def parse_top_stats(event_ids: list) -> tuple:
+    """Extrae goles y asistencias de los keyEvents de cada partido."""
+    goals   = {}  # player -> {player, team, flag, goals, assists}
+    assists = {}
+
+    for eid in event_ids:
+        try:
+            data = fetch_summary(eid)
+        except Exception as e:
+            print(f"  AVISO summary {eid}: {e}", file=sys.stderr)
+            continue
+
+        for ke in data.get("keyEvents", []):
+            if ke.get("type", {}).get("type") != "goal":
+                continue
+            parts   = ke.get("participants", [])
+            team_en = ke.get("team", {}).get("displayName", "")
+            team_es = NAMES_ES.get(team_en, team_en)
+            flag    = FLAGS.get(team_es, "")
+
+            if parts:
+                scorer = parts[0].get("athlete", {}).get("displayName", "")
+                if scorer:
+                    if scorer not in goals:
+                        goals[scorer] = {"player": scorer, "team": team_es, "flag": flag, "goals": 0, "assists": 0}
+                    goals[scorer]["goals"] += 1
+
+            if len(parts) > 1:
+                assister = parts[1].get("athlete", {}).get("displayName", "")
+                if assister:
+                    if assister not in assists:
+                        assists[assister] = {"player": assister, "team": team_es, "flag": flag, "goals": 0, "assists": 0}
+                    assists[assister]["assists"] += 1
+
+    top_scorers = sorted(goals.values(),   key=lambda x: -x["goals"])[:20]
+    top_assists = sorted(assists.values(), key=lambda x: -x["assists"])[:20]
+    return top_scorers, top_assists
+
+
+def fetch_all_results(existing: dict) -> tuple:
+    """Recorre día a día desde el 11 jun hasta hoy. Returns (results, event_ids)."""
     start = date(2026, 6, 11)
     today = datetime.now(MADRID).date()
-    results = dict(existing)  # parte de los resultados ya guardados
+    results   = dict(existing)
+    event_ids = []
 
     d = start
     while d <= today:
         dates_param = d.strftime("%Y%m%d")
         try:
             data = fetch_scoreboard(dates_param)
-            day_results = parse_scoreboard(data)
-            # Los ft prevalecen; los live siempre se actualizan
+            day_results, day_ids = parse_scoreboard(data)
             for mid, r in day_results.items():
                 if r["status"] == "ft" or mid not in results:
                     results[mid] = r
+            event_ids.extend(day_ids)
             if day_results:
                 print(f"  {d}: {len(day_results)} partidos")
         except Exception as e:
             print(f"  AVISO {d}: {e}", file=sys.stderr)
         d += timedelta(days=1)
 
-    return results
+    return results, event_ids
 
 
 def fetch_groups() -> dict:
@@ -185,8 +241,8 @@ def main():
             pass
 
     print("Obteniendo resultados (ESPN, día a día)…")
-    match_results = fetch_all_results(existing.get("matchResults", {}))
-    print(f"  → {len(match_results)} resultados totales")
+    match_results, event_ids = fetch_all_results(existing.get("matchResults", {}))
+    print(f"  → {len(match_results)} resultados, {len(event_ids)} partidos terminados")
 
     print("Obteniendo clasificaciones (ESPN standings)…")
     try:
@@ -200,9 +256,13 @@ def main():
         print("Sin datos de grupos — standings.json no se actualiza.", file=sys.stderr)
         sys.exit(0)
 
-    # Top scorers: ESPN no tiene un endpoint claro aún, conservar existente
-    top_scorers = existing.get("topScorers", [])
-    top_assists = existing.get("topAssists", [])
+    print(f"Obteniendo goleadores/asistentes ({len(event_ids)} summaries)…")
+    if event_ids:
+        top_scorers, top_assists = parse_top_stats(event_ids)
+        print(f"  → {len(top_scorers)} goleadores, {len(top_assists)} asistentes")
+    else:
+        top_scorers = existing.get("topScorers", [])
+        top_assists = existing.get("topAssists", [])
 
     OUT_FILE.write_text(json.dumps({
         "updated":      datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -212,7 +272,7 @@ def main():
         "matchResults": match_results,
     }, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    print(f"✓ standings.json actualizado — {len(groups)} grupos, {len(match_results)} resultados")
+    print(f"✓ standings.json actualizado — {len(groups)} grupos, {len(match_results)} resultados, {len(top_scorers)} goleadores")
 
 
 if __name__ == "__main__":
