@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-12T16:43:32Z",
+  "updated": "2026-06-12T19:03:53Z",
   "groups": {
     "A": [
       {
@@ -658,6 +658,11 @@
       "home": 2,
       "away": 1,
       "status": "ft"
+    },
+    "2026-06-12_21:00_Canadá_vs_Bosnia": {
+      "home": 0,
+      "away": 0,
+      "status": "live"
     }
   }
 }
