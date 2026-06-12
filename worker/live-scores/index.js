@@ -9,7 +9,7 @@ const NAMES_ES = {
   'Scotland': 'Escocia', 'Haiti': 'Haití', 'United States': 'Estados Unidos',
   'USA': 'Estados Unidos', 'Australia': 'Australia', 'Turkey': 'Turquía', 'Turkiye': 'Turquía', 'Türkiye': 'Turquía',
   'Paraguay': 'Paraguay', 'Germany': 'Alemania', "Ivory Coast": 'Costa de Marfil',
-  "Côte d'Ivoire": 'Costa de Marfil', 'Ecuador': 'Ecuador', 'Curacao': 'Curazao', 'Curaçao': 'Curazao',
+  "Côte d'Ivoire": 'Costa de Marfil', 'Ivory Coast': 'Costa de Marfil', 'Ecuador': 'Ecuador', 'Curacao': 'Curazao', 'Curaçao': 'Curazao',
   'Netherlands': 'Países Bajos', 'Japan': 'Japón', 'Sweden': 'Suecia',
   'Tunisia': 'Túnez', 'Belgium': 'Bélgica', 'New Zealand': 'Nueva Zelanda',
   'Iran': 'RI de Irán', 'IR Iran': 'RI de Irán',
