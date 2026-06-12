@@ -1,4 +1,4 @@
-const VERSION = 'v64';
+const VERSION = 'v66';
 const CACHE   = 'mundial2026-' + VERSION;
 
 const CORE = [

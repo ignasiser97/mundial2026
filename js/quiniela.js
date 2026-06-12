@@ -100,12 +100,24 @@ function nextUpcomingMatch() {
 }
 
 // 3 pts resultado exacto · 1 pt ganador correcto · 0 pts fallo
-function calcPoints(bet, result) {
+function calcPoints(bet, result, double = false) {
   if (!result || result.status === 'live') return null;
-  if (bet.home_score === result.home_score && bet.away_score === result.away_score) return 3;
-  const bOut = Math.sign(bet.home_score - bet.away_score);
-  const rOut = Math.sign(result.home_score - result.away_score);
-  return bOut === rOut ? 1 : 0;
+  let pts;
+  if (bet.home_score === result.home_score && bet.away_score === result.away_score) pts = 3;
+  else {
+    const bOut = Math.sign(bet.home_score - bet.away_score);
+    const rOut = Math.sign(result.home_score - result.away_score);
+    pts = bOut === rOut ? 1 : 0;
+  }
+  return double ? pts * 2 : pts;
+}
+
+let _spainMatchIds = null;
+function isSpainMatch(mid) {
+  if (!_spainMatchIds) {
+    _spainMatchIds = new Set(MATCHES.filter(m => m[6] === 1).map(m => matchId(m)));
+  }
+  return _spainMatchIds.has(mid);
 }
 
 function showToast(msg) {
@@ -120,10 +132,10 @@ function showToast(msg) {
 }
 
 function ptsLabel(pts) {
-  if (pts === 3) return '<span class="gb-pts-exact">+3 exacto!</span>';
-  if (pts === 1) return '<span class="gb-pts-win">+1 ganador</span>';
+  if (pts === null || pts === undefined) return '';
   if (pts === 0) return '<span class="gb-pts-miss">0 pts</span>';
-  return '';
+  const isExact = pts === 3 || pts === 6;
+  return `<span class="${isExact ? 'gb-pts-exact' : 'gb-pts-win'}">+${pts}${isExact ? ' exacto!' : ' ganador'}</span>`;
 }
 
 // ── Auth ───────────────────────────────────────────────────────
@@ -775,10 +787,11 @@ async function renderApostar(el) {
 
       const o = !started && allOdds[mid];
       const oddsLine = o ? `<div class="bet-odds">${oddsChips(o)}</div>` : '';
+      const doubleBadge = m[6] === 1 ? `<span class="bet-double-badge">🇪🇸 ×2</span>` : '';
 
       return `
-        <div class="bet-card">
-          ${badge}
+        <div class="bet-card${m[6] === 1 ? ' spain-double' : ''}">
+          ${badge}${doubleBadge}
           <div class="bet-card-header" onclick="toggleBetDropdown('${mid}')">
             <div class="bet-meta">${m[1]} · ${m[3].split(',').pop().trim()}</div>
           </div>
@@ -809,6 +822,7 @@ async function toggleGroupBets(mid, btn) {
   btn.textContent = 'Cargando…';
   const matchObj = MATCHES.find(m => matchId(m) === mid);
   const betOpen  = matchObj ? isBetOpen(matchObj) : false;
+  const double   = isSpainMatch(mid);
 
   const [groupUserIds, resultsMap] = await Promise.all([
     ensureGroupUserIds(),
@@ -836,13 +850,13 @@ async function toggleGroupBets(mid, btn) {
 
   const rows = bets
     .sort((a, b) => {
-      const pA = calcPoints(a, result) ?? -1;
-      const pB = calcPoints(b, result) ?? -1;
+      const pA = calcPoints(a, result, double) ?? -1;
+      const pB = calcPoints(b, result, double) ?? -1;
       return pB - pA;
     })
     .map(b => {
       const isMe  = b.user_id === qnlUser?.id;
-      const pts   = calcPoints(b, result);
+      const pts   = calcPoints(b, result, double);
       // Ocultar marcadores mientras las apuestas siguen abiertas, excepto la propia apuesta
       const score = (!betOpen || isMe)
         ? `${b.home_score} – ${b.away_score}`
@@ -959,12 +973,14 @@ async function renderMisApuestas(el) {
   }).join('');
 
   const pastCards = past.map(b => {
-    const m       = lookup[b.match_id];
+    const m        = lookup[b.match_id];
     const [home, away] = matchTeams(m);
-    const result  = resultMap[b.match_id];
-    const pts     = calcPoints(b, result);
-    const started = isMatchStarted(m);
+    const result   = resultMap[b.match_id];
+    const double   = m[6] === 1;
+    const pts      = calcPoints(b, result, double);
+    const started  = isMatchStarted(m);
 
+    const doubleBadge = double ? `<span class="bet-double-badge">🇪🇸 ×2</span>` : '';
     const isLiveBet = result?.status === 'live';
     const resultSection = result ? `
       <div class="bet-result-row">
@@ -980,7 +996,8 @@ async function renderMisApuestas(el) {
       <div id="gbets-${b.match_id}" class="hidden"></div>` : '';
 
     return `
-      <div class="bet-card">
+      <div class="bet-card${double ? ' spain-double' : ''}">
+        ${doubleBadge}
         <div class="bet-meta">${fmtDate(m[0])} · ${m[1]}</div>
         ${betRow(home, away, `<span class="bsr-score">${b.home_score}</span><span class="bet-dash">–</span><span class="bsr-score">${b.away_score}</span>`)}
         ${resultSection}${verGrupo}
@@ -1051,9 +1068,11 @@ async function renderClasificacion(el) {
     stats[b.user_id].apuestas++;
     const r = resultMap[b.match_id];
     if (r) {
-      const pts = calcPoints(b, r);
+      const double   = isSpainMatch(b.match_id);
+      const pts      = calcPoints(b, r, double);
+      const basePts  = double ? pts / 2 : pts;
       stats[b.user_id].pts += pts;
-      if (pts === 3) stats[b.user_id].exactos++;
+      if (basePts === 3) stats[b.user_id].exactos++;
     }
   });
 
