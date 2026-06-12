@@ -1,79 +1,619 @@
 {
-  "updated": "2026-05-29T00:00:00Z",
+  "updated": "2026-06-12T07:15:53Z",
   "groups": {
     "A": [
-      {"team": "México",        "flag": "🇲🇽", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Corea del Sur", "flag": "🇰🇷", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Rep. Checa",    "flag": "🇨🇿", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Sudáfrica",     "flag": "🇿🇦", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0}
+      {
+        "team": "México",
+        "flag": "🇲🇽",
+        "pj": 1,
+        "g": 1,
+        "e": 0,
+        "p": 0,
+        "gf": 2,
+        "gc": 0,
+        "dg": 2,
+        "pts": 3
+      },
+      {
+        "team": "Rep. Checa",
+        "flag": "🇨🇿",
+        "pj": 1,
+        "g": 0,
+        "e": 0,
+        "p": 1,
+        "gf": 1,
+        "gc": 2,
+        "dg": -1,
+        "pts": 0
+      },
+      {
+        "team": "Corea del Sur",
+        "flag": "🇰🇷",
+        "pj": 1,
+        "g": 1,
+        "e": 0,
+        "p": 0,
+        "gf": 2,
+        "gc": 1,
+        "dg": 1,
+        "pts": 3
+      },
+      {
+        "team": "Sudáfrica",
+        "flag": "🇿🇦",
+        "pj": 1,
+        "g": 0,
+        "e": 0,
+        "p": 1,
+        "gf": 0,
+        "gc": 2,
+        "dg": -2,
+        "pts": 0
+      }
     ],
     "B": [
-      {"team": "Canadá",  "flag": "🇨🇦", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Suiza",   "flag": "🇨🇭", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Bosnia",  "flag": "🇧🇦", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Catar",   "flag": "🇶🇦", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0}
+      {
+        "team": "Canadá",
+        "flag": "🇨🇦",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Bosnia",
+        "flag": "🇧🇦",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Suiza",
+        "flag": "🇨🇭",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Catar",
+        "flag": "🇶🇦",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      }
     ],
     "C": [
-      {"team": "Brasil",   "flag": "🇧🇷", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Marruecos","flag": "🇲🇦", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Escocia",  "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Haití",    "flag": "🇭🇹", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0}
+      {
+        "team": "Brasil",
+        "flag": "🇧🇷",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Escocia",
+        "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Haití",
+        "flag": "🇭🇹",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Marruecos",
+        "flag": "🇲🇦",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      }
     ],
     "D": [
-      {"team": "Estados Unidos","flag": "🇺🇸", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Australia",     "flag": "🇦🇺", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Turquía",       "flag": "🇹🇷", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Paraguay",      "flag": "🇵🇾", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0}
+      {
+        "team": "Paraguay",
+        "flag": "🇵🇾",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Türkiye",
+        "flag": "",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Australia",
+        "flag": "🇦🇺",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Estados Unidos",
+        "flag": "🇺🇸",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      }
     ],
     "E": [
-      {"team": "Alemania",       "flag": "🇩🇪", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Costa de Marfil","flag": "🇨🇮", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Ecuador",        "flag": "🇪🇨", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Curazao",        "flag": "🇨🇼", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0}
+      {
+        "team": "Ecuador",
+        "flag": "🇪🇨",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Alemania",
+        "flag": "🇩🇪",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Costa de Marfil",
+        "flag": "🇨🇮",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Curaçao",
+        "flag": "",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      }
     ],
     "F": [
-      {"team": "Países Bajos","flag": "🇳🇱", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Japón",       "flag": "🇯🇵", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Suecia",      "flag": "🇸🇪", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Túnez",       "flag": "🇹🇳", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0}
+      {
+        "team": "Países Bajos",
+        "flag": "🇳🇱",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Suecia",
+        "flag": "🇸🇪",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Japón",
+        "flag": "🇯🇵",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Túnez",
+        "flag": "🇹🇳",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      }
     ],
     "G": [
-      {"team": "Bélgica",      "flag": "🇧🇪", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Nueva Zelanda","flag": "🇳🇿", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "RI de Irán",   "flag": "🇮🇷", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Egipto",       "flag": "🇪🇬", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0}
+      {
+        "team": "Bélgica",
+        "flag": "🇧🇪",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "RI de Irán",
+        "flag": "🇮🇷",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Egipto",
+        "flag": "🇪🇬",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Nueva Zelanda",
+        "flag": "🇳🇿",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      }
     ],
     "H": [
-      {"team": "España",      "flag": "🇪🇸", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Uruguay",     "flag": "🇺🇾", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Arabia Saudí","flag": "🇸🇦", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Cabo Verde",  "flag": "🇨🇻", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0}
+      {
+        "team": "España",
+        "flag": "🇪🇸",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Uruguay",
+        "flag": "🇺🇾",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Arabia Saudí",
+        "flag": "🇸🇦",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Cabo Verde",
+        "flag": "🇨🇻",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      }
     ],
     "I": [
-      {"team": "Francia", "flag": "🇫🇷", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Senegal", "flag": "🇸🇳", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Noruega", "flag": "🇳🇴", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Irak",    "flag": "🇮🇶", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0}
+      {
+        "team": "Noruega",
+        "flag": "🇳🇴",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Francia",
+        "flag": "🇫🇷",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Senegal",
+        "flag": "🇸🇳",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Irak",
+        "flag": "🇮🇶",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      }
     ],
     "J": [
-      {"team": "Argentina","flag": "🇦🇷", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Austria",  "flag": "🇦🇹", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Argelia",  "flag": "🇩🇿", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Jordania", "flag": "🇯🇴", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0}
+      {
+        "team": "Argentina",
+        "flag": "🇦🇷",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Austria",
+        "flag": "🇦🇹",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Argelia",
+        "flag": "🇩🇿",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Jordania",
+        "flag": "🇯🇴",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      }
     ],
     "K": [
-      {"team": "Portugal",    "flag": "🇵🇹", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Colombia",    "flag": "🇨🇴", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "RD Congo",    "flag": "🇨🇩", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Uzbekistán",  "flag": "🇺🇿", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0}
+      {
+        "team": "Colombia",
+        "flag": "🇨🇴",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Portugal",
+        "flag": "🇵🇹",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Uzbekistán",
+        "flag": "🇺🇿",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Congo DR",
+        "flag": "",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      }
     ],
     "L": [
-      {"team": "Inglaterra","flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Croacia",   "flag": "🇭🇷", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Ghana",     "flag": "🇬🇭", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0},
-      {"team": "Panamá",    "flag": "🇵🇦", "pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "dg": 0, "pts": 0}
+      {
+        "team": "Inglaterra",
+        "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Croacia",
+        "flag": "🇭🇷",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Panamá",
+        "flag": "🇵🇦",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      },
+      {
+        "team": "Ghana",
+        "flag": "🇬🇭",
+        "pj": 0,
+        "g": 0,
+        "e": 0,
+        "p": 0,
+        "gf": 0,
+        "gc": 0,
+        "dg": 0,
+        "pts": 0
+      }
     ]
   },
   "topScorers": [],
-  "topAssists": []
+  "topAssists": [],
+  "matchResults": {
+    "2026-06-11_21:00_México_vs_Sudáfrica": {
+      "home": 2,
+      "away": 0,
+      "status": "ft"
+    },
+    "2026-06-12_04:00_CoreadelSur_vs_Rep.Checa": {
+      "home": 2,
+      "away": 1,
+      "status": "ft"
+    }
+  }
 }

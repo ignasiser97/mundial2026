@@ -31,8 +31,6 @@ jobs:
         run: pip install -r scraper/requirements.txt
 
       - name: Actualizar standings.json
-        env:
-          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
         run: python scraper/scrape.py
 
       - name: Commit y push (solo si hay cambios)

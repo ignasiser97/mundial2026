@@ -12,7 +12,8 @@ const NAMES_ES = {
   "Côte d'Ivoire": 'Costa de Marfil', 'Ecuador': 'Ecuador', 'Curacao': 'Curazao',
   'Netherlands': 'Países Bajos', 'Japan': 'Japón', 'Sweden': 'Suecia',
   'Tunisia': 'Túnez', 'Belgium': 'Bélgica', 'New Zealand': 'Nueva Zelanda',
-  'Iran': 'RI de Irán', 'Egypt': 'Egipto', 'Spain': 'España', 'Uruguay': 'Uruguay',
+  'Iran': 'RI de Irán', 'IR Iran': 'RI de Irán',
+  'Czechia': 'Rep. Checa', 'Bosnia-Herzegovina': 'Bosnia', 'Egypt': 'Egipto', 'Spain': 'España', 'Uruguay': 'Uruguay',
   'Saudi Arabia': 'Arabia Saudí', 'Cape Verde': 'Cabo Verde', 'France': 'Francia',
   'Senegal': 'Senegal', 'Norway': 'Noruega', 'Iraq': 'Irak', 'Argentina': 'Argentina',
   'Austria': 'Austria', 'Algeria': 'Argelia', 'Jordan': 'Jordania',
@@ -51,18 +52,16 @@ function toSpainDateTime(isoDate) {
 async function fetchFromESPN() {
   // Try WC-specific endpoint first, fall back to full soccer scoreboard
   const endpoints = [
-    'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world-cup/scoreboard',
-    'https://site.api.espn.com/apis/site/v2/sports/soccer/scoreboard',
+    'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard',
   ];
 
   for (const url of endpoints) {
     try {
       const res = await fetch(url, {
         headers: { 'User-Agent': 'Mozilla/5.0 (compatible)' },
-        // Tell CF not to cache the upstream request itself
         cf: { cacheEverything: false },
       });
-      if (res.ok) return { data: await res.json(), wc_only: url.includes('world-cup') };
+      if (res.ok) return { data: await res.json(), wc_only: true };
     } catch { /* try next */ }
   }
   return null;
