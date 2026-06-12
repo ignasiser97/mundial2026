@@ -3,6 +3,57 @@ let sqdDid = 0;
 let sqdClubListenerAdded = false;
 let sqdPendingTeam = null;
 
+const COACHES = {
+  "Algeria": "Vladimir Petković",
+  "Argentina": "Lionel Scaloni",
+  "Australia": "Tony Popovic",
+  "Austria": "Ralf Rangnick",
+  "Belgium": "Rudi Garcia",
+  "Bosnia and Herzegovina": "Sergej Barbarez",
+  "Brazil": "Carlo Ancelotti",
+  "Canada": "Jesse Marsch",
+  "Cape Verde": "Bubista",
+  "Colombia": "Néstor Lorenzo",
+  "Croatia": "Zlatko Dalić",
+  "Curaçao": "Dick Advocaat",
+  "Czech Republic": "Miroslav Koubek",
+  "DR Congo": "Sébastien Desabre",
+  "Ecuador": "Sebastián Beccacece",
+  "Egypt": "Hossam Hassan",
+  "England": "Thomas Tuchel",
+  "France": "Didier Deschamps",
+  "Germany": "Julian Nagelsmann",
+  "Ghana": "Carlos Queiroz",
+  "Haiti": "Sébastien Migné",
+  "Iran": "Amir Ghalenoei",
+  "Iraq": "Graham Arnold",
+  "Ivory Coast": "Emerse Faé",
+  "Japan": "Hajime Moriyasu",
+  "Jordan": "Jamal Sellami",
+  "Mexico": "Javier Aguirre",
+  "Morocco": "Mohamed Ouahbi",
+  "Netherlands": "Ronald Koeman",
+  "New Zealand": "Darren Bazeley",
+  "Norway": "Ståle Solbakken",
+  "Panama": "Thomas Christiansen",
+  "Paraguay": "Gustavo Alfaro",
+  "Portugal": "Roberto Martínez",
+  "Qatar": "Julen Lopetegui",
+  "Saudi Arabia": "Georgios Donis",
+  "Scotland": "Steve Clarke",
+  "Senegal": "Pape Thiaw",
+  "South Africa": "Hugo Broos",
+  "South Korea": "Hong Myung-bo",
+  "Spain": "Luis de la Fuente",
+  "Sweden": "Graham Potter",
+  "Switzerland": "Murat Yakin",
+  "Tunisia": "Sabri Lamouchi",
+  "Turkey": "Vincenzo Montella",
+  "United States": "Mauricio Pochettino",
+  "Uruguay": "Marcelo Bielsa",
+  "Uzbekistan": "Fabio Cannavaro",
+};
+
 const SQUAD_NAMES_ES = {
   "Algeria":"Argelia","Argentina":"Argentina","Australia":"Australia",
   "Austria":"Austria","Belgium":"Bélgica","Bosnia and Herzegovina":"Bosnia",
@@ -230,10 +281,12 @@ function renderCountrySquad(teamEn) {
   POS_ORDER.forEach(p => byPos[p] = []);
   players.forEach(p => { (byPos[p.position] ?? byPos['FW']).push(p); });
 
+  const coach = COACHES[teamEn];
   let html = `<div class="sqd-team-header">
     <span class="sqd-team-flag">${sqdFlag(teamEn)}</span>
     <span class="sqd-team-name">${sqdNameES(teamEn)}</span>
     <span class="sqd-team-count">${players.length} jugadores</span>
+    ${coach ? `<span class="sqd-team-coach">🧑‍💼 ${coach}</span>` : ''}
   </div>`;
 
   for (const pos of POS_ORDER) {
