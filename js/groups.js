@@ -124,7 +124,10 @@ function toggleTeamPanel(team) {
 }
 
 function renderGroup(letter, teams) {
-  const rows = teams.map((t, idx) => {
+  const sorted = [...teams].sort((a, b) =>
+    b.pts - a.pts || b.dg - a.dg || b.gf - a.gf || a.team.localeCompare(b.team, 'es')
+  );
+  const rows = sorted.map((t, idx) => {
     const dgVal = t.dg ?? 0;
     const dgCls = dgVal > 0 ? 'pos' : dgVal < 0 ? 'neg' : '';
     const dg    = dgVal > 0 ? '+' + dgVal : dgVal;
