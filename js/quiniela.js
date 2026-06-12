@@ -800,7 +800,7 @@ async function renderApostar(el) {
         <div class="bet-card${m[6] === 1 ? ' spain-double' : ''}">
           ${badge}${doubleBadge}
           <div class="bet-card-header" onclick="toggleBetDropdown('${mid}')">
-            <div class="bet-meta">${m[1]} · ${m[3].split(',').pop().trim()}</div>
+            <div class="bet-meta"><span class="${isNight(m[1])?'night':''}">${m[1]}${isNight(m[1])?' 🌙':''}</span> · ${m[3].split(',').pop().trim()}</div>
           </div>
           ${oddsLine}
           <div id="bdrop-${mid}" class="bet-dropdown hidden">${dropContent}</div>
@@ -974,7 +974,7 @@ async function renderMisApuestas(el) {
         </div>`;
     return `
       <div class="bet-card" style="border-color:rgba(232,200,74,.35)">
-        <div class="bet-meta">${fmtDate(m[0])} · ${m[1]}</div>
+        <div class="bet-meta">${fmtDate(m[0])} · <span class="${isNight(m[1])?'night':''}">${m[1]}${isNight(m[1])?' 🌙':''}</span></div>
         ${body}
       </div>`;
   }).join('');
@@ -1005,7 +1005,7 @@ async function renderMisApuestas(el) {
     return `
       <div class="bet-card${double ? ' spain-double' : ''}">
         ${doubleBadge}
-        <div class="bet-meta">${fmtDate(m[0])} · ${m[1]}</div>
+        <div class="bet-meta">${fmtDate(m[0])} · <span class="${isNight(m[1])?'night':''}">${m[1]}${isNight(m[1])?' 🌙':''}</span></div>
         ${betRow(home, away, `<span class="bsr-score">${b.home_score}</span><span class="bet-dash">–</span><span class="bsr-score">${b.away_score}</span>`)}
         ${resultSection}${verGrupo}
       </div>`;
