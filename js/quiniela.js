@@ -32,7 +32,7 @@ const GROUPS = [
     id:      'qbiertos',
     name:    "Q'biertos",
     salt:    'mundial26',
-    hash:    'a14b7a6a1b7a5203503e94abf5d3ad600d55890d8851563e324c87be8aa94951',
+    hash:    '56c7cc5f6de23d66c22a945954c1658797f3a7a50389b5a04481f1417ecfa814',
     members: ['Jimmy','Maraca','Banery','Qiling','Negro','Joker Pelon','Nyom Ballon D\'or'],
   },
 ];
