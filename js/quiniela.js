@@ -241,7 +241,7 @@ function renderQnlPickerScreen() {
   const wrap = document.getElementById('qnl-inner');
   if (!wrap) return;
   const buttons = qnlGroup.members.map(name =>
-    `<button class="qnl-picker-btn" onclick="qnlPickFriend('${name}')">${name}</button>`
+    `<button class="qnl-picker-btn" onclick="qnlPickFriend('${name.replace(/'/g, "\\'")}')">${escHtml(name)}</button>`
   ).join('');
   wrap.innerHTML = `
     <div class="qnl-register">
