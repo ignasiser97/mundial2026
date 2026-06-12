@@ -28,6 +28,13 @@ const GROUPS = [
     hash:    '2f5f36432f865d91bb992b083081db3e5c96ffe37f806f5149be701b8703cde3',
     members: ['Crossfitero 1','Crossfitero 2','Gutcemaniaco','Xaxofon2000','Chiqui Ibai','Mª Escudero','JAME JAMENEI','AFELLAY','The Small One','xNanoXz'],
   },
+  {
+    id:      'qbiertos',
+    name:    "Q'biertos",
+    salt:    'mundial26',
+    hash:    'a14b7a6a1b7a5203503e94abf5d3ad600d55890d8851563e324c87be8aa94951',
+    members: ['Jimmy','Maraca','Banery','Qiling','Negro','Joker Pelon','Nyom Ballon D\'or'],
+  },
 ];
 
 const ADMIN_HASH = 'f353bf263d36c03aa634957ae550b9d24fb8ee38ca4b672ed61997d4934cb29d';
@@ -56,7 +63,7 @@ const ALL_TEAMS = [...new Set(
 )].sort((a, b) => a.localeCompare(b, 'es'));
 
 function isTorneoOpen() {
-  return Date.now() < MUNDIAL_START_MS;
+  return true; // abierto manualmente para nuevos grupos durante el torneo
 }
 
 // ── Helpers ────────────────────────────────────────────────────
