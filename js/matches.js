@@ -7,7 +7,7 @@ const MATCHES = [
   ['2026-06-12','04:00','Corea del Sur vs Rep. Checa · Grupo A',   'Estadio Akron, Guadalajara',            'MEX','d', 0,'groups'],
   ['2026-06-12','21:00','Canadá vs Bosnia · Grupo B',              'BMO Field, Toronto',                   'CAN','d', 0,'groups'],
   ['2026-06-13','03:00','Estados Unidos vs Paraguay · Grupo D',    'SoFi Stadium, Los Ángeles',             'USA','d', 0,'groups'],
-  ['2026-06-13','06:00','Australia vs Turquía · Grupo D',          'BC Place, Vancouver',                  'CAN','d', 0,'groups'],
+  ['2026-06-14','06:00','Australia vs Turquía · Grupo D',          'BC Place, Vancouver',                  'CAN','d', 0,'groups'],
   ['2026-06-13','21:00','Catar vs Suiza · Grupo B',                "Levi's Stadium, San Francisco",        'USA','d', 0,'groups'],
   ['2026-06-14','00:00','Brasil vs Marruecos · Grupo C',           'MetLife Stadium, Nueva Jersey',         'USA','dl',0,'groups'],
   ['2026-06-14','03:00','Haití vs Escocia · Grupo C',              'Gillette Stadium, Boston',              'USA','d', 0,'groups'],
