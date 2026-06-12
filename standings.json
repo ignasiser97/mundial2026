@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-12T19:03:53Z",
+  "updated": "2026-06-12T21:42:37Z",
   "groups": {
     "A": [
       {
@@ -55,26 +55,26 @@
       {
         "team": "Canadá",
         "flag": "🇨🇦",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
+        "gf": 1,
+        "gc": 1,
         "dg": 0,
-        "pts": 0
+        "pts": 1
       },
       {
         "team": "Bosnia",
         "flag": "🇧🇦",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
+        "gf": 1,
+        "gc": 1,
         "dg": 0,
-        "pts": 0
+        "pts": 1
       },
       {
         "team": "Suiza",
@@ -623,6 +623,13 @@
       "flag": "🇰🇷",
       "goals": 1,
       "assists": 0
+    },
+    {
+      "player": "Cyle Larin",
+      "team": "Canadá",
+      "flag": "🇨🇦",
+      "goals": 1,
+      "assists": 0
     }
   ],
   "topAssists": [
@@ -646,6 +653,13 @@
       "flag": "🇰🇷",
       "goals": 0,
       "assists": 1
+    },
+    {
+      "player": "Promise David",
+      "team": "Canadá",
+      "flag": "🇨🇦",
+      "goals": 0,
+      "assists": 1
     }
   ],
   "matchResults": {
@@ -660,9 +674,9 @@
       "status": "ft"
     },
     "2026-06-12_21:00_Canadá_vs_Bosnia": {
-      "home": 0,
-      "away": 0,
-      "status": "live"
+      "home": 1,
+      "away": 1,
+      "status": "ft"
     }
   }
 }
