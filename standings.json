@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-12T07:33:47Z",
+  "updated": "2026-06-12T09:59:56Z",
   "groups": {
     "A": [
       {
@@ -165,8 +165,8 @@
         "pts": 0
       },
       {
-        "team": "Türkiye",
-        "flag": "",
+        "team": "Turquía",
+        "flag": "🇹🇷",
         "pj": 0,
         "g": 0,
         "e": 0,
@@ -239,8 +239,8 @@
         "pts": 0
       },
       {
-        "team": "Curaçao",
-        "flag": "",
+        "team": "Curazao",
+        "flag": "🇨🇼",
         "pj": 0,
         "g": 0,
         "e": 0,
@@ -539,8 +539,8 @@
         "pts": 0
       },
       {
-        "team": "Congo DR",
-        "flag": "",
+        "team": "RD Congo",
+        "flag": "🇨🇩",
         "pj": 0,
         "g": 0,
         "e": 0,

@@ -26,9 +26,9 @@ NAMES_ES = {
     "Bosnia": "Bosnia", "Bosnia-Herzegovina": "Bosnia", "Qatar": "Catar",
     "Brazil": "Brasil", "Morocco": "Marruecos", "Scotland": "Escocia",
     "Haiti": "Haití", "United States": "Estados Unidos", "USA": "Estados Unidos",
-    "Australia": "Australia", "Turkey": "Turquía", "Paraguay": "Paraguay",
+    "Australia": "Australia", "Turkey": "Turquía", "Turkiye": "Turquía", "Türkiye": "Turquía", "Paraguay": "Paraguay",
     "Germany": "Alemania", "Ivory Coast": "Costa de Marfil",
-    "Côte d'Ivoire": "Costa de Marfil", "Ecuador": "Ecuador", "Curacao": "Curazao",
+    "Côte d'Ivoire": "Costa de Marfil", "Ecuador": "Ecuador", "Curacao": "Curazao", "Curaçao": "Curazao",
     "Netherlands": "Países Bajos", "Japan": "Japón", "Sweden": "Suecia",
     "Tunisia": "Túnez", "Belgium": "Bélgica", "New Zealand": "Nueva Zelanda",
     "Iran": "RI de Irán", "IR Iran": "RI de Irán", "Egypt": "Egipto",
@@ -37,7 +37,7 @@ NAMES_ES = {
     "Norway": "Noruega", "Iraq": "Irak", "Argentina": "Argentina",
     "Austria": "Austria", "Algeria": "Argelia", "Jordan": "Jordania",
     "Portugal": "Portugal", "Colombia": "Colombia", "DR Congo": "RD Congo",
-    "Democratic Republic of Congo": "RD Congo", "Uzbekistan": "Uzbekistán",
+    "Congo DR": "RD Congo", "Democratic Republic of Congo": "RD Congo", "Uzbekistan": "Uzbekistán",
     "England": "Inglaterra", "Croatia": "Croacia", "Ghana": "Ghana", "Panama": "Panamá",
 }
 

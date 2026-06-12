@@ -7,9 +7,9 @@ const NAMES_ES = {
   'South Africa': 'Sudáfrica', 'Canada': 'Canadá', 'Switzerland': 'Suiza',
   'Bosnia': 'Bosnia', 'Qatar': 'Catar', 'Brazil': 'Brasil', 'Morocco': 'Marruecos',
   'Scotland': 'Escocia', 'Haiti': 'Haití', 'United States': 'Estados Unidos',
-  'USA': 'Estados Unidos', 'Australia': 'Australia', 'Turkey': 'Turquía',
+  'USA': 'Estados Unidos', 'Australia': 'Australia', 'Turkey': 'Turquía', 'Turkiye': 'Turquía', 'Türkiye': 'Turquía',
   'Paraguay': 'Paraguay', 'Germany': 'Alemania', "Ivory Coast": 'Costa de Marfil',
-  "Côte d'Ivoire": 'Costa de Marfil', 'Ecuador': 'Ecuador', 'Curacao': 'Curazao',
+  "Côte d'Ivoire": 'Costa de Marfil', 'Ecuador': 'Ecuador', 'Curacao': 'Curazao', 'Curaçao': 'Curazao',
   'Netherlands': 'Países Bajos', 'Japan': 'Japón', 'Sweden': 'Suecia',
   'Tunisia': 'Túnez', 'Belgium': 'Bélgica', 'New Zealand': 'Nueva Zelanda',
   'Iran': 'RI de Irán', 'IR Iran': 'RI de Irán',
@@ -18,7 +18,7 @@ const NAMES_ES = {
   'Senegal': 'Senegal', 'Norway': 'Noruega', 'Iraq': 'Irak', 'Argentina': 'Argentina',
   'Austria': 'Austria', 'Algeria': 'Argelia', 'Jordan': 'Jordania',
   'Portugal': 'Portugal', 'Colombia': 'Colombia', 'DR Congo': 'RD Congo',
-  'Democratic Republic of Congo': 'RD Congo', 'Uzbekistan': 'Uzbekistán',
+  'Congo DR': 'RD Congo', 'Democratic Republic of Congo': 'RD Congo', 'Uzbekistan': 'Uzbekistán',
   'England': 'Inglaterra', 'Croatia': 'Croacia', 'Ghana': 'Ghana', 'Panama': 'Panamá',
 };
 
