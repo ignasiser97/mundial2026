@@ -204,16 +204,40 @@ function buildPMap() {
   return map;
 }
 
-function bktNavLabel(text) {
-  const letter = text.match(/[A-L]$/)?.[0];
-  return letter
-    ? `<span class="bkt-nav-link" onclick="navigateToGroup('${letter}')">${text}</span>`
-    : text;
-}
-
 function bktGoToDate(date) {
   switchTab('cal');
   requestAnimationFrame(() => cpSelect(date));
+}
+
+let bktMap = {};
+let bktSlotMap = {};  // '1º A' → {team, flag, pj}
+
+function buildBktSlotMap(groups) {
+  const map = {};
+  for (const [letter, teams] of Object.entries(groups)) {
+    const sorted = [...teams].sort((a, b) =>
+      b.pts - a.pts || b.dg - a.dg || b.gf - a.gf
+    );
+    if (sorted[0]) map[`1º ${letter}`] = sorted[0];
+    if (sorted[1]) map[`2º ${letter}`] = sorted[1];
+  }
+  return map;
+}
+
+function bktSlotLabel(slot) {
+  const entry = bktSlotMap[slot];
+  const letter = slot.match(/[A-L]$/) ? slot.slice(-1) : null;
+  const nav = letter ? ` onclick="navigateToGroup('${letter}')"` : '';
+  if (!entry) {
+    return letter
+      ? `<span class="bkt-nav-link"${nav}>${slot}</span>`
+      : slot;
+  }
+  const prov  = entry.pj < 3;
+  const label = `${entry.flag || ''} ${entry.team}${prov ? '<span class="bkt-prov"> ~</span>' : ''}`;
+  return letter
+    ? `<span class="bkt-nav-link"${nav}>${label}</span>`
+    : label;
 }
 
 function bktCard(code, pmap, extra='') {
@@ -222,7 +246,7 @@ function bktCard(code, pmap, extra='') {
   const isR32 = m[7] === 'r32';
   let home = '-', away = '-';
   if (isR32) {
-    [home, away] = matchTeams(m).map(bktNavLabel);
+    [home, away] = matchTeams(m).map(bktSlotLabel);
   }
   return `<div class="bkt-m${extra} clickable" onclick="bktGoToDate('${m[0]}')">
     <div class="bkt-team">${home}</div>
@@ -244,11 +268,14 @@ function bktColumn(rounds, labels, side) {
   }).join('');
 }
 
-let bktMap = {};
-
-function renderBracket() {
+async function renderBracket() {
   const el = document.getElementById('bracket-content');
   bktMap = buildPMap();
+
+  try {
+    const data = await getStandingsData();
+    bktSlotMap = buildBktSlotMap(data?.groups || {});
+  } catch { bktSlotMap = {}; }
 
   const leftHTML  = bktColumn(BKT_LEFT,  BKT_LEFT_LABELS,  'l');
   const rightHTML = bktColumn(BKT_RIGHT, BKT_RIGHT_LABELS, 'r');
