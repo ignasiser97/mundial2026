@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-13T17:21:17Z",
+  "updated": "2026-06-13T19:23:38Z",
   "groups": {
     "A": [
       {
@@ -731,6 +731,11 @@
       "home": 4,
       "away": 1,
       "status": "ft"
+    },
+    "2026-06-13_21:00_Catar_vs_Suiza": {
+      "home": 0,
+      "away": 1,
+      "status": "live"
     }
   }
 }
