@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-12T23:15:28Z",
+  "updated": "2026-06-13T03:34:24Z",
   "groups": {
     "A": [
       {
@@ -155,13 +155,13 @@
       {
         "team": "Paraguay",
         "flag": "🇵🇾",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
         "e": 0,
-        "p": 0,
-        "gf": 0,
-        "gc": 0,
-        "dg": 0,
+        "p": 1,
+        "gf": 1,
+        "gc": 4,
+        "dg": -3,
         "pts": 0
       },
       {
@@ -191,14 +191,14 @@
       {
         "team": "Estados Unidos",
         "flag": "🇺🇸",
-        "pj": 0,
-        "g": 0,
+        "pj": 1,
+        "g": 1,
         "e": 0,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
-        "dg": 0,
-        "pts": 0
+        "gf": 4,
+        "gc": 1,
+        "dg": 3,
+        "pts": 3
       }
     ],
     "E": [
@@ -604,6 +604,13 @@
   },
   "topScorers": [
     {
+      "player": "Folarin Balogun",
+      "team": "Estados Unidos",
+      "flag": "🇺🇸",
+      "goals": 2,
+      "assists": 0
+    },
+    {
       "player": "Julián Quiñones",
       "team": "México",
       "flag": "🇲🇽",
@@ -628,6 +635,20 @@
       "player": "Cyle Larin",
       "team": "Canadá",
       "flag": "🇨🇦",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Maurício",
+      "team": "Paraguay",
+      "flag": "🇵🇾",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Giovanni Reyna",
+      "team": "Estados Unidos",
+      "flag": "🇺🇸",
       "goals": 1,
       "assists": 0
     }
@@ -660,6 +681,34 @@
       "flag": "🇨🇦",
       "goals": 0,
       "assists": 1
+    },
+    {
+      "player": "Christian Pulisic",
+      "team": "Estados Unidos",
+      "flag": "🇺🇸",
+      "goals": 0,
+      "assists": 1
+    },
+    {
+      "player": "Malik Tillman",
+      "team": "Estados Unidos",
+      "flag": "🇺🇸",
+      "goals": 0,
+      "assists": 1
+    },
+    {
+      "player": "Julio Enciso",
+      "team": "Paraguay",
+      "flag": "🇵🇾",
+      "goals": 0,
+      "assists": 1
+    },
+    {
+      "player": "Alex Freeman",
+      "team": "Estados Unidos",
+      "flag": "🇺🇸",
+      "goals": 0,
+      "assists": 1
     }
   ],
   "matchResults": {
@@ -675,6 +724,11 @@
     },
     "2026-06-12_21:00_Canadá_vs_Bosnia": {
       "home": 1,
+      "away": 1,
+      "status": "ft"
+    },
+    "2026-06-13_03:00_EstadosUnidos_vs_Paraguay": {
+      "home": 4,
       "away": 1,
       "status": "ft"
     }
