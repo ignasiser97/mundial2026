@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-13T21:14:38Z",
+  "updated": "2026-06-13T23:03:20Z",
   "groups": {
     "A": [
       {
@@ -736,6 +736,11 @@
       "home": 1,
       "away": 1,
       "status": "ft"
+    },
+    "2026-06-14_00:00_Brasil_vs_Marruecos": {
+      "home": 1,
+      "away": 1,
+      "status": "live"
     }
   }
 }
