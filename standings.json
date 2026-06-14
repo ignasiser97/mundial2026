@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-14T15:48:21Z",
+  "updated": "2026-06-14T17:19:31Z",
   "groups": {
     "A": [
       {
@@ -807,6 +807,11 @@
       "home": 2,
       "away": 0,
       "status": "ft"
+    },
+    "2026-06-14_19:00_Alemania_vs_Curazao": {
+      "home": 1,
+      "away": 0,
+      "status": "live"
     }
   }
 }
