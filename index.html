@@ -572,6 +572,19 @@ html,body { overscroll-behavior-y: contain; }
 .home-section-label { font-size:10px; font-weight:700; letter-spacing:2px; color:var(--muted); text-transform:uppercase; padding:16px 16px 8px; }
 .home-live-matches { margin:0 -20px; }
 .home-next-card { background:var(--card); border:1px solid var(--border); border-radius:12px; margin:0; padding:22px; text-align:center; }
+.home-scoreboard { background:linear-gradient(135deg,#0d1e3a 0%,#0a1628 100%); border:1px solid rgba(232,200,74,.3); border-radius:14px; margin:4px 0 8px; padding:0; overflow:hidden; cursor:pointer; }
+.home-scoreboard:active { opacity:.85; }
+.hsb-live-bar { background:var(--pos); color:#000; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:5px 12px; text-align:center; }
+.hsb-body { display:flex; align-items:center; justify-content:space-between; padding:20px 16px 14px; gap:8px; }
+.hsb-team { flex:1; text-align:center; min-width:0; }
+.hsb-flag { font-size:36px; line-height:1; margin-bottom:6px; }
+.hsb-name { font-size:12px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.hsb-goals { margin-top:6px; min-height:16px; }
+.hsb-goal { display:block; font-size:10px; color:var(--pos); line-height:1.5; }
+.hsb-score { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+.hsb-num { font-family:'Bebas Neue',sans-serif; font-size:clamp(44px,12vw,68px); color:#fff; line-height:1; }
+.hsb-dash { font-family:'Bebas Neue',sans-serif; font-size:clamp(28px,8vw,44px); color:var(--muted); }
+.hsb-venue { font-size:10px; color:var(--muted); text-align:center; padding:0 12px 10px; letter-spacing:.5px; }
 .home-next-teams { font-size:17px; font-weight:600; margin-bottom:6px; }
 .home-next-when { font-size:13px; color:var(--muted); }
 .home-quick-links { display:flex; gap:10px; padding:20px 0 4px; }

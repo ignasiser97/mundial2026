@@ -67,12 +67,30 @@ async function fetchFromESPN() {
   return null;
 }
 
+async function fetchSummary(eventId) {
+  try {
+    const res = await fetch(
+      `https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=${eventId}`,
+      { headers: { 'User-Agent': 'Mozilla/5.0 (compatible)' }, cf: { cacheEverything: false } }
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.keyEvents || [])
+      .filter(ke => ke.type?.type === 'goal')
+      .map(ke => ({
+        player: ke.participants?.[0]?.athlete?.displayName || '',
+        team:   NAMES_ES[ke.team?.displayName] ?? ke.team?.displayName ?? '',
+        minute: ke.clock?.displayValue || '',
+      }));
+  } catch { return []; }
+}
+
 function parseESPN({ data, wc_only }) {
   const matchResults = {};
+  const liveEvents   = {};   // mid → eventId, para pedir goals después
   const events = data.events ?? [];
 
   for (const event of events) {
-    // When using the general endpoint, filter to World Cup only
     if (!wc_only) {
       const leagueName = (event.league?.name ?? data.leagues?.[0]?.name ?? '').toLowerCase();
       if (!leagueName.includes('world cup')) continue;
@@ -81,7 +99,7 @@ function parseESPN({ data, wc_only }) {
     const comp = event.competitions?.[0];
     if (!comp) continue;
 
-    const state = comp.status?.type?.state; // 'pre' | 'in' | 'post'
+    const state = comp.status?.type?.state;
     if (!state || state === 'pre') continue;
 
     const home = comp.competitors?.find(c => c.homeAway === 'home');
@@ -93,14 +111,20 @@ function parseESPN({ data, wc_only }) {
     const { date, time } = toSpainDateTime(event.date);
     const mid = toMatchId(homeEs, awayEs, date, time);
 
+    const isLive = state === 'in';
     matchResults[mid] = {
-      home:   parseInt(home.score || '0', 10),
-      away:   parseInt(away.score || '0', 10),
-      status: state === 'in' ? 'live' : 'ft',
+      home:       parseInt(home.score || '0', 10),
+      away:       parseInt(away.score || '0', 10),
+      status:     isLive ? 'live' : 'ft',
+      clock:      isLive ? (comp.status?.displayClock || '') : '',
+      period:     isLive ? (comp.status?.period || 1) : 0,
+      periodName: isLive ? (comp.status?.type?.description || '') : '',
+      goals:      [],
     };
+    if (isLive) liveEvents[event.id] = mid;
   }
 
-  return matchResults;
+  return { matchResults, liveEvents };
 }
 
 export default {
@@ -109,9 +133,8 @@ export default {
       return new Response(null, { headers: CORS });
     }
 
-    // Edge cache key (shared across all users)
     const cache    = caches.default;
-    const cacheKey = new Request('https://cache.internal/live-scores/v2');
+    const cacheKey = new Request('https://cache.internal/live-scores/v3');
     const cached   = await cache.match(cacheKey);
     if (cached) {
       const r = new Response(cached.body, cached);
@@ -119,8 +142,18 @@ export default {
       return r;
     }
 
-    const result       = await fetchFromESPN();
-    const matchResults = result ? parseESPN(result) : {};
+    const raw = await fetchFromESPN();
+    let matchResults = {};
+    if (raw) {
+      const parsed = parseESPN(raw);
+      matchResults  = parsed.matchResults;
+      // Fetch goal events for each live match (usually 1-2 at a time)
+      await Promise.all(
+        Object.entries(parsed.liveEvents).map(async ([eventId, mid]) => {
+          matchResults[mid].goals = await fetchSummary(eventId);
+        })
+      );
+    }
 
     const body = JSON.stringify({ matchResults, ts: Date.now() });
     const response = new Response(body, {

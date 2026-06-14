@@ -107,13 +107,23 @@ async function renderHomeLive(el) {
         <div class="home-live-day">DÍA ${dayNum > 0 ? dayNum : '—'} · ${currentPhase.toUpperCase()}</div>
       </div>`;
 
+    // Separar partidos en directo del resto
+    const liveMatches  = todayMatches.filter(m => results[matchId(m)]?.status === 'live');
+    const otherMatches = todayMatches.filter(m => results[matchId(m)]?.status !== 'live');
+
     let matchSection = '';
-    if (todayMatches.length) {
+    if (liveMatches.length) {
+      const scoreboards = liveMatches.map(m => _homeLiveScoreboard(m, results[matchId(m)])).join('');
+      const rest = otherMatches.length
+        ? `<div class="home-section-label" style="margin-top:18px">Resto del día</div><div class="home-live-matches">${otherMatches.map(m => _homeLiveRow(m, results, allOdds)).join('')}</div>`
+        : '';
+      matchSection = scoreboards + rest;
+    } else if (todayMatches.length) {
       const cards = todayMatches.map(m => _homeLiveRow(m, results, allOdds)).join('');
       matchSection = `
         <div class="home-section-label">Partidos de hoy</div>
         <div class="home-live-matches">${cards}</div>`;
-    } else if (nextMatch) {
+    } else if (nextMatch) {  // (cierre del bloque liveMatches.length > 0 está arriba)
       const [home, away] = matchTeams(nextMatch);
       const hf = FLAGS_MAP[home] || '';
       const af = FLAGS_MAP[away] || '';
@@ -191,5 +201,42 @@ function _homeLiveRow(m, results, allOdds) {
     </div>
     <div class="mrow-meta">${m[3].split(',')[0]} · ${PHASES[m[7]]||m[7]}</div>
     ${oddsHtml}
+  </div>`;
+}
+
+function _homeLiveScoreboard(m, result) {
+  const [homeTeam, awayTeam] = matchTeams(m);
+  const hf = FLAGS_MAP[homeTeam] || '';
+  const af = FLAGS_MAP[awayTeam] || '';
+  const vd = viewDate(m[0], m[1]);
+
+  const periodLabel = result.periodName || (result.period === 1 ? 'Primera parte' : result.period === 2 ? 'Segunda parte' : '');
+
+  const goalsHome = (result.goals || []).filter(g => g.team === homeTeam);
+  const goalsAway = (result.goals || []).filter(g => g.team === awayTeam);
+  const goalRowHome = goalsHome.map(g => `<span class="hsb-goal">${g.player} ${g.minute}</span>`).join('');
+  const goalRowAway = goalsAway.map(g => `<span class="hsb-goal">${g.player} ${g.minute}</span>`).join('');
+
+  return `
+  <div class="home-scoreboard" onclick="switchTab('cal');requestAnimationFrame(()=>cpSelect('${vd}'))">
+    <div class="hsb-live-bar">● EN VIVO${result.clock ? ` · ${result.clock}` : ''}${periodLabel ? ` · ${periodLabel}` : ''}</div>
+    <div class="hsb-body">
+      <div class="hsb-team">
+        <div class="hsb-flag">${hf}</div>
+        <div class="hsb-name">${homeTeam}</div>
+        <div class="hsb-goals">${goalRowHome}</div>
+      </div>
+      <div class="hsb-score">
+        <span class="hsb-num">${result.home}</span>
+        <span class="hsb-dash">–</span>
+        <span class="hsb-num">${result.away}</span>
+      </div>
+      <div class="hsb-team">
+        <div class="hsb-flag">${af}</div>
+        <div class="hsb-name">${awayTeam}</div>
+        <div class="hsb-goals">${goalRowAway}</div>
+      </div>
+    </div>
+    <div class="hsb-venue">${m[3].split(',')[0]}</div>
   </div>`;
 }
