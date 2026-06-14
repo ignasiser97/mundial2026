@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-14T19:24:56Z",
+  "updated": "2026-06-14T21:11:10Z",
   "groups": {
     "A": [
       {
@@ -709,13 +709,6 @@
       "assists": 0
     },
     {
-      "player": "Nathaniel Brown",
-      "team": "Alemania",
-      "flag": "🇩🇪",
-      "goals": 1,
-      "assists": 0
-    },
-    {
       "player": "Deniz Undav",
       "team": "Alemania",
       "flag": "🇩🇪",
@@ -733,13 +726,6 @@
   "topAssists": [
     {
       "player": "Joshua Kimmich",
-      "team": "Alemania",
-      "flag": "🇩🇪",
-      "goals": 0,
-      "assists": 2
-    },
-    {
-      "player": "Deniz Undav",
       "team": "Alemania",
       "flag": "🇩🇪",
       "goals": 0,
@@ -828,6 +814,13 @@
       "flag": "🇩🇪",
       "goals": 0,
       "assists": 1
+    },
+    {
+      "player": "Deniz Undav",
+      "team": "Alemania",
+      "flag": "🇩🇪",
+      "goals": 0,
+      "assists": 1
     }
   ],
   "matchResults": {
@@ -875,6 +868,11 @@
       "home": 7,
       "away": 1,
       "status": "ft"
+    },
+    "2026-06-14_22:00_PaísesBajos_vs_Japón": {
+      "home": 1,
+      "away": 0,
+      "status": "live"
     }
   }
 }
