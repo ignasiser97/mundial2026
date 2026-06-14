@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-14T03:55:24Z",
+  "updated": "2026-06-14T08:15:27Z",
   "groups": {
     "A": [
       {
@@ -167,26 +167,26 @@
       {
         "team": "Turquía",
         "flag": "🇹🇷",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
         "e": 0,
-        "p": 0,
+        "p": 1,
         "gf": 0,
-        "gc": 0,
-        "dg": 0,
+        "gc": 2,
+        "dg": -2,
         "pts": 0
       },
       {
         "team": "Australia",
         "flag": "🇦🇺",
-        "pj": 0,
-        "g": 0,
+        "pj": 1,
+        "g": 1,
         "e": 0,
         "p": 0,
-        "gf": 0,
+        "gf": 2,
         "gc": 0,
-        "dg": 0,
-        "pts": 0
+        "dg": 2,
+        "pts": 3
       },
       {
         "team": "Estados Unidos",
@@ -672,6 +672,20 @@
       "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
       "goals": 1,
       "assists": 0
+    },
+    {
+      "player": "Nestory Irankunda",
+      "team": "Australia",
+      "flag": "🇦🇺",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Connor Metcalfe",
+      "team": "Australia",
+      "flag": "🇦🇺",
+      "goals": 1,
+      "assists": 0
     }
   ],
   "topAssists": [
@@ -744,6 +758,13 @@
       "flag": "🇧🇷",
       "goals": 0,
       "assists": 1
+    },
+    {
+      "player": "Paul Okon-Engstler",
+      "team": "Australia",
+      "flag": "🇦🇺",
+      "goals": 0,
+      "assists": 1
     }
   ],
   "matchResults": {
@@ -780,6 +801,11 @@
     "2026-06-14_03:00_Haití_vs_Escocia": {
       "home": 0,
       "away": 1,
+      "status": "ft"
+    },
+    "2026-06-14_06:00_Australia_vs_Turquía": {
+      "home": 2,
+      "away": 0,
       "status": "ft"
     }
   }
