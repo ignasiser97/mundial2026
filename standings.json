@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-14T21:11:10Z",
+  "updated": "2026-06-14T23:08:28Z",
   "groups": {
     "A": [
       {
@@ -255,14 +255,14 @@
       {
         "team": "Países Bajos",
         "flag": "🇳🇱",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
+        "gf": 2,
+        "gc": 2,
         "dg": 0,
-        "pts": 0
+        "pts": 1
       },
       {
         "team": "Suecia",
@@ -279,14 +279,14 @@
       {
         "team": "Japón",
         "flag": "🇯🇵",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
+        "gf": 2,
+        "gc": 2,
         "dg": 0,
-        "pts": 0
+        "pts": 1
       },
       {
         "team": "Túnez",
@@ -721,6 +721,20 @@
       "flag": "🇩🇪",
       "goals": 1,
       "assists": 0
+    },
+    {
+      "player": "Keito Nakamura",
+      "team": "Japón",
+      "flag": "🇯🇵",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Crysencio Summerville",
+      "team": "Países Bajos",
+      "flag": "🇳🇱",
+      "goals": 1,
+      "assists": 0
     }
   ],
   "topAssists": [
@@ -821,6 +835,20 @@
       "flag": "🇩🇪",
       "goals": 0,
       "assists": 1
+    },
+    {
+      "player": "Takefusa Kubo",
+      "team": "Japón",
+      "flag": "🇯🇵",
+      "goals": 0,
+      "assists": 1
+    },
+    {
+      "player": "Ryan Gravenberch",
+      "team": "Países Bajos",
+      "flag": "🇳🇱",
+      "goals": 0,
+      "assists": 1
     }
   ],
   "matchResults": {
@@ -870,7 +898,12 @@
       "status": "ft"
     },
     "2026-06-14_22:00_PaísesBajos_vs_Japón": {
-      "home": 1,
+      "home": 2,
+      "away": 2,
+      "status": "ft"
+    },
+    "2026-06-15_01:00_CostadeMarfil_vs_Ecuador": {
+      "home": 0,
       "away": 0,
       "status": "live"
     }
