@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-13T23:03:20Z",
+  "updated": "2026-06-14T03:55:24Z",
   "groups": {
     "A": [
       {
@@ -105,50 +105,50 @@
       {
         "team": "Brasil",
         "flag": "🇧🇷",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
+        "gf": 1,
+        "gc": 1,
         "dg": 0,
-        "pts": 0
+        "pts": 1
       },
       {
         "team": "Escocia",
         "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-        "pj": 0,
-        "g": 0,
+        "pj": 1,
+        "g": 1,
         "e": 0,
         "p": 0,
-        "gf": 0,
+        "gf": 1,
         "gc": 0,
-        "dg": 0,
-        "pts": 0
+        "dg": 1,
+        "pts": 3
       },
       {
         "team": "Haití",
         "flag": "🇭🇹",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
         "e": 0,
-        "p": 0,
+        "p": 1,
         "gf": 0,
-        "gc": 0,
-        "dg": 0,
+        "gc": 1,
+        "dg": -1,
         "pts": 0
       },
       {
         "team": "Marruecos",
         "flag": "🇲🇦",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
+        "gf": 1,
+        "gc": 1,
         "dg": 0,
-        "pts": 0
+        "pts": 1
       }
     ],
     "D": [
@@ -651,6 +651,27 @@
       "flag": "🇺🇸",
       "goals": 1,
       "assists": 0
+    },
+    {
+      "player": "Ismael Saibari",
+      "team": "Marruecos",
+      "flag": "🇲🇦",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Vinícius Júnior",
+      "team": "Brasil",
+      "flag": "🇧🇷",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "John McGinn",
+      "team": "Escocia",
+      "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+      "goals": 1,
+      "assists": 0
     }
   ],
   "topAssists": [
@@ -709,6 +730,20 @@
       "flag": "🇺🇸",
       "goals": 0,
       "assists": 1
+    },
+    {
+      "player": "Brahim Díaz",
+      "team": "Marruecos",
+      "flag": "🇲🇦",
+      "goals": 0,
+      "assists": 1
+    },
+    {
+      "player": "Bruno Guimarães",
+      "team": "Brasil",
+      "flag": "🇧🇷",
+      "goals": 0,
+      "assists": 1
     }
   ],
   "matchResults": {
@@ -740,7 +775,12 @@
     "2026-06-14_00:00_Brasil_vs_Marruecos": {
       "home": 1,
       "away": 1,
-      "status": "live"
+      "status": "ft"
+    },
+    "2026-06-14_03:00_Haití_vs_Escocia": {
+      "home": 0,
+      "away": 1,
+      "status": "ft"
     }
   }
 }
