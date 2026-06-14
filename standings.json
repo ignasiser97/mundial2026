@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-14T17:19:31Z",
+  "updated": "2026-06-14T19:24:56Z",
   "groups": {
     "A": [
       {
@@ -217,14 +217,14 @@
       {
         "team": "Alemania",
         "flag": "🇩🇪",
-        "pj": 0,
-        "g": 0,
+        "pj": 1,
+        "g": 1,
         "e": 0,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
-        "dg": 0,
-        "pts": 0
+        "gf": 7,
+        "gc": 1,
+        "dg": 6,
+        "pts": 3
       },
       {
         "team": "Costa de Marfil",
@@ -241,13 +241,13 @@
       {
         "team": "Curazao",
         "flag": "🇨🇼",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
         "e": 0,
-        "p": 0,
-        "gf": 0,
-        "gc": 0,
-        "dg": 0,
+        "p": 1,
+        "gf": 1,
+        "gc": 7,
+        "dg": -6,
         "pts": 0
       }
     ],
@@ -686,9 +686,65 @@
       "flag": "🇦🇺",
       "goals": 1,
       "assists": 0
+    },
+    {
+      "player": "Felix Nmecha",
+      "team": "Alemania",
+      "flag": "🇩🇪",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Livano Comenencia",
+      "team": "Curazao",
+      "flag": "🇨🇼",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Jamal Musiala",
+      "team": "Alemania",
+      "flag": "🇩🇪",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Nathaniel Brown",
+      "team": "Alemania",
+      "flag": "🇩🇪",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Deniz Undav",
+      "team": "Alemania",
+      "flag": "🇩🇪",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Kai Havertz",
+      "team": "Alemania",
+      "flag": "🇩🇪",
+      "goals": 1,
+      "assists": 0
     }
   ],
   "topAssists": [
+    {
+      "player": "Joshua Kimmich",
+      "team": "Alemania",
+      "flag": "🇩🇪",
+      "goals": 0,
+      "assists": 2
+    },
+    {
+      "player": "Deniz Undav",
+      "team": "Alemania",
+      "flag": "🇩🇪",
+      "goals": 0,
+      "assists": 2
+    },
     {
       "player": "Érik Lira",
       "team": "México",
@@ -765,6 +821,13 @@
       "flag": "🇦🇺",
       "goals": 0,
       "assists": 1
+    },
+    {
+      "player": "Florian Wirtz",
+      "team": "Alemania",
+      "flag": "🇩🇪",
+      "goals": 0,
+      "assists": 1
     }
   ],
   "matchResults": {
@@ -809,9 +872,9 @@
       "status": "ft"
     },
     "2026-06-14_19:00_Alemania_vs_Curazao": {
-      "home": 1,
-      "away": 0,
-      "status": "live"
+      "home": 7,
+      "away": 1,
+      "status": "ft"
     }
   }
 }
