@@ -7,6 +7,27 @@ let _detailInterval = null;
 
 const EVENT_ICONS = { goal:'⚽', yellowcard:'🟨', redcard:'🟥', yellowredcard:'🟥', substitution:'↕️' };
 
+// Convierte nombre ESPN (inglés) a nombre español del frontend
+function mdEsName(enName) {
+  // SQUAD_NAMES_ES existe en squads.js (inglés → español)
+  if (typeof SQUAD_NAMES_ES !== 'undefined' && SQUAD_NAMES_ES[enName]) return SQUAD_NAMES_ES[enName];
+  // Aliases adicionales que ESPN usa y no están en SQUAD_NAMES_ES
+  const extra = {
+    'Türkiye':'Turquía', 'Turkey':'Turquía', 'Turkiye':'Turquía',
+    'Curaçao':'Curazao', 'Curacao':'Curazao',
+    'Congo DR':'RD Congo', 'DR Congo':'RD Congo', 'Democratic Republic of Congo':'RD Congo',
+    'IR Iran':'RI de Irán', 'Iran':'RI de Irán',
+    'Czechia':'Rep. Checa', 'Czech Republic':'Rep. Checa',
+    'Bosnia-Herzegovina':'Bosnia', 'Bosnia and Herzegovina':'Bosnia',
+    'United States':'Estados Unidos', 'USA':'Estados Unidos',
+    'Saudi Arabia':'Arabia Saudí', 'South Korea':'Corea del Sur',
+    'South Africa':'Sudáfrica', 'Ivory Coast':'Costa de Marfil',
+    "Côte d'Ivoire":'Costa de Marfil', 'New Zealand':'Nueva Zelanda',
+    'Cape Verde':'Cabo Verde', 'Netherlands':'Países Bajos',
+  };
+  return extra[enName] || enName;
+}
+
 function mdClose() {
   clearInterval(_detailInterval);
   _detailInterval = null;
@@ -106,11 +127,11 @@ function mdStatsHtml(summary, homeTeam, awayTeam) {
   const teams = summary.boxscore?.teams || [];
   const homeStats = teams.find(t => {
     const name = t.team?.displayName || '';
-    return NAMES_ES[name] === homeTeam || name === homeTeam;
+    return mdEsName(name) === homeTeam || name === homeTeam;
   })?.statistics || [];
   const awayStats = teams.find(t => {
     const name = t.team?.displayName || '';
-    return NAMES_ES[name] === awayTeam || name === awayTeam;
+    return mdEsName(name) === awayTeam || name === awayTeam;
   })?.statistics || [];
 
   const getStat = (arr, name) => arr.find(s => s.label?.toLowerCase() === name.toLowerCase() || s.name?.toLowerCase() === name.toLowerCase())?.displayValue || '0';
@@ -165,7 +186,7 @@ function mdEventsHtml(summary, homeTeam, awayTeam) {
     const player = parts[0]?.athlete?.displayName || '';
     const player2 = parts[1]?.athlete?.displayName || '';  // asistente / sale
     const teamEn = ke.team?.displayName || '';
-    const teamEs = NAMES_ES[teamEn] || teamEn;
+    const teamEs = mdEsName(teamEn) || teamEn;
     const isHome = teamEs === homeTeam;
 
     const sub2 = type === 'substitution' && player2 ? `<span class="md-ev-sub2">↑ ${player2}</span>` : '';
@@ -185,11 +206,11 @@ function mdLineupsHtml(summary, homeTeam, awayTeam, hf, af) {
   const rosters = summary.rosters || [];
   const homeRoster = rosters.find(r => {
     const n = r.team?.displayName || '';
-    return NAMES_ES[n] === homeTeam || n === homeTeam;
+    return mdEsName(n) === homeTeam || n === homeTeam;
   })?.roster || [];
   const awayRoster = rosters.find(r => {
     const n = r.team?.displayName || '';
-    return NAMES_ES[n] === awayTeam || n === awayTeam;
+    return mdEsName(n) === awayTeam || n === awayTeam;
   })?.roster || [];
 
   if (!homeRoster.length && !awayRoster.length) return '';
