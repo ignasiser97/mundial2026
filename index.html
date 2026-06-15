@@ -397,6 +397,37 @@ footer a { color:var(--muted); text-decoration:none; border-bottom:1px solid rgb
 footer a:hover { color:var(--text); }
 .footer-author { font-size:12px; color:var(--text); font-weight:600; margin-bottom:4px; }
 .footer-divider { height:1px; background:var(--border); max-width:280px; margin:12px auto; }
+#spain-day-overlay {
+  position:fixed; inset:0; z-index:500;
+  background:rgba(0,0,0,.88);
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+  animation:fadeIn .3s ease;
+}
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.spain-day-card {
+  background:linear-gradient(160deg,#0a0e1a 0%,#0d1e3a 60%,#1a0a0a 100%);
+  border:1px solid rgba(232,200,74,.5);
+  border-radius:20px; padding:40px 28px 32px;
+  text-align:center; max-width:340px; width:100%;
+  box-shadow:0 0 60px rgba(232,200,74,.15);
+}
+.spain-day-flag { font-size:64px; margin-bottom:16px; animation:pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+.spain-day-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(42px,12vw,58px); letter-spacing:3px;
+  color:var(--accent); line-height:1.05; margin-bottom:14px;
+}
+.spain-day-sub { font-size:16px; color:var(--text); line-height:1.5; margin-bottom:18px; }
+.spain-day-match { font-size:12px; color:var(--muted); letter-spacing:.5px; margin-bottom:28px; }
+.spain-day-btn {
+  width:100%; padding:16px; border:none; border-radius:12px;
+  background:var(--accent); color:#000;
+  font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px;
+  cursor:pointer; transition:transform .1s, opacity .1s;
+}
+.spain-day-btn:active { transform:scale(.97); opacity:.85; }
 #update-banner {
   position:fixed; bottom:0; left:0; right:0; z-index:300;
   background:var(--accent); color:#000;

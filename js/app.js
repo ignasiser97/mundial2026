@@ -190,8 +190,32 @@ function toggleSpainFilter() {
   renderCalendar();
 }
 
+// ── Banner día España ──────────────────────────────────────────
+function showSpainDayBanner() {
+  const SPAIN_DATE = '2026-06-15';
+  const KEY        = 'spain_day_ack_' + SPAIN_DATE;
+  const today      = new Intl.DateTimeFormat('sv', { timeZone:'Europe/Madrid' }).format(new Date());
+  if (today !== SPAIN_DATE || localStorage.getItem(KEY)) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'spain-day-overlay';
+  overlay.innerHTML = `
+    <div class="spain-day-card">
+      <div class="spain-day-flag">🇪🇸</div>
+      <div class="spain-day-title">HOY ES<br>DÍA GRANDE</div>
+      <div class="spain-day-sub">Hoy empieza el camino<br>a la historia</div>
+      <div class="spain-day-match">España vs Cabo Verde · 18:00</div>
+      <button class="spain-day-btn" onclick="
+        localStorage.setItem('${KEY}', '1');
+        document.getElementById('spain-day-overlay').remove();
+      ">✋ Yo estuve aquí</button>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
 // ── Init ───────────────────────────────────────────────────────
 tsInit();
 cpRender();
 renderHome();
 renderCalendar();
+showSpainDayBanner();
