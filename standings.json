@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-15T18:24:26Z",
+  "updated": "2026-06-15T21:41:30Z",
   "groups": {
     "A": [
       {
@@ -305,14 +305,14 @@
       {
         "team": "Bélgica",
         "flag": "🇧🇪",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
+        "gf": 1,
+        "gc": 1,
         "dg": 0,
-        "pts": 0
+        "pts": 1
       },
       {
         "team": "RI de Irán",
@@ -329,14 +329,14 @@
       {
         "team": "Egipto",
         "flag": "🇪🇬",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
+        "gf": 1,
+        "gc": 1,
         "dg": 0,
-        "pts": 0
+        "pts": 1
       },
       {
         "team": "Nueva Zelanda",
@@ -950,6 +950,11 @@
     "2026-06-15_18:00_España_vs_CaboVerde": {
       "home": 0,
       "away": 0,
+      "status": "ft"
+    },
+    "2026-06-15_21:00_Bélgica_vs_Egipto": {
+      "home": 1,
+      "away": 1,
       "status": "ft"
     }
   }
