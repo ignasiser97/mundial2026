@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-15T10:54:02Z",
+  "updated": "2026-06-15T18:24:26Z",
   "groups": {
     "A": [
       {
@@ -355,14 +355,14 @@
       {
         "team": "España",
         "flag": "🇪🇸",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 0,
         "gf": 0,
         "gc": 0,
         "dg": 0,
-        "pts": 0
+        "pts": 1
       },
       {
         "team": "Uruguay",
@@ -391,14 +391,14 @@
       {
         "team": "Cabo Verde",
         "flag": "🇨🇻",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 0,
         "gf": 0,
         "gc": 0,
         "dg": 0,
-        "pts": 0
+        "pts": 1
       }
     ],
     "I": [
@@ -611,6 +611,13 @@
       "assists": 0
     },
     {
+      "player": "Yasin Ayari",
+      "team": "Suecia",
+      "flag": "🇸🇪",
+      "goals": 2,
+      "assists": 0
+    },
+    {
       "player": "Julián Quiñones",
       "team": "México",
       "flag": "🇲🇽",
@@ -733,13 +740,6 @@
       "player": "Crysencio Summerville",
       "team": "Países Bajos",
       "flag": "🇳🇱",
-      "goals": 1,
-      "assists": 0
-    },
-    {
-      "player": "Amad Diallo",
-      "team": "Costa de Marfil",
-      "flag": "🇨🇮",
       "goals": 1,
       "assists": 0
     }
@@ -945,6 +945,11 @@
     "2026-06-15_04:00_Suecia_vs_Túnez": {
       "home": 5,
       "away": 1,
+      "status": "ft"
+    },
+    "2026-06-15_18:00_España_vs_CaboVerde": {
+      "home": 0,
+      "away": 0,
       "status": "ft"
     }
   }
