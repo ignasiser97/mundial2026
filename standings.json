@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-15T04:07:41Z",
+  "updated": "2026-06-15T10:54:02Z",
   "groups": {
     "A": [
       {
@@ -611,13 +611,6 @@
       "assists": 0
     },
     {
-      "player": "Yasin Ayari",
-      "team": "Suecia",
-      "flag": "🇸🇪",
-      "goals": 2,
-      "assists": 0
-    },
-    {
       "player": "Julián Quiñones",
       "team": "México",
       "flag": "🇲🇽",
@@ -740,6 +733,13 @@
       "player": "Crysencio Summerville",
       "team": "Países Bajos",
       "flag": "🇳🇱",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Amad Diallo",
+      "team": "Costa de Marfil",
+      "flag": "🇨🇮",
       "goals": 1,
       "assists": 0
     }
