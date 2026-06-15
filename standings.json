@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-14T23:08:28Z",
+  "updated": "2026-06-15T04:07:41Z",
   "groups": {
     "A": [
       {
@@ -205,13 +205,13 @@
       {
         "team": "Ecuador",
         "flag": "🇪🇨",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
         "e": 0,
-        "p": 0,
+        "p": 1,
         "gf": 0,
-        "gc": 0,
-        "dg": 0,
+        "gc": 1,
+        "dg": -1,
         "pts": 0
       },
       {
@@ -229,14 +229,14 @@
       {
         "team": "Costa de Marfil",
         "flag": "🇨🇮",
-        "pj": 0,
-        "g": 0,
+        "pj": 1,
+        "g": 1,
         "e": 0,
         "p": 0,
-        "gf": 0,
+        "gf": 1,
         "gc": 0,
-        "dg": 0,
-        "pts": 0
+        "dg": 1,
+        "pts": 3
       },
       {
         "team": "Curazao",
@@ -267,14 +267,14 @@
       {
         "team": "Suecia",
         "flag": "🇸🇪",
-        "pj": 0,
-        "g": 0,
+        "pj": 1,
+        "g": 1,
         "e": 0,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
-        "dg": 0,
-        "pts": 0
+        "gf": 5,
+        "gc": 1,
+        "dg": 4,
+        "pts": 3
       },
       {
         "team": "Japón",
@@ -291,13 +291,13 @@
       {
         "team": "Túnez",
         "flag": "🇹🇳",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
         "e": 0,
-        "p": 0,
-        "gf": 0,
-        "gc": 0,
-        "dg": 0,
+        "p": 1,
+        "gf": 1,
+        "gc": 5,
+        "dg": -4,
         "pts": 0
       }
     ],
@@ -611,6 +611,13 @@
       "assists": 0
     },
     {
+      "player": "Yasin Ayari",
+      "team": "Suecia",
+      "flag": "🇸🇪",
+      "goals": 2,
+      "assists": 0
+    },
+    {
       "player": "Julián Quiñones",
       "team": "México",
       "flag": "🇲🇽",
@@ -746,6 +753,13 @@
       "assists": 2
     },
     {
+      "player": "Alexander Isak",
+      "team": "Suecia",
+      "flag": "🇸🇪",
+      "goals": 0,
+      "assists": 2
+    },
+    {
       "player": "Érik Lira",
       "team": "México",
       "flag": "🇲🇽",
@@ -849,6 +863,27 @@
       "flag": "🇳🇱",
       "goals": 0,
       "assists": 1
+    },
+    {
+      "player": "Wilfried Singo",
+      "team": "Costa de Marfil",
+      "flag": "🇨🇮",
+      "goals": 0,
+      "assists": 1
+    },
+    {
+      "player": "Viktor Gyökeres",
+      "team": "Suecia",
+      "flag": "🇸🇪",
+      "goals": 0,
+      "assists": 1
+    },
+    {
+      "player": "Lucas Bergvall",
+      "team": "Suecia",
+      "flag": "🇸🇪",
+      "goals": 0,
+      "assists": 1
     }
   ],
   "matchResults": {
@@ -903,9 +938,14 @@
       "status": "ft"
     },
     "2026-06-15_01:00_CostadeMarfil_vs_Ecuador": {
-      "home": 0,
+      "home": 1,
       "away": 0,
-      "status": "live"
+      "status": "ft"
+    },
+    "2026-06-15_04:00_Suecia_vs_Túnez": {
+      "home": 5,
+      "away": 1,
+      "status": "ft"
     }
   }
 }
