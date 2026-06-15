@@ -63,7 +63,7 @@ const ALL_TEAMS = [...new Set(
 )].sort((a, b) => a.localeCompare(b, 'es'));
 
 function isTorneoOpen() {
-  return true; // abierto manualmente para nuevos grupos durante el torneo
+  return false; // cerrado el 15 jun — apuestas de torneo bloqueadas
 }
 
 // ── Helpers ────────────────────────────────────────────────────
