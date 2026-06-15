@@ -208,7 +208,6 @@ function _homeLiveScoreboard(m, result) {
   const [homeTeam, awayTeam] = matchTeams(m);
   const hf = FLAGS_MAP[homeTeam] || '';
   const af = FLAGS_MAP[awayTeam] || '';
-  const vd = viewDate(m[0], m[1]);
 
   const periodLabel = result.periodName || (result.period === 1 ? 'Primera parte' : result.period === 2 ? 'Segunda parte' : '');
 
@@ -217,9 +216,10 @@ function _homeLiveScoreboard(m, result) {
   const goalRowHome = goalsHome.map(g => `<span class="hsb-goal">${g.player} ${g.minute}</span>`).join('');
   const goalRowAway = goalsAway.map(g => `<span class="hsb-goal">${g.player} ${g.minute}</span>`).join('');
 
+  const mid = matchId(m);
   return `
-  <div class="home-scoreboard" onclick="switchTab('cal');requestAnimationFrame(()=>cpSelect('${vd}'))">
-    <div class="hsb-live-bar">● EN VIVO${result.clock ? ` · ${result.clock}` : ''}${periodLabel ? ` · ${periodLabel}` : ''}</div>
+  <div class="home-scoreboard" onclick="showMatchDetail('${mid}')">
+    <div class="hsb-live-bar">● EN VIVO${result.clock ? ` · ${result.clock}` : ''}${periodLabel ? ` · ${periodLabel}` : ''} <span style="font-size:9px;opacity:.7">· toca para stats</span></div>
     <div class="hsb-body">
       <div class="hsb-team">
         <div class="hsb-flag">${hf}</div>

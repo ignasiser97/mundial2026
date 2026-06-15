@@ -174,6 +174,7 @@ async function getStandingsData() {
 
 let _matchResults  = null;
 let _liveResults   = null;  // injected by CF Worker, overrides standings.json for same match
+let _liveEventIds  = {};    // { matchId: espnEventId } for live matches
 
 // ← Actualizar tras el primer deploy del Worker
 const LIVE_SCORES_URL = 'https://mundial-live-scores.ignasiser97.workers.dev';
@@ -182,7 +183,11 @@ async function refreshLiveResults() {
   if (LIVE_SCORES_URL === 'PENDING_WORKER_URL') return;
   try {
     const res = await fetch(LIVE_SCORES_URL, { signal: AbortSignal.timeout(5000) });
-    if (res.ok) _liveResults = (await res.json()).matchResults ?? null;
+    if (res.ok) {
+      const data = await res.json();
+      _liveResults  = data.matchResults  ?? null;
+      _liveEventIds = data.liveEventIds  ?? {};
+    }
   } catch { /* keep previous value */ }
 }
 

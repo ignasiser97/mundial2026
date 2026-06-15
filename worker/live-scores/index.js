@@ -144,9 +144,12 @@ export default {
 
     const raw = await fetchFromESPN();
     let matchResults = {};
+    let liveEventIds = {};  // { mid: espnEventId }
     if (raw) {
       const parsed = parseESPN(raw);
       matchResults  = parsed.matchResults;
+      // liveEvents is { espnEventId: mid } — invert for frontend
+      for (const [eid, mid] of Object.entries(parsed.liveEvents)) liveEventIds[mid] = eid;
       // Fetch goal events for each live match (usually 1-2 at a time)
       await Promise.all(
         Object.entries(parsed.liveEvents).map(async ([eventId, mid]) => {
@@ -155,7 +158,7 @@ export default {
       );
     }
 
-    const body = JSON.stringify({ matchResults, ts: Date.now() });
+    const body = JSON.stringify({ matchResults, liveEventIds, ts: Date.now() });
     const response = new Response(body, {
       headers: {
         'Content-Type': 'application/json',
