@@ -213,9 +213,79 @@ function showSpainDayBanner() {
   document.body.appendChild(overlay);
 }
 
+// ── Banner ¿Sabías que? ────────────────────────────────────────
+const SABIASQUE = [
+  'El Mundial 2026 es el primero en la historia disputado en 3 países: Estados Unidos, Canadá y México.',
+  'Con 48 selecciones y 104 partidos, este es el Mundial más grande de la historia. El anterior tenía 32 equipos y 64 partidos.',
+  'Brasil es el único país que ha participado en todos los Mundiales de fútbol de la historia, todos los que se han celebrado.',
+  'El estadio MetLife de Nueva Jersey, sede de la final, tiene capacidad para más de 82.000 espectadores.',
+  'El Estadio Azteca de Ciudad de México es el único en haber albergado dos finales mundialistas: 1970 y 1986.',
+  'Just Fontaine marcó 13 goles en el Mundial de Suecia 1958 con Francia. Sigue siendo el récord de goles en una sola edición.',
+  'Miroslav Klose es el máximo goleador de la historia del Mundial con 16 goles en cuatro ediciones (2002-2014).',
+  'El gol más rápido en la historia del Mundial lo marcó Hakan Şükür (Turquía) a los 11 segundos contra Corea del Sur en 2002.',
+  'Pelé es el único jugador en ganar tres Mundiales: 1958, 1962 y 1970, todos con Brasil.',
+  'La primera Copa del Mundo se celebró en Uruguay en 1930. Solo participaron 13 países y el torneo duró 3 semanas.',
+  'El árbitro italiano Giovanni Lo Bello fue nombrado para pitar la final de 1970, pero un cambio de última hora lo dejó fuera.',
+  'Italia y Brasil son los únicos países que han ganado el Mundial en casa de una potencia rival (Italia en 1934 y 1938, Brasil buscó el suyo en 1950 pero perdió).',
+  'La selección alemana es la única que ha disputado finales del Mundial tanto con el nombre de "Alemania Occidental" como de "Alemania".',
+  'En el Mundial de 1950, Uruguay eliminó a Brasil en el Maracaná ante 200.000 espectadores. El silencio del estadio se escuchó en toda la ciudad.',
+  'La "Mano de Dios" de Maradona contra Inglaterra en 1986 sigue siendo uno de los momentos más polémicos de la historia del fútbol.',
+  'El "Gol del Siglo" de Maradona en ese mismo partido de 1986 fue elegido el mejor gol del Mundial en una votación de 2002.',
+  'Gordon Banks realizó en 1970 la considerada mejor parada de la historia: negó el gol a Pelé en el aire cuando el remate parecía imposible de detener.',
+  'España ganó el Mundial de 2010 sin haber marcado un solo gol en la primera parte de la final. Iniesta decidió en el minuto 116.',
+  'El Mundial 2026 contará con 16 sedes en total: 11 en Estados Unidos, 3 en México y 2 en Canadá.',
+  'Canadá celebra un Mundial de fútbol por primera vez en su historia.',
+  'Estados Unidos ya organizó el Mundial en 1994, cuando batió todos los récords de asistencia de la historia del torneo.',
+  'La selección con más títulos mundiales es Brasil con 5 (1958, 1962, 1970, 1994, 2002).',
+  'Francia e Italia han ganado el Mundial en casa de otro campeón: Francia en 1998 (sede propia) e Italia en España (1982).',
+  'El primer gol de la historia del Mundial lo marcó Lucien Laurent (Francia) el 13 de julio de 1930 contra México.',
+  'El penalti más famoso de un Mundial fue el de Roberto Baggio en la final de 1994 contra Brasil, que decidió el título para los cariocas.',
+  'En el Mundial de 2014, Alemania goleó 7-1 a Brasil en su propia casa. Fue el resultado más abultado en una semifinal.',
+  'El jugador más joven en marcar en un Mundial es Pelé, con 17 años y 239 días en 1958.',
+  'El jugador más mayor en marcar en un Mundial es Faryd Mondragón (Colombia), que marcó con 43 años en 2014.',
+  'La camiseta de Maradona en el "Gol del Siglo" de 1986 fue subastada en 2022 por más de 9 millones de dólares.',
+  'Solo 8 selecciones han ganado un Mundial: Brasil, Alemania, Italia, Argentina, Francia, Uruguay, Inglaterra y España.',
+  'El único jugador en marcar en 5 ediciones del Mundial es Cristiano Ronaldo (2006, 2010, 2014, 2018, 2022).',
+  'Ronaldo Nazario marcó 8 goles en el Mundial de 2002 con Brasil, siendo la estrella del torneo con 23 años.',
+  'El balón oficial del Mundial 2026 se llama "Fevernova" ... bueno, el del 2026 aún está por confirmar su nombre oficial.',
+  'El primer estadio cubierto en albergar un Mundial es el SoFi Stadium de Los Ángeles, sede del 2026.',
+  'La final del Mundial 2026 se jugará el 19 de julio en el MetLife Stadium de East Rutherford, Nueva Jersey.',
+  'El récord de asistencia a un partido del Mundial es de 173.850 espectadores en el Uruguay-Brasil de 1950 en el Maracaná.',
+  'Alemania disputó la final del Mundial en 4 ediciones consecutivas entre 1982 y 1990, ganando en 1990.',
+  'La única vez que el anfitrión perdió en la primera ronda fue Sudáfrica en 2010, aunque pasó la fase de grupos.',
+  'El Mundial de 2026 usará por primera vez tecnología semiautomática de fuera de juego en todos los partidos.',
+  'España es la única selección europea que ha ganado el Mundial en suelo americano (Sudáfrica 2010 fue en África).',
+];
+
+function showSabiasQueBanner() {
+  const today = new Intl.DateTimeFormat('sv', { timeZone:'Europe/Madrid' }).format(new Date());
+  const KEY   = 'sabiasque_' + today;
+  if (localStorage.getItem(KEY)) return;
+
+  // Índice basado en el día del torneo
+  const start  = new Date('2026-06-11T00:00:00Z');
+  const dayIdx = Math.max(0, Math.floor((Date.now() - start) / 86400000)) % SABIASQUE.length;
+  const fact   = SABIASQUE[dayIdx];
+
+  const overlay = document.createElement('div');
+  overlay.id = 'sabiasque-overlay';
+  overlay.innerHTML = `
+    <div class="sq-card">
+      <div class="sq-eyebrow">⚽ MUNDIAL 2026</div>
+      <div class="sq-title">¿Sabías que…?</div>
+      <div class="sq-fact">${fact}</div>
+      <button class="sq-btn" onclick="
+        localStorage.setItem('${KEY}','1');
+        document.getElementById('sabiasque-overlay').remove();
+      ">¡Lo sabía! →</button>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
 // ── Init ───────────────────────────────────────────────────────
 tsInit();
 cpRender();
 renderHome();
 renderCalendar();
 showSpainDayBanner();
+showSabiasQueBanner();

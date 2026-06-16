@@ -1069,7 +1069,7 @@ async function renderClasificacion(el) {
   const hasResults = Object.keys(raw).length > 0;
 
   const stats = {};
-  users.forEach(u => { stats[u.id] = { id: u.id, name: u.name, group_id: u.group_id, apuestas: 0, exactos: 0, pts: 0 }; });
+  users.forEach(u => { stats[u.id] = { id: u.id, name: u.name, group_id: u.group_id, apuestas: 0, exactos: 0, ganadores: 0, pts: 0 }; });
   (bets || []).forEach(b => {
     if (!stats[b.user_id]) return;
     stats[b.user_id].apuestas++;
@@ -1080,11 +1080,12 @@ async function renderClasificacion(el) {
       const basePts  = double ? pts / 2 : pts;
       stats[b.user_id].pts += pts;
       if (basePts === 3) stats[b.user_id].exactos++;
+      if (basePts === 1) stats[b.user_id].ganadores++;
     }
   });
 
   const board = Object.values(stats)
-    .sort((a,b) => b.pts - a.pts || b.exactos - a.exactos || b.apuestas - a.apuestas || a.name.localeCompare(b.name));
+    .sort((a,b) => b.pts - a.pts || b.exactos - a.exactos || b.ganadores - a.ganadores || b.apuestas - a.apuestas || a.name.localeCompare(b.name));
 
   const rows = board.map((u, i) => {
     const isMe = u.id === qnlUser?.id;
@@ -1096,6 +1097,7 @@ async function renderClasificacion(el) {
       <td class="lb-name">${u.name}${isMe ? ' 👈' : ''}${groupBadge}</td>
       <td>${u.apuestas}</td>
       <td>${u.exactos}</td>
+      <td>${u.ganadores}</td>
       <td class="lb-pts">${u.pts}</td>
     </tr>`;
   }).join('');
@@ -1112,7 +1114,8 @@ async function renderClasificacion(el) {
         <th>#</th>
         <th class="lb-name">Nombre</th>
         <th title="Apuestas realizadas">Ap.</th>
-        <th title="Resultados exactos">✓✓</th>
+        <th title="Resultados exactos (3 pts)">✓✓</th>
+        <th title="Ganador correcto (1 pt)">✓</th>
         <th>Pts</th>
       </tr></thead>
       <tbody>${rows}</tbody>
