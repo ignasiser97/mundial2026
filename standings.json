@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-15T23:43:49Z",
+  "updated": "2026-06-16T03:57:11Z",
   "groups": {
     "A": [
       {
@@ -317,14 +317,14 @@
       {
         "team": "RI de Irán",
         "flag": "🇮🇷",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
+        "gf": 2,
+        "gc": 2,
         "dg": 0,
-        "pts": 0
+        "pts": 1
       },
       {
         "team": "Egipto",
@@ -341,14 +341,14 @@
       {
         "team": "Nueva Zelanda",
         "flag": "🇳🇿",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
+        "gf": 2,
+        "gc": 2,
         "dg": 0,
-        "pts": 0
+        "pts": 1
       }
     ],
     "H": [
@@ -367,26 +367,26 @@
       {
         "team": "Uruguay",
         "flag": "🇺🇾",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
+        "gf": 1,
+        "gc": 1,
         "dg": 0,
-        "pts": 0
+        "pts": 1
       },
       {
         "team": "Arabia Saudí",
         "flag": "🇸🇦",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
+        "gf": 1,
+        "gc": 1,
         "dg": 0,
-        "pts": 0
+        "pts": 1
       },
       {
         "team": "Cabo Verde",
@@ -618,6 +618,13 @@
       "assists": 0
     },
     {
+      "player": "Elijah Just",
+      "team": "Nueva Zelanda",
+      "flag": "🇳🇿",
+      "goals": 2,
+      "assists": 0
+    },
+    {
       "player": "Julián Quiñones",
       "team": "México",
       "flag": "🇲🇽",
@@ -735,13 +742,6 @@
       "flag": "🇯🇵",
       "goals": 1,
       "assists": 0
-    },
-    {
-      "player": "Crysencio Summerville",
-      "team": "Países Bajos",
-      "flag": "🇳🇱",
-      "goals": 1,
-      "assists": 0
     }
   ],
   "topAssists": [
@@ -756,6 +756,13 @@
       "player": "Alexander Isak",
       "team": "Suecia",
       "flag": "🇸🇪",
+      "goals": 0,
+      "assists": 2
+    },
+    {
+      "player": "Chris Wood",
+      "team": "Nueva Zelanda",
+      "flag": "🇳🇿",
       "goals": 0,
       "assists": 2
     },
@@ -877,13 +884,6 @@
       "flag": "🇸🇪",
       "goals": 0,
       "assists": 1
-    },
-    {
-      "player": "Lucas Bergvall",
-      "team": "Suecia",
-      "flag": "🇸🇪",
-      "goals": 0,
-      "assists": 1
     }
   ],
   "matchResults": {
@@ -959,8 +959,13 @@
     },
     "2026-06-16_00:00_ArabiaSaudí_vs_Uruguay": {
       "home": 1,
-      "away": 0,
-      "status": "live"
+      "away": 1,
+      "status": "ft"
+    },
+    "2026-06-16_03:00_RIdeIrán_vs_NuevaZelanda": {
+      "home": 2,
+      "away": 2,
+      "status": "ft"
     }
   }
 }
