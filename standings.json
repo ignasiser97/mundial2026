@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-16T18:26:40Z",
+  "updated": "2026-06-16T21:41:13Z",
   "groups": {
     "A": [
       {
@@ -417,25 +417,25 @@
       {
         "team": "Francia",
         "flag": "🇫🇷",
-        "pj": 0,
-        "g": 0,
+        "pj": 1,
+        "g": 1,
         "e": 0,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
-        "dg": 0,
-        "pts": 0
+        "gf": 3,
+        "gc": 1,
+        "dg": 2,
+        "pts": 3
       },
       {
         "team": "Senegal",
         "flag": "🇸🇳",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
         "e": 0,
-        "p": 0,
-        "gf": 0,
-        "gc": 0,
-        "dg": 0,
+        "p": 1,
+        "gf": 1,
+        "gc": 3,
+        "dg": -2,
         "pts": 0
       },
       {
@@ -618,6 +618,13 @@
       "assists": 0
     },
     {
+      "player": "Kylian Mbappé",
+      "team": "Francia",
+      "flag": "🇫🇷",
+      "goals": 2,
+      "assists": 0
+    },
+    {
       "player": "Julián Quiñones",
       "team": "México",
       "flag": "🇲🇽",
@@ -733,13 +740,6 @@
       "player": "Keito Nakamura",
       "team": "Japón",
       "flag": "🇯🇵",
-      "goals": 1,
-      "assists": 0
-    },
-    {
-      "player": "Crysencio Summerville",
-      "team": "Países Bajos",
-      "flag": "🇳🇱",
       "goals": 1,
       "assists": 0
     }
@@ -965,6 +965,11 @@
     "2026-06-16_03:00_RIdeIrán_vs_NuevaZelanda": {
       "home": 2,
       "away": 2,
+      "status": "ft"
+    },
+    "2026-06-16_21:00_Francia_vs_Senegal": {
+      "home": 3,
+      "away": 1,
       "status": "ft"
     }
   }
