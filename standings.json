@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-16T03:57:11Z",
+  "updated": "2026-06-16T09:29:40Z",
   "groups": {
     "A": [
       {
@@ -618,13 +618,6 @@
       "assists": 0
     },
     {
-      "player": "Elijah Just",
-      "team": "Nueva Zelanda",
-      "flag": "🇳🇿",
-      "goals": 2,
-      "assists": 0
-    },
-    {
       "player": "Julián Quiñones",
       "team": "México",
       "flag": "🇲🇽",
@@ -742,6 +735,13 @@
       "flag": "🇯🇵",
       "goals": 1,
       "assists": 0
+    },
+    {
+      "player": "Crysencio Summerville",
+      "team": "Países Bajos",
+      "flag": "🇳🇱",
+      "goals": 1,
+      "assists": 0
     }
   ],
   "topAssists": [
@@ -756,13 +756,6 @@
       "player": "Alexander Isak",
       "team": "Suecia",
       "flag": "🇸🇪",
-      "goals": 0,
-      "assists": 2
-    },
-    {
-      "player": "Chris Wood",
-      "team": "Nueva Zelanda",
-      "flag": "🇳🇿",
       "goals": 0,
       "assists": 2
     },
@@ -880,6 +873,13 @@
     },
     {
       "player": "Viktor Gyökeres",
+      "team": "Suecia",
+      "flag": "🇸🇪",
+      "goals": 0,
+      "assists": 1
+    },
+    {
+      "player": "Lucas Bergvall",
       "team": "Suecia",
       "flag": "🇸🇪",
       "goals": 0,
