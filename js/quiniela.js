@@ -812,6 +812,20 @@ async function renderApostar(el) {
   }).join('');
 
   el.innerHTML = sections;
+
+  // Programar re-render cuando empiece el próximo partido abierto
+  const nextKickoff = upcomingDates
+    .flatMap(date => MATCHES.filter(m => m[0] === date))
+    .filter(m => isBetOpen(m))
+    .map(m => spainToUTC(m[0], m[1]) - 5 * 60 * 1000)
+    .filter(t => t > Date.now())
+    .sort()[0];
+  if (nextKickoff) {
+    setTimeout(() => {
+      const subEl = document.getElementById('qnl-subcontent');
+      if (subEl && qnlSubTab === 'apostar') renderApostar(subEl);
+    }, nextKickoff - Date.now() + 1000);
+  }
 }
 
 function toggleBetDropdown(mid) {
