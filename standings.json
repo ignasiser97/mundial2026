@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-17T19:24:44Z",
+  "updated": "2026-06-17T21:59:33Z",
   "groups": {
     "A": [
       {
@@ -991,6 +991,11 @@
       "home": 1,
       "away": 1,
       "status": "ft"
+    },
+    "2026-06-17_22:00_Inglaterra_vs_Croacia": {
+      "home": 4,
+      "away": 2,
+      "status": "live"
     }
   }
 }
