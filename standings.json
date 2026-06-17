@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-16T23:23:06Z",
+  "updated": "2026-06-17T03:58:29Z",
   "groups": {
     "A": [
       {
@@ -405,14 +405,14 @@
       {
         "team": "Noruega",
         "flag": "🇳🇴",
-        "pj": 0,
-        "g": 0,
+        "pj": 1,
+        "g": 1,
         "e": 0,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
-        "dg": 0,
-        "pts": 0
+        "gf": 4,
+        "gc": 1,
+        "dg": 3,
+        "pts": 3
       },
       {
         "team": "Francia",
@@ -441,13 +441,13 @@
       {
         "team": "Irak",
         "flag": "🇮🇶",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
         "e": 0,
-        "p": 0,
-        "gf": 0,
-        "gc": 0,
-        "dg": 0,
+        "p": 1,
+        "gf": 1,
+        "gc": 4,
+        "dg": -3,
         "pts": 0
       }
     ],
@@ -455,14 +455,14 @@
       {
         "team": "Argentina",
         "flag": "🇦🇷",
-        "pj": 0,
-        "g": 0,
+        "pj": 1,
+        "g": 1,
         "e": 0,
         "p": 0,
-        "gf": 0,
+        "gf": 3,
         "gc": 0,
-        "dg": 0,
-        "pts": 0
+        "dg": 3,
+        "pts": 3
       },
       {
         "team": "Austria",
@@ -479,13 +479,13 @@
       {
         "team": "Argelia",
         "flag": "🇩🇿",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
         "e": 0,
-        "p": 0,
+        "p": 1,
         "gf": 0,
-        "gc": 0,
-        "dg": 0,
+        "gc": 3,
+        "dg": -3,
         "pts": 0
       },
       {
@@ -604,6 +604,13 @@
   },
   "topScorers": [
     {
+      "player": "Lionel Messi",
+      "team": "Argentina",
+      "flag": "🇦🇷",
+      "goals": 3,
+      "assists": 0
+    },
+    {
       "player": "Folarin Balogun",
       "team": "Estados Unidos",
       "flag": "🇺🇸",
@@ -621,6 +628,13 @@
       "player": "Kylian Mbappé",
       "team": "Francia",
       "flag": "🇫🇷",
+      "goals": 2,
+      "assists": 0
+    },
+    {
+      "player": "Erling Haaland",
+      "team": "Noruega",
+      "flag": "🇳🇴",
       "goals": 2,
       "assists": 0
     },
@@ -726,20 +740,6 @@
       "player": "Deniz Undav",
       "team": "Alemania",
       "flag": "🇩🇪",
-      "goals": 1,
-      "assists": 0
-    },
-    {
-      "player": "Kai Havertz",
-      "team": "Alemania",
-      "flag": "🇩🇪",
-      "goals": 1,
-      "assists": 0
-    },
-    {
-      "player": "Keito Nakamura",
-      "team": "Japón",
-      "flag": "🇯🇵",
       "goals": 1,
       "assists": 0
     }
@@ -974,8 +974,13 @@
     },
     "2026-06-17_00:00_Irak_vs_Noruega": {
       "home": 1,
-      "away": 2,
-      "status": "live"
+      "away": 4,
+      "status": "ft"
+    },
+    "2026-06-17_03:00_Argentina_vs_Argelia": {
+      "home": 3,
+      "away": 0,
+      "status": "ft"
     }
   }
 }
