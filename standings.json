@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-17T03:58:29Z",
+  "updated": "2026-06-17T09:07:05Z",
   "groups": {
     "A": [
       {
@@ -467,14 +467,14 @@
       {
         "team": "Austria",
         "flag": "🇦🇹",
-        "pj": 0,
-        "g": 0,
+        "pj": 1,
+        "g": 1,
         "e": 0,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
-        "dg": 0,
-        "pts": 0
+        "gf": 3,
+        "gc": 1,
+        "dg": 2,
+        "pts": 3
       },
       {
         "team": "Argelia",
@@ -491,13 +491,13 @@
       {
         "team": "Jordania",
         "flag": "🇯🇴",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
         "e": 0,
-        "p": 0,
-        "gf": 0,
-        "gc": 0,
-        "dg": 0,
+        "p": 1,
+        "gf": 1,
+        "gc": 3,
+        "dg": -2,
         "pts": 0
       }
     ],
@@ -625,6 +625,13 @@
       "assists": 0
     },
     {
+      "player": "Elijah Just",
+      "team": "Nueva Zelanda",
+      "flag": "🇳🇿",
+      "goals": 2,
+      "assists": 0
+    },
+    {
       "player": "Kylian Mbappé",
       "team": "Francia",
       "flag": "🇫🇷",
@@ -735,13 +742,6 @@
       "flag": "🇩🇪",
       "goals": 1,
       "assists": 0
-    },
-    {
-      "player": "Deniz Undav",
-      "team": "Alemania",
-      "flag": "🇩🇪",
-      "goals": 1,
-      "assists": 0
     }
   ],
   "topAssists": [
@@ -756,6 +756,13 @@
       "player": "Alexander Isak",
       "team": "Suecia",
       "flag": "🇸🇪",
+      "goals": 0,
+      "assists": 2
+    },
+    {
+      "player": "Chris Wood",
+      "team": "Nueva Zelanda",
+      "flag": "🇳🇿",
       "goals": 0,
       "assists": 2
     },
@@ -877,13 +884,6 @@
       "flag": "🇸🇪",
       "goals": 0,
       "assists": 1
-    },
-    {
-      "player": "Lucas Bergvall",
-      "team": "Suecia",
-      "flag": "🇸🇪",
-      "goals": 0,
-      "assists": 1
     }
   ],
   "matchResults": {
@@ -980,6 +980,11 @@
     "2026-06-17_03:00_Argentina_vs_Argelia": {
       "home": 3,
       "away": 0,
+      "status": "ft"
+    },
+    "2026-06-17_06:00_Austria_vs_Jordania": {
+      "home": 3,
+      "away": 1,
       "status": "ft"
     }
   }
