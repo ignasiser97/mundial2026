@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-17T23:45:37Z",
+  "updated": "2026-06-18T03:46:12Z",
   "groups": {
     "A": [
       {
@@ -579,26 +579,26 @@
       {
         "team": "Panamá",
         "flag": "🇵🇦",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
         "e": 0,
-        "p": 0,
+        "p": 1,
         "gf": 0,
-        "gc": 0,
-        "dg": 0,
+        "gc": 1,
+        "dg": -1,
         "pts": 0
       },
       {
         "team": "Ghana",
         "flag": "🇬🇭",
-        "pj": 0,
-        "g": 0,
+        "pj": 1,
+        "g": 1,
         "e": 0,
         "p": 0,
-        "gf": 0,
+        "gf": 1,
         "gc": 0,
-        "dg": 0,
-        "pts": 0
+        "dg": 1,
+        "pts": 3
       }
     ]
   },
@@ -998,8 +998,13 @@
       "status": "ft"
     },
     "2026-06-18_01:00_Ghana_vs_Panamá": {
-      "home": 0,
+      "home": 1,
       "away": 0,
+      "status": "ft"
+    },
+    "2026-06-18_04:00_Uzbekistán_vs_Colombia": {
+      "home": 1,
+      "away": 2,
       "status": "live"
     }
   }
