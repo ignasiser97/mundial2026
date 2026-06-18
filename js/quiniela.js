@@ -901,6 +901,16 @@ async function renderApostar(el) {
 
   el.innerHTML = sections;
 
+  // Hint one-time: click en equipo → popup resultados
+  const HINT_KEY = 'hint-qnl-team';
+  if (!localStorage.getItem(HINT_KEY)) {
+    const hint = document.createElement('div');
+    hint.className = 'hint-banner';
+    hint.innerHTML = `<div class="hint-lines"><div class="hint-line">💡 Pulsa el nombre de un equipo para ver sus resultados en el torneo</div></div><button class="hint-close" onclick="dismissHint('${HINT_KEY}',this.parentElement)">✕</button>`;
+    el.prepend(hint);
+    setTimeout(() => dismissHint(HINT_KEY, hint), 6000);
+  }
+
   // Programar re-render cuando empiece el próximo partido abierto
   const nextKickoff = upcomingDates
     .flatMap(date => MATCHES.filter(m => m[0] === date))
