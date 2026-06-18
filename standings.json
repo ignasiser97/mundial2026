@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-18T03:46:12Z",
+  "updated": "2026-06-18T08:45:19Z",
   "groups": {
     "A": [
       {
@@ -505,14 +505,14 @@
       {
         "team": "Colombia",
         "flag": "🇨🇴",
-        "pj": 0,
-        "g": 0,
+        "pj": 1,
+        "g": 1,
         "e": 0,
         "p": 0,
-        "gf": 0,
-        "gc": 0,
-        "dg": 0,
-        "pts": 0
+        "gf": 3,
+        "gc": 1,
+        "dg": 2,
+        "pts": 3
       },
       {
         "team": "Portugal",
@@ -529,13 +529,13 @@
       {
         "team": "Uzbekistán",
         "flag": "🇺🇿",
-        "pj": 0,
+        "pj": 1,
         "g": 0,
         "e": 0,
-        "p": 0,
-        "gf": 0,
-        "gc": 0,
-        "dg": 0,
+        "p": 1,
+        "gf": 1,
+        "gc": 3,
+        "dg": -2,
         "pts": 0
       },
       {
@@ -1004,8 +1004,8 @@
     },
     "2026-06-18_04:00_Uzbekistán_vs_Colombia": {
       "home": 1,
-      "away": 2,
-      "status": "live"
+      "away": 3,
+      "status": "ft"
     }
   }
 }
