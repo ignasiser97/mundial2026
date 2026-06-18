@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-18T19:26:44Z",
+  "updated": "2026-06-18T22:06:23Z",
   "groups": {
     "A": [
       {
@@ -67,26 +67,26 @@
       {
         "team": "Bosnia",
         "flag": "🇧🇦",
-        "pj": 1,
+        "pj": 2,
         "g": 0,
         "e": 1,
-        "p": 0,
-        "gf": 1,
-        "gc": 1,
-        "dg": 0,
+        "p": 1,
+        "gf": 2,
+        "gc": 5,
+        "dg": -3,
         "pts": 1
       },
       {
         "team": "Suiza",
         "flag": "🇨🇭",
-        "pj": 1,
-        "g": 0,
+        "pj": 2,
+        "g": 1,
         "e": 1,
         "p": 0,
-        "gf": 1,
-        "gc": 1,
-        "dg": 0,
-        "pts": 1
+        "gf": 5,
+        "gc": 2,
+        "dg": 3,
+        "pts": 4
       },
       {
         "team": "Catar",
@@ -646,6 +646,13 @@
       "assists": 0
     },
     {
+      "player": "Johan Manzambi",
+      "team": "Suiza",
+      "flag": "🇨🇭",
+      "goals": 2,
+      "assists": 0
+    },
+    {
       "player": "Julián Quiñones",
       "team": "México",
       "flag": "🇲🇽",
@@ -733,13 +740,6 @@
       "player": "Livano Comenencia",
       "team": "Curazao",
       "flag": "🇨🇼",
-      "goals": 1,
-      "assists": 0
-    },
-    {
-      "player": "Jamal Musiala",
-      "team": "Alemania",
-      "flag": "🇩🇪",
       "goals": 1,
       "assists": 0
     }
@@ -1013,6 +1013,11 @@
       "status": "ft"
     },
     "2026-06-18_21:00_Suiza_vs_Bosnia": {
+      "home": 4,
+      "away": 1,
+      "status": "ft"
+    },
+    "2026-06-19_00:00_Canadá_vs_Catar": {
       "home": 0,
       "away": 0,
       "status": "live"
