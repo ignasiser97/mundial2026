@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-18T08:45:19Z",
+  "updated": "2026-06-18T16:55:20Z",
   "groups": {
     "A": [
       {
@@ -1006,6 +1006,11 @@
       "home": 1,
       "away": 3,
       "status": "ft"
+    },
+    "2026-06-18_18:00_Rep.Checa_vs_Sudáfrica": {
+      "home": 1,
+      "away": 0,
+      "status": "live"
     }
   }
 }
