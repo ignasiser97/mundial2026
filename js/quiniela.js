@@ -1,11 +1,17 @@
-function betRow(home, away, centerHtml, cls) {
+function betRow(home, away, centerHtml, cls, teamClickable) {
   const hf = FLAGS_MAP[home] || '';
   const af = FLAGS_MAP[away] || '';
   const rowCls = cls ? `bet-score-row ${cls}` : 'bet-score-row';
+  const hn = teamClickable
+    ? `<span class="bsr-tname bsr-tname--link" onclick="showTeamPopup('${home.replace(/'/g,"\\'")}')">${home}</span>`
+    : `<span class="bsr-tname">${home}</span>`;
+  const an = teamClickable
+    ? `<span class="bsr-tname bsr-tname--link" onclick="showTeamPopup('${away.replace(/'/g,"\\'")}')">${away}</span>`
+    : `<span class="bsr-tname">${away}</span>`;
   return `<div class="${rowCls}">
-    <div class="bsr-home">${hf ? `<span class="bsr-flag">${hf}</span>` : ''}<span class="bsr-tname">${home}</span></div>
+    <div class="bsr-home">${hf ? `<span class="bsr-flag">${hf}</span>` : ''}${hn}</div>
     <div class="bsr-center">${centerHtml}</div>
-    <div class="bsr-away"><span class="bsr-tname">${away}</span>${af ? `<span class="bsr-flag">${af}</span>` : ''}</div>
+    <div class="bsr-away">${an}${af ? `<span class="bsr-flag">${af}</span>` : ''}</div>
   </div>`;
 }
 
@@ -689,29 +695,112 @@ async function renderQnlSubTab() {
   }
 }
 
+// ── Popup resultados de equipo ─────────────────────────────────
+
+const PHASE_LABEL = { groups:'Fase de grupos', r32:'1/32 de final', r16:'Octavos', qf:'Cuartos', sf:'Semis', '3p':'3er y 4º puesto', final:'Final' };
+
+async function showTeamPopup(team) {
+  const results = await getMatchResults();
+  const flag = FLAGS_MAP[team] || '';
+
+  const played = [], upcoming = [];
+  for (const m of MATCHES) {
+    const [home, away] = matchTeams(m);
+    if (home !== team && away !== team) continue;
+    const mid = matchId(m);
+    const r = results[mid];
+    if (r && r.status !== 'live') {
+      const isHome = home === team;
+      const gs = isHome ? r.home_score : r.away_score;
+      const gc = isHome ? r.away_score : r.home_score;
+      const rival = isHome ? away : home;
+      const rivalFlag = FLAGS_MAP[rival] || '';
+      const outcome = gs > gc ? 'win' : gs < gc ? 'loss' : 'draw';
+      const isLive = r.status === 'live';
+      played.push({ m, rival, rivalFlag, gs, gc, outcome, isLive, score: `${r.home_score}–${r.away_score}`, isHome });
+    } else {
+      upcoming.push({ m, rival: home === team ? away : home });
+    }
+  }
+
+  const phaseFor = m => PHASE_LABEL[m[7]] || m[7];
+  const groupFor = m => { const g = m[2].match(/Grupo ([A-Z])/); return g ? `Grupo ${g[1]}` : phaseFor(m); };
+
+  const playedRows = played.map(({ m, rival, rivalFlag, outcome, score }) => {
+    const cls = outcome === 'win' ? 'tpop-win' : outcome === 'loss' ? 'tpop-loss' : 'tpop-draw';
+    const label = m[7] === 'groups' ? groupFor(m) : phaseFor(m);
+    return `<div class="tpop-row">
+      <span class="tpop-phase">${label}</span>
+      <span class="tpop-rival">${rivalFlag} ${rival}</span>
+      <span class="tpop-score ${cls}">${score}</span>
+    </div>`;
+  }).join('');
+
+  const upcomingRows = upcoming.map(({ m, rival }) => {
+    const rivalFlag = FLAGS_MAP[rival] || '';
+    const label = m[7] === 'groups' ? groupFor(m) : phaseFor(m);
+    return `<div class="tpop-row tpop-row--upcoming">
+      <span class="tpop-phase">${label}</span>
+      <span class="tpop-rival">${rivalFlag} ${rival}</span>
+      <span class="tpop-score" style="color:var(--muted)">${m[1]}</span>
+    </div>`;
+  }).join('');
+
+  const body = (played.length ? `<div class="tpop-section-title">Jugados</div>${playedRows}` : '') +
+               (upcoming.length ? `<div class="tpop-section-title">Próximos</div>${upcomingRows}` : '');
+
+  const overlay = document.createElement('div');
+  overlay.id = 'team-popup-overlay';
+  overlay.innerHTML = `
+    <div class="tpop-card">
+      <div class="tpop-header">
+        <span class="tpop-flag">${flag}</span>
+        <span class="tpop-team">${team}</span>
+      </div>
+      <div class="tpop-body">${body || '<div style="color:var(--muted);font-size:13px">Sin partidos registrados</div>'}</div>
+      <button class="sq-btn" style="margin-top:20px" onclick="document.getElementById('team-popup-overlay').remove()">Cerrar</button>
+    </div>`;
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+
 // ── Apostar ────────────────────────────────────────────────────
 
 async function renderApostar(el) {
   const today = spainToday();
-  const upcomingDates = [...new Set(
+  // Fetch more candidate dates to compensate for fully-finished days
+  const candidateDates = [...new Set(
     MATCHES.filter(m => m[0] >= today).map(m => m[0])
-  )].sort().slice(0, 3);
+  )].sort().slice(0, 6);
+
+  if (!candidateDates.length) {
+    el.innerHTML = '<div class="empty">El torneo ha finalizado.</div>';
+    return;
+  }
+
+  const candidateIds = candidateDates
+    .flatMap(date => MATCHES.filter(m => m[0] === date))
+    .map(m => matchId(m));
+
+  const [{ data: groupBetsRaw }, oddsData, groupUserIds, matchResultsMap] = await Promise.all([
+    db.from('bets').select('match_id, home_score, away_score, user_id, users(name)').in('match_id', candidateIds),
+    getOddsData(),
+    ensureGroupUserIds(),
+    getMatchResults(),
+  ]);
+  const allOdds = oddsData.odds || {};
+
+  const isFinished = mid => matchResultsMap[mid]?.status === 'ft';
+
+  // Skip dates where every match is already finished
+  const upcomingDates = candidateDates.filter(date =>
+    MATCHES.filter(m => m[0] === date).some(m => !isFinished(matchId(m)))
+  ).slice(0, 3);
 
   if (!upcomingDates.length) {
     el.innerHTML = '<div class="empty">El torneo ha finalizado.</div>';
     return;
   }
-
-  const displayedIds = upcomingDates
-    .flatMap(date => MATCHES.filter(m => m[0] === date))
-    .map(m => matchId(m));
-
-  const [{ data: groupBetsRaw }, oddsData, groupUserIds] = await Promise.all([
-    db.from('bets').select('match_id, home_score, away_score, user_id, users(name)').in('match_id', displayedIds),
-    getOddsData(),
-    ensureGroupUserIds(),
-  ]);
-  const allOdds = oddsData.odds || {};
 
   const groupBetsMap = {};
   (groupBetsRaw || []).filter(b => groupUserIds.includes(b.user_id)).forEach(b => {
@@ -723,7 +812,7 @@ async function renderApostar(el) {
 
   const sections = upcomingDates.map(date => {
     const label = date === today ? `Hoy · ${fmtDate(date)}` : fmtDate(date);
-    const cards = MATCHES.filter(m => m[0] === date).map(m => {
+    const cards = MATCHES.filter(m => m[0] === date && !isFinished(matchId(m))).map(m => {
       const mid     = matchId(m);
       const saved   = qnlBets[mid];
       const open    = isBetOpen(m);
@@ -758,7 +847,7 @@ async function renderApostar(el) {
         // Apuesta guardada + plazo abierto: lectura por defecto, edición al pulsar
         body = `
           <div id="ro-${mid}">
-            ${betRow(home, away, `<span class="bsr-score">${saved.home_score}</span><span class="bet-dash">–</span><span class="bsr-score">${saved.away_score}</span>`)}
+            ${betRow(home, away, `<span class="bsr-score">${saved.home_score}</span><span class="bet-dash">–</span><span class="bsr-score">${saved.away_score}</span>`, null, true)}
             <div class="bet-actions">
               <span class="bet-saved">✓ Apuesta guardada</span>
               <button class="bet-toggle-bets" onclick="enableBetEdit('${mid}')">✎ Editar</button>
@@ -775,19 +864,19 @@ async function renderApostar(el) {
       } else if (open) {
         // Sin apuesta previa: inputs directamente
         body = `
-          ${betRow(home, away, `<input class="bet-score-input" type="number" min="0" max="20" id="h-${mid}" value="" placeholder="0"><span class="bet-dash">–</span><input class="bet-score-input" type="number" min="0" max="20" id="a-${mid}" value="" placeholder="0">`)}
+          ${betRow(home, away, `<input class="bet-score-input" type="number" min="0" max="20" id="h-${mid}" value="" placeholder="0"><span class="bet-dash">–</span><input class="bet-score-input" type="number" min="0" max="20" id="a-${mid}" value="" placeholder="0">`, null, true)}
           <div class="bet-actions">
             <button class="bet-submit" onclick="submitBet('${mid}')">+ Apostar</button>
           </div>
           <div class="bet-lock-info">Cierra 5 min antes del pitido</div>`;
       } else if (saved) {
         body = `
-          ${betRow(home, away, `<span class="bsr-score">${saved.home_score}</span><span class="bet-dash">–</span><span class="bsr-score">${saved.away_score}</span>`)}
+          ${betRow(home, away, `<span class="bsr-score">${saved.home_score}</span><span class="bet-dash">–</span><span class="bsr-score">${saved.away_score}</span>`, null, true)}
           <div class="bet-actions"><span class="bet-saved">✓ Apuesta guardada</span>${verGrupoBtn}</div>
           <div id="gbets-${mid}" class="hidden"></div>`;
       } else {
         body = `
-          ${betRow(home, away, `<span class="bsr-score" style="color:var(--muted)">–</span><span class="bet-dash">–</span><span class="bsr-score" style="color:var(--muted)">–</span>`, 'opacity45')}
+          ${betRow(home, away, `<span class="bsr-score" style="color:var(--muted)">–</span><span class="bet-dash">–</span><span class="bsr-score" style="color:var(--muted)">–</span>`, 'opacity45', true)}
           <div class="bet-actions"><span class="bet-closed">${started ? 'Partido en juego' : 'Apuestas cerradas'}</span>${verGrupoBtn}</div>
           <div id="gbets-${mid}" class="hidden"></div>`;
       }

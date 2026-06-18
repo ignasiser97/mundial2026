@@ -20,6 +20,7 @@
 - [x] Próxima apuesta que cierra — bloque urgente en home de Quiniela con countdown en tiempo real
 - [x] Quiniela multigrupo: clasificación de torneo con filtro Mi grupo/Todos; apuestas de partido filtradas al grupo propio (Ver grupo, dropdown contador)
 - [x] Live scores: CF Worker proxy (mundial-live-scores.ignasiser97.workers.dev) + polling 60s en home + status live/ft en calendar, home y quiniela
+- [x] Apostar: ocultar partidos con resultado final (status ft); popup de resultados al clickar equipo
 
 ## Pendiente
 
@@ -43,6 +44,7 @@
 - [ ] **Comprobar match_id del Worker**: verificar que los IDs generados por el CF Worker (ESPN) coinciden exactamente con los de `matchId()` en el frontend para al menos los primeros partidos
 - [ ] **Ajustar ventana de live polling**: actualmente `_liveInterval` se activa si un partido está dentro de los 130 min desde el kickoff — verificar que cubre prórrogas y penaltis correctamente
 - [ ] **Activar botón de notificaciones push**: descomentar `#push-section` en CSS y depurar inyección de VAPID key en el deploy
+- [ ] **Alineaciones vía ESPN**: el scoreboard ya devuelve `event.id` por partido — con ese ID se puede pegar a `site.api.espn.com/apis/site/v2/sports/soccer/fifa.world-cup/summary?event={id}` para obtener alineaciones, formación, goles y tarjetas. Verificar estructura de respuesta y cuándo publica ESPN las alineaciones oficiales (~1h antes del partido). Requiere guardar el ESPN event ID en el CF Worker y exponerlo al frontend.
 
 ## Ideas a valorar
 - [ ] "Yo estuve aquí" — botón por partido, activo solo durante la ventana del partido (mismo criterio que el chat: día del partido hasta kickoff +3h). Un click por usuario por partido. Al final del mundial, contador de partidos vistos visible en Apuestas. Auth: login de Apuestas. Tabla: `checkins (id, match_id, user_id, created_at)`, unique constraint en (match_id, user_id).

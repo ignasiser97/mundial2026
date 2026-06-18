@@ -452,6 +452,33 @@ footer a:hover { color:var(--text); }
   cursor:pointer; transition:background .15s, color .15s;
 }
 .sq-btn:active { background:var(--accent); color:#000; }
+.bsr-tname--link { cursor:pointer; text-decoration:underline; text-decoration-color:var(--border); text-underline-offset:3px; }
+.bsr-tname--link:active { color:var(--accent); }
+#team-popup-overlay {
+  position:fixed; inset:0; z-index:500;
+  background:rgba(0,0,0,.75);
+  display:flex; align-items:center; justify-content:center;
+  padding:24px; animation:fadeIn .2s ease;
+}
+.tpop-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:20px; padding:24px 20px 20px;
+  width:100%; max-width:340px; max-height:80vh;
+  display:flex; flex-direction:column;
+}
+.tpop-header { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.tpop-flag { font-size:32px; line-height:1; }
+.tpop-team { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1px; color:var(--accent); }
+.tpop-body { overflow-y:auto; flex:1; }
+.tpop-section-title { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin:10px 0 6px; }
+.tpop-row { display:flex; align-items:center; gap:8px; padding:7px 0; border-bottom:1px solid var(--border); }
+.tpop-row--upcoming { opacity:.6; }
+.tpop-phase { font-size:10px; color:var(--muted); width:80px; flex-shrink:0; }
+.tpop-rival { flex:1; font-size:13px; }
+.tpop-score { font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:1px; }
+.tpop-win   { color:var(--pos); }
+.tpop-loss  { color:var(--neg); }
+.tpop-draw  { color:var(--text); }
 #update-banner {
   position:fixed; bottom:0; left:0; right:0; z-index:300;
   background:var(--accent); color:#000;
