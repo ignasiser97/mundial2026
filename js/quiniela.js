@@ -711,13 +711,12 @@ async function showTeamPopup(team) {
     const r = results[mid];
     if (r && r.status !== 'live') {
       const isHome = home === team;
-      const gs = isHome ? r.home_score : r.away_score;
-      const gc = isHome ? r.away_score : r.home_score;
+      const gs = isHome ? r.home : r.away;
+      const gc = isHome ? r.away : r.home;
       const rival = isHome ? away : home;
       const rivalFlag = FLAGS_MAP[rival] || '';
       const outcome = gs > gc ? 'win' : gs < gc ? 'loss' : 'draw';
-      const isLive = r.status === 'live';
-      played.push({ m, rival, rivalFlag, gs, gc, outcome, isLive, score: `${r.home_score}–${r.away_score}`, isHome });
+      played.push({ m, rival, rivalFlag, outcome, score: `${r.home}–${r.away}` });
     } else {
       upcoming.push({ m, rival: home === team ? away : home });
     }
