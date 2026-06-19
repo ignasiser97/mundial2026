@@ -1,18 +1,18 @@
 {
-  "updated": "2026-06-19T00:25:28Z",
+  "updated": "2026-06-19T06:17:19Z",
   "groups": {
     "A": [
       {
         "team": "México",
         "flag": "🇲🇽",
-        "pj": 1,
-        "g": 1,
+        "pj": 2,
+        "g": 2,
         "e": 0,
         "p": 0,
-        "gf": 2,
+        "gf": 3,
         "gc": 0,
-        "dg": 2,
-        "pts": 3
+        "dg": 3,
+        "pts": 6
       },
       {
         "team": "Rep. Checa",
@@ -29,13 +29,13 @@
       {
         "team": "Corea del Sur",
         "flag": "🇰🇷",
-        "pj": 1,
+        "pj": 2,
         "g": 1,
         "e": 0,
-        "p": 0,
+        "p": 1,
         "gf": 2,
-        "gc": 1,
-        "dg": 1,
+        "gc": 2,
+        "dg": 0,
         "pts": 3
       },
       {
@@ -611,13 +611,6 @@
       "assists": 0
     },
     {
-      "player": "Jonathan David",
-      "team": "Canadá",
-      "flag": "🇨🇦",
-      "goals": 3,
-      "assists": 0
-    },
-    {
       "player": "Cyle Larin",
       "team": "Canadá",
       "flag": "🇨🇦",
@@ -740,6 +733,13 @@
       "player": "Livano Comenencia",
       "team": "Curazao",
       "flag": "🇨🇼",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Jamal Musiala",
+      "team": "Alemania",
+      "flag": "🇩🇪",
       "goals": 1,
       "assists": 0
     }
@@ -1019,6 +1019,11 @@
     },
     "2026-06-19_00:00_Canadá_vs_Catar": {
       "home": 6,
+      "away": 0,
+      "status": "ft"
+    },
+    "2026-06-19_03:00_México_vs_CoreadelSur": {
+      "home": 1,
       "away": 0,
       "status": "ft"
     }
