@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-18T22:06:23Z",
+  "updated": "2026-06-19T00:25:28Z",
   "groups": {
     "A": [
       {
@@ -55,14 +55,14 @@
       {
         "team": "Canadá",
         "flag": "🇨🇦",
-        "pj": 1,
-        "g": 0,
+        "pj": 2,
+        "g": 1,
         "e": 1,
         "p": 0,
-        "gf": 1,
+        "gf": 7,
         "gc": 1,
-        "dg": 0,
-        "pts": 1
+        "dg": 6,
+        "pts": 4
       },
       {
         "team": "Bosnia",
@@ -91,13 +91,13 @@
       {
         "team": "Catar",
         "flag": "🇶🇦",
-        "pj": 1,
+        "pj": 2,
         "g": 0,
         "e": 1,
-        "p": 0,
+        "p": 1,
         "gf": 1,
-        "gc": 1,
-        "dg": 0,
+        "gc": 7,
+        "dg": -6,
         "pts": 1
       }
     ],
@@ -611,6 +611,20 @@
       "assists": 0
     },
     {
+      "player": "Jonathan David",
+      "team": "Canadá",
+      "flag": "🇨🇦",
+      "goals": 3,
+      "assists": 0
+    },
+    {
+      "player": "Cyle Larin",
+      "team": "Canadá",
+      "flag": "🇨🇦",
+      "goals": 2,
+      "assists": 0
+    },
+    {
       "player": "Folarin Balogun",
       "team": "Estados Unidos",
       "flag": "🇺🇸",
@@ -646,13 +660,6 @@
       "assists": 0
     },
     {
-      "player": "Johan Manzambi",
-      "team": "Suiza",
-      "flag": "🇨🇭",
-      "goals": 2,
-      "assists": 0
-    },
-    {
       "player": "Julián Quiñones",
       "team": "México",
       "flag": "🇲🇽",
@@ -670,13 +677,6 @@
       "player": "Oh Hyeon-Gyu",
       "team": "Corea del Sur",
       "flag": "🇰🇷",
-      "goals": 1,
-      "assists": 0
-    },
-    {
-      "player": "Cyle Larin",
-      "team": "Canadá",
-      "flag": "🇨🇦",
       "goals": 1,
       "assists": 0
     },
@@ -1018,9 +1018,9 @@
       "status": "ft"
     },
     "2026-06-19_00:00_Canadá_vs_Catar": {
-      "home": 0,
+      "home": 6,
       "away": 0,
-      "status": "live"
+      "status": "ft"
     }
   }
 }
