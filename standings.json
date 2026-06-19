@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-19T20:25:55Z",
+  "updated": "2026-06-19T22:02:48Z",
   "groups": {
     "A": [
       {
@@ -179,26 +179,26 @@
       {
         "team": "Australia",
         "flag": "🇦🇺",
-        "pj": 1,
+        "pj": 2,
         "g": 1,
         "e": 0,
-        "p": 0,
+        "p": 1,
         "gf": 2,
-        "gc": 0,
-        "dg": 2,
+        "gc": 2,
+        "dg": 0,
         "pts": 3
       },
       {
         "team": "Estados Unidos",
         "flag": "🇺🇸",
-        "pj": 1,
-        "g": 1,
+        "pj": 2,
+        "g": 2,
         "e": 0,
         "p": 0,
-        "gf": 4,
+        "gf": 6,
         "gc": 1,
-        "dg": 3,
-        "pts": 3
+        "dg": 5,
+        "pts": 6
       }
     ],
     "E": [
@@ -1030,6 +1030,11 @@
     "2026-06-19_21:00_EstadosUnidos_vs_Australia": {
       "home": 2,
       "away": 0,
+      "status": "ft"
+    },
+    "2026-06-20_00:00_Escocia_vs_Marruecos": {
+      "home": 0,
+      "away": 1,
       "status": "live"
     }
   }
