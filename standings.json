@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-20T17:25:09Z",
+  "updated": "2026-06-20T19:23:47Z",
   "groups": {
     "A": [
       {
@@ -255,25 +255,25 @@
       {
         "team": "Países Bajos",
         "flag": "🇳🇱",
-        "pj": 1,
-        "g": 0,
+        "pj": 2,
+        "g": 1,
         "e": 1,
         "p": 0,
-        "gf": 2,
-        "gc": 2,
-        "dg": 0,
-        "pts": 1
+        "gf": 7,
+        "gc": 3,
+        "dg": 4,
+        "pts": 4
       },
       {
         "team": "Suecia",
         "flag": "🇸🇪",
-        "pj": 1,
+        "pj": 2,
         "g": 1,
         "e": 0,
-        "p": 0,
-        "gf": 5,
-        "gc": 1,
-        "dg": 4,
+        "p": 1,
+        "gf": 6,
+        "gc": 6,
+        "dg": 0,
         "pts": 3
       },
       {
@@ -646,6 +646,13 @@
       "assists": 0
     },
     {
+      "player": "Crysencio Summerville",
+      "team": "Países Bajos",
+      "flag": "🇳🇱",
+      "goals": 2,
+      "assists": 0
+    },
+    {
       "player": "Yasin Ayari",
       "team": "Suecia",
       "flag": "🇸🇪",
@@ -688,6 +695,20 @@
       "assists": 0
     },
     {
+      "player": "Brian Brobbey",
+      "team": "Países Bajos",
+      "flag": "🇳🇱",
+      "goals": 2,
+      "assists": 0
+    },
+    {
+      "player": "Cody Gakpo",
+      "team": "Países Bajos",
+      "flag": "🇳🇱",
+      "goals": 2,
+      "assists": 0
+    },
+    {
       "player": "Julián Quiñones",
       "team": "México",
       "flag": "🇲🇽",
@@ -721,30 +742,16 @@
       "flag": "🇺🇸",
       "goals": 1,
       "assists": 0
-    },
-    {
-      "player": "John McGinn",
-      "team": "Escocia",
-      "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-      "goals": 1,
-      "assists": 0
-    },
-    {
-      "player": "Nestory Irankunda",
-      "team": "Australia",
-      "flag": "🇦🇺",
-      "goals": 1,
-      "assists": 0
-    },
-    {
-      "player": "Connor Metcalfe",
-      "team": "Australia",
-      "flag": "🇦🇺",
-      "goals": 1,
-      "assists": 0
     }
   ],
   "topAssists": [
+    {
+      "player": "Alexander Isak",
+      "team": "Suecia",
+      "flag": "🇸🇪",
+      "goals": 0,
+      "assists": 3
+    },
     {
       "player": "Julio Enciso",
       "team": "Paraguay",
@@ -767,16 +774,16 @@
       "assists": 2
     },
     {
-      "player": "Alexander Isak",
-      "team": "Suecia",
-      "flag": "🇸🇪",
+      "player": "Chris Wood",
+      "team": "Nueva Zelanda",
+      "flag": "🇳🇿",
       "goals": 0,
       "assists": 2
     },
     {
-      "player": "Chris Wood",
-      "team": "Nueva Zelanda",
-      "flag": "🇳🇿",
+      "player": "Denzel Dumfries",
+      "team": "Países Bajos",
+      "flag": "🇳🇱",
       "goals": 0,
       "assists": 2
     },
@@ -875,13 +882,6 @@
       "player": "Wilfried Singo",
       "team": "Costa de Marfil",
       "flag": "🇨🇮",
-      "goals": 0,
-      "assists": 1
-    },
-    {
-      "player": "Viktor Gyökeres",
-      "team": "Suecia",
-      "flag": "🇸🇪",
       "goals": 0,
       "assists": 1
     }
@@ -1048,9 +1048,9 @@
       "status": "ft"
     },
     "2026-06-20_19:00_PaísesBajos_vs_Suecia": {
-      "home": 2,
-      "away": 0,
-      "status": "live"
+      "home": 5,
+      "away": 1,
+      "status": "ft"
     }
   }
 }
