@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-20T21:16:58Z",
+  "updated": "2026-06-20T23:06:37Z",
   "groups": {
     "A": [
       {
@@ -217,25 +217,25 @@
       {
         "team": "Alemania",
         "flag": "🇩🇪",
-        "pj": 1,
-        "g": 1,
+        "pj": 2,
+        "g": 2,
         "e": 0,
         "p": 0,
-        "gf": 7,
-        "gc": 1,
-        "dg": 6,
-        "pts": 3
+        "gf": 9,
+        "gc": 2,
+        "dg": 7,
+        "pts": 6
       },
       {
         "team": "Costa de Marfil",
         "flag": "🇨🇮",
-        "pj": 1,
+        "pj": 2,
         "g": 1,
         "e": 0,
-        "p": 0,
-        "gf": 1,
-        "gc": 0,
-        "dg": 1,
+        "p": 1,
+        "gf": 2,
+        "gc": 2,
+        "dg": 0,
         "pts": 3
       },
       {
@@ -604,6 +604,13 @@
   },
   "topScorers": [
     {
+      "player": "Deniz Undav",
+      "team": "Alemania",
+      "flag": "🇩🇪",
+      "goals": 3,
+      "assists": 0
+    },
+    {
       "player": "Lionel Messi",
       "team": "Argentina",
       "flag": "🇦🇷",
@@ -733,13 +740,6 @@
       "player": "Maurício",
       "team": "Paraguay",
       "flag": "🇵🇾",
-      "goals": 1,
-      "assists": 0
-    },
-    {
-      "player": "Giovanni Reyna",
-      "team": "Estados Unidos",
-      "flag": "🇺🇸",
       "goals": 1,
       "assists": 0
     }
@@ -1053,9 +1053,9 @@
       "status": "ft"
     },
     "2026-06-20_22:00_Alemania_vs_CostadeMarfil": {
-      "home": 0,
+      "home": 2,
       "away": 1,
-      "status": "live"
+      "status": "ft"
     }
   }
 }
