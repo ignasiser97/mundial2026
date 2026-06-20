@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-20T00:08:33Z",
+  "updated": "2026-06-20T05:12:15Z",
   "groups": {
     "A": [
       {
@@ -105,14 +105,14 @@
       {
         "team": "Brasil",
         "flag": "🇧🇷",
-        "pj": 1,
-        "g": 0,
+        "pj": 2,
+        "g": 1,
         "e": 1,
         "p": 0,
-        "gf": 1,
+        "gf": 4,
         "gc": 1,
-        "dg": 0,
-        "pts": 1
+        "dg": 3,
+        "pts": 4
       },
       {
         "team": "Escocia",
@@ -129,13 +129,13 @@
       {
         "team": "Haití",
         "flag": "🇭🇹",
-        "pj": 1,
+        "pj": 2,
         "g": 0,
         "e": 0,
-        "p": 1,
+        "p": 2,
         "gf": 0,
-        "gc": 1,
-        "dg": -1,
+        "gc": 4,
+        "dg": -4,
         "pts": 0
       },
       {
@@ -155,25 +155,25 @@
       {
         "team": "Paraguay",
         "flag": "🇵🇾",
-        "pj": 1,
-        "g": 0,
+        "pj": 2,
+        "g": 1,
         "e": 0,
         "p": 1,
-        "gf": 1,
+        "gf": 2,
         "gc": 4,
-        "dg": -3,
-        "pts": 0
+        "dg": -2,
+        "pts": 3
       },
       {
         "team": "Turquía",
         "flag": "🇹🇷",
-        "pj": 1,
+        "pj": 2,
         "g": 0,
         "e": 0,
-        "p": 1,
+        "p": 2,
         "gf": 0,
-        "gc": 2,
-        "dg": -2,
+        "gc": 3,
+        "dg": -3,
         "pts": 0
       },
       {
@@ -611,6 +611,13 @@
       "assists": 0
     },
     {
+      "player": "Jonathan David",
+      "team": "Canadá",
+      "flag": "🇨🇦",
+      "goals": 3,
+      "assists": 0
+    },
+    {
       "player": "Cyle Larin",
       "team": "Canadá",
       "flag": "🇨🇦",
@@ -628,6 +635,13 @@
       "player": "Ismael Saibari",
       "team": "Marruecos",
       "flag": "🇲🇦",
+      "goals": 2,
+      "assists": 0
+    },
+    {
+      "player": "Vinícius Júnior",
+      "team": "Brasil",
+      "flag": "🇧🇷",
       "goals": 2,
       "assists": 0
     },
@@ -656,6 +670,20 @@
       "player": "Erling Haaland",
       "team": "Noruega",
       "flag": "🇳🇴",
+      "goals": 2,
+      "assists": 0
+    },
+    {
+      "player": "Johan Manzambi",
+      "team": "Suiza",
+      "flag": "🇨🇭",
+      "goals": 2,
+      "assists": 0
+    },
+    {
+      "player": "Matheus Cunha",
+      "team": "Brasil",
+      "flag": "🇧🇷",
       "goals": 2,
       "assists": 0
     },
@@ -695,13 +723,6 @@
       "assists": 0
     },
     {
-      "player": "Vinícius Júnior",
-      "team": "Brasil",
-      "flag": "🇧🇷",
-      "goals": 1,
-      "assists": 0
-    },
-    {
       "player": "John McGinn",
       "team": "Escocia",
       "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
@@ -721,30 +742,16 @@
       "flag": "🇦🇺",
       "goals": 1,
       "assists": 0
-    },
-    {
-      "player": "Felix Nmecha",
-      "team": "Alemania",
-      "flag": "🇩🇪",
-      "goals": 1,
-      "assists": 0
-    },
-    {
-      "player": "Livano Comenencia",
-      "team": "Curazao",
-      "flag": "🇨🇼",
-      "goals": 1,
-      "assists": 0
-    },
-    {
-      "player": "Jamal Musiala",
-      "team": "Alemania",
-      "flag": "🇩🇪",
-      "goals": 1,
-      "assists": 0
     }
   ],
   "topAssists": [
+    {
+      "player": "Julio Enciso",
+      "team": "Paraguay",
+      "flag": "🇵🇾",
+      "goals": 0,
+      "assists": 2
+    },
     {
       "player": "Brahim Díaz",
       "team": "Marruecos",
@@ -812,13 +819,6 @@
       "player": "Malik Tillman",
       "team": "Estados Unidos",
       "flag": "🇺🇸",
-      "goals": 0,
-      "assists": 1
-    },
-    {
-      "player": "Julio Enciso",
-      "team": "Paraguay",
-      "flag": "🇵🇾",
       "goals": 0,
       "assists": 1
     },
@@ -1033,6 +1033,16 @@
       "status": "ft"
     },
     "2026-06-20_00:00_Escocia_vs_Marruecos": {
+      "home": 0,
+      "away": 1,
+      "status": "ft"
+    },
+    "2026-06-20_02:30_Brasil_vs_Haití": {
+      "home": 3,
+      "away": 0,
+      "status": "ft"
+    },
+    "2026-06-20_05:00_Turquía_vs_Paraguay": {
       "home": 0,
       "away": 1,
       "status": "ft"
