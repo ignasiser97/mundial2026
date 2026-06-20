@@ -113,6 +113,7 @@ const MATCHES = [
   ['2026-07-18','23:00','3er y 4º puesto',                         'Hard Rock Stadium, Miami',              'USA','dl',0,'3p'],
   ['2026-07-19','21:00','Gran Final del Mundial 2026',             'MetLife Stadium, Nueva Jersey',         'USA','dl',0,'final'],
 ];
+MATCHES.sort((a, b) => (a[0] + a[1]).localeCompare(b[0] + b[1]));
 
 const PHASES = {
   groups:'Fase de Grupos', r32:'Dieciseisavos de Final',
