@@ -113,16 +113,44 @@ function nextUpcomingMatch() {
 }
 
 // 3 pts resultado exacto · 1 pt ganador correcto · 0 pts fallo
+// Eliminatorias: 3 pts si marcador exacto a 90 min (home_90/away_90), 1 pt clasificado correcto, 0 pts fallo
 function calcPoints(bet, result, double = false) {
   if (!result || result.status === 'live') return null;
   let pts;
-  if (bet.home_score === result.home_score && bet.away_score === result.away_score) pts = 3;
-  else {
-    const bOut = Math.sign(bet.home_score - bet.away_score);
-    const rOut = Math.sign(result.home_score - result.away_score);
-    pts = bOut === rOut ? 1 : 0;
+  if (result.phase === 'knockout') {
+    const h90 = result.home_90 ?? result.home_score;
+    const a90 = result.away_90 ?? result.away_score;
+    if (bet.home_score === h90 && bet.away_score === a90) pts = 3;
+    else {
+      const betWin = bet.qualifier
+        || (bet.home_score > bet.away_score ? 'home' : bet.home_score < bet.away_score ? 'away' : null);
+      pts = betWin && betWin === result.winner ? 1 : 0;
+    }
+  } else {
+    if (bet.home_score === result.home_score && bet.away_score === result.away_score) pts = 3;
+    else {
+      const bOut = Math.sign(bet.home_score - bet.away_score);
+      const rOut = Math.sign(result.home_score - result.away_score);
+      pts = bOut === rOut ? 1 : 0;
+    }
   }
   return double ? pts * 2 : pts;
+}
+
+function selectQualifier(mid, team) {
+  const el = document.getElementById('bq-' + mid);
+  if (!el) return;
+  el.setAttribute('data-qualifier', team);
+  el.querySelectorAll('.bq-btn').forEach((btn, i) => {
+    btn.classList.toggle('bq-active', (i === 0 && team === 'home') || (i === 1 && team === 'away'));
+  });
+}
+
+function updateQualifierFromScore(mid) {
+  const h = parseInt(document.getElementById('h-' + mid)?.value) || 0;
+  const a = parseInt(document.getElementById('a-' + mid)?.value) || 0;
+  if (h > a) selectQualifier(mid, 'home');
+  else if (a > h) selectQualifier(mid, 'away');
 }
 
 let _spainMatchIds = null;
@@ -782,7 +810,7 @@ async function renderApostar(el) {
     .map(m => matchId(m));
 
   const [{ data: groupBetsRaw }, oddsData, groupUserIds, matchResultsMap] = await Promise.all([
-    db.from('bets').select('match_id, home_score, away_score, user_id, users(name)').in('match_id', candidateIds),
+    db.from('bets').select('match_id, home_score, away_score, qualifier, user_id, users(name)').in('match_id', candidateIds),
     getOddsData(),
     ensureGroupUserIds(),
     getMatchResults(),
@@ -812,7 +840,8 @@ async function renderApostar(el) {
   const sections = upcomingDates.map(date => {
     const label = date === today ? `Hoy · ${fmtDate(date)}` : fmtDate(date);
     const cards = MATCHES.filter(m => m[0] === date && !isFinished(matchId(m))).sort((a,b)=>a[1].localeCompare(b[1])).map(m => {
-      const mid     = matchId(m);
+      const mid        = matchId(m);
+      const isKnockout = m[7] !== 'groups';
       const saved   = qnlBets[mid];
       const open    = isBetOpen(m);
       const started = isMatchStarted(m);
@@ -841,19 +870,41 @@ async function renderApostar(el) {
         ? `<button class="bet-toggle-bets" onclick="toggleGroupBets('${mid}',this)">Ver grupo</button>`
         : '';
 
+      // Helper: input de marcador (con oninput para qualifier en eliminatorias)
+      const inp = (id, val) => `<input class="bet-score-input" type="number" min="0" max="20" id="${id}" value="${val}" placeholder="0"${isKnockout ? ` oninput="updateQualifierFromScore('${mid}')"` : ''}>`;
+      // Helper: selector de clasificado editable (solo eliminatorias)
+      const qEdit = (curQ) => {
+        if (!isKnockout) return '';
+        const hf = FLAGS_MAP[home] || '', af = FLAGS_MAP[away] || '';
+        return `<div class="bq-row" id="bq-${mid}" data-qualifier="${curQ || ''}">
+          <span class="bq-label">¿Pasa?</span>
+          <button class="bq-btn${curQ === 'home' ? ' bq-active' : ''}" onclick="selectQualifier('${mid}','home')">${hf} ${home}</button>
+          <button class="bq-btn${curQ === 'away' ? ' bq-active' : ''}" onclick="selectQualifier('${mid}','away')">${af} ${away}</button>
+        </div>`;
+      };
+      // Helper: selector de clasificado en modo lectura (solo eliminatorias)
+      const qRead = (curQ) => {
+        if (!isKnockout || !curQ) return '';
+        const name = curQ === 'home' ? home : away;
+        const flag = curQ === 'home' ? (FLAGS_MAP[home] || '') : (FLAGS_MAP[away] || '');
+        return `<div class="bq-row"><span class="bq-label">Pasa:</span><span class="bq-val">${flag} ${name}</span></div>`;
+      };
+
       let body;
       if (open && saved) {
         // Apuesta guardada + plazo abierto: lectura por defecto, edición al pulsar
         body = `
           <div id="ro-${mid}">
             ${betRow(home, away, `<span class="bsr-score">${saved.home_score}</span><span class="bet-dash">–</span><span class="bsr-score">${saved.away_score}</span>`, null, true)}
+            ${qRead(saved.qualifier)}
             <div class="bet-actions">
               <span class="bet-saved">✓ Apuesta guardada</span>
               <button class="bet-toggle-bets" onclick="enableBetEdit('${mid}')">✎ Editar</button>
             </div>
           </div>
           <div id="ed-${mid}" class="hidden">
-            ${betRow(home, away, `<input class="bet-score-input" type="number" min="0" max="20" id="h-${mid}" value="${saved.home_score}" placeholder="0"><span class="bet-dash">–</span><input class="bet-score-input" type="number" min="0" max="20" id="a-${mid}" value="${saved.away_score}" placeholder="0">`)}
+            ${betRow(home, away, `${inp('h-' + mid, saved.home_score)}<span class="bet-dash">–</span>${inp('a-' + mid, saved.away_score)}`)}
+            ${qEdit(saved.qualifier)}
             <div class="bet-actions">
               <button class="bet-submit" onclick="submitBet('${mid}')">✓ Guardar</button>
               <button class="bet-toggle-bets" onclick="cancelBetEdit('${mid}')">✕ Cancelar</button>
@@ -863,7 +914,8 @@ async function renderApostar(el) {
       } else if (open) {
         // Sin apuesta previa: inputs directamente
         body = `
-          ${betRow(home, away, `<input class="bet-score-input" type="number" min="0" max="20" id="h-${mid}" value="" placeholder="0"><span class="bet-dash">–</span><input class="bet-score-input" type="number" min="0" max="20" id="a-${mid}" value="" placeholder="0">`, null, true)}
+          ${betRow(home, away, `${inp('h-' + mid, '')}<span class="bet-dash">–</span>${inp('a-' + mid, '')}`, null, true)}
+          ${qEdit(null)}
           <div class="bet-actions">
             <button class="bet-submit" onclick="submitBet('${mid}')">+ Apostar</button>
           </div>
@@ -871,6 +923,7 @@ async function renderApostar(el) {
       } else if (saved) {
         body = `
           ${betRow(home, away, `<span class="bsr-score">${saved.home_score}</span><span class="bet-dash">–</span><span class="bsr-score">${saved.away_score}</span>`, null, true)}
+          ${qRead(saved.qualifier)}
           <div class="bet-actions"><span class="bet-saved">✓ Apuesta guardada</span>${verGrupoBtn}</div>
           <div id="gbets-${mid}" class="hidden"></div>`;
       } else {
@@ -948,10 +1001,17 @@ async function toggleGroupBets(mid, btn) {
     getMatchResults(),
   ]);
   const { data: bets } = await db.from('bets')
-    .select('home_score, away_score, user_id, users(name)')
+    .select('home_score, away_score, qualifier, user_id, users(name)')
     .eq('match_id', mid)
     .in('user_id', groupUserIds);
-  const result = resultsMap[mid] ? { home_score: resultsMap[mid].home, away_score: resultsMap[mid].away, status: resultsMap[mid].status } : null;
+  const raw_r = resultsMap[mid];
+  const result = raw_r ? {
+    home_score: raw_r.home_90 ?? raw_r.home,
+    away_score: raw_r.away_90 ?? raw_r.away,
+    status: raw_r.status,
+    phase: raw_r.phase,
+    winner: raw_r.winner,
+  } : null;
 
   if (!bets?.length) {
     el.innerHTML = '<div class="group-bets-list"><p style="font-size:12px;color:var(--muted);text-align:center;padding:4px">Nadie ha apostado en este partido</p></div>';
@@ -961,9 +1021,13 @@ async function toggleGroupBets(mid, btn) {
   }
 
   const isLiveResult = result?.status === 'live';
+  const [matchHome, matchAway] = matchObj ? matchTeams(matchObj) : ['', ''];
+  const advLabel = result?.phase === 'knockout' && result?.winner && !isLiveResult
+    ? ` · Pasa: <strong>${result.winner === 'home' ? matchHome : matchAway}</strong>`
+    : '';
   const resultHeader = result
     ? `<div style="font-size:11px;color:${isLiveResult?'var(--pos)':'var(--muted)'};text-align:center;margin-bottom:8px">
-         ${isLiveResult ? '● En vivo' : 'Resultado'}: <strong style="color:var(--text)">${result.home_score} – ${result.away_score}</strong>
+         ${isLiveResult ? '● En vivo' : 'Resultado'}: <strong style="color:var(--text)">${result.home_score} – ${result.away_score}</strong>${advLabel}
        </div>`
     : '';
 
@@ -977,8 +1041,11 @@ async function toggleGroupBets(mid, btn) {
       const isMe  = b.user_id === qnlUser?.id;
       const pts   = calcPoints(b, result, double);
       // Ocultar marcadores mientras las apuestas siguen abiertas, excepto la propia apuesta
+      const qualStr = result?.phase === 'knockout' && !betOpen
+        ? ` · pasa: ${b.qualifier ? (b.qualifier === 'home' ? matchHome : matchAway) : '?'}`
+        : '';
       const score = (!betOpen || isMe)
-        ? `${b.home_score} – ${b.away_score}`
+        ? `${b.home_score} – ${b.away_score}${qualStr}`
         : `<span style="color:var(--muted)">? – ?</span>`;
       return `<div class="group-bet-row">
         <span class="gb-name">${b.users.name}${isMe ? ' 👈' : ''}</span>
@@ -1002,6 +1069,7 @@ function cancelBetEdit(mid) {
   document.getElementById('ed-' + mid)?.classList.add('hidden');
 }
 
+// NOTA: Ejecutar en Supabase: ALTER TABLE bets ADD COLUMN IF NOT EXISTS qualifier TEXT;
 async function submitBet(mid) {
   const hEl = document.getElementById('h-' + mid);
   const aEl = document.getElementById('a-' + mid);
@@ -1017,14 +1085,32 @@ async function submitBet(mid) {
     alert('Las apuestas para este partido ya están cerradas.');
     return;
   }
+
+  // Gestión del clasificado en eliminatorias
+  const isKnockout = m[7] !== 'groups';
+  let qualifier = null;
+  if (isKnockout) {
+    const bqEl = document.getElementById('bq-' + mid);
+    qualifier = bqEl?.getAttribute('data-qualifier') || null;
+    // Auto-derivar clasificado a partir del marcador si no es empate
+    if (!qualifier) {
+      if (home_score > away_score) qualifier = 'home';
+      else if (away_score > home_score) qualifier = 'away';
+    }
+    // Empate sin clasificado seleccionado: pedir al usuario
+    if (!qualifier) {
+      alert('En eliminatorias con empate a 90 min debes seleccionar quién pasa (ET/penaltis).');
+      return;
+    }
+  }
+
   const btn = document.querySelector(`[onclick="submitBet('${mid}')"]`);
   if (btn) { btn.disabled = true; btn.textContent = 'Guardando…'; }
-  const { error } = await db.from('bets').upsert(
-    { user_id: qnlUser.id, match_id: mid, home_score, away_score },
-    { onConflict: 'user_id,match_id' }
-  );
+  const payload = { user_id: qnlUser.id, match_id: mid, home_score, away_score };
+  if (isKnockout) payload.qualifier = qualifier;
+  const { error } = await db.from('bets').upsert(payload, { onConflict: 'user_id,match_id' });
   if (error) { alert('Error al guardar. Inténtalo de nuevo.'); return; }
-  qnlBets[mid] = { match_id: mid, home_score, away_score };
+  qnlBets[mid] = { match_id: mid, home_score, away_score, qualifier };
   qnlBetsDirty = true;
   showToast('✓ Apuesta guardada');
   const el = document.getElementById('qnl-subcontent');
@@ -1045,7 +1131,13 @@ async function renderMisApuestas(el) {
   const raw = await getMatchResults();
   const resultMap = {};
   Object.entries(raw).forEach(([id, r]) => {
-    resultMap[id] = { home_score: r.home, away_score: r.away, status: r.status };
+    resultMap[id] = {
+      home_score: r.home_90 ?? r.home,
+      away_score: r.away_90 ?? r.away,
+      status: r.status,
+      phase: r.phase,
+      winner: r.winner,
+    };
   });
 
   const lookup = {};
@@ -1072,15 +1164,35 @@ async function renderMisApuestas(el) {
     const open = isBetOpen(m);
     const [home, away] = matchTeams(m);
     const hasBet = b.home_score !== undefined && b.home_score !== null;
+    const isKnockoutHot = m[7] !== 'groups';
+
+    const inpHot = (id, val) => `<input class="bet-score-input" type="number" min="0" max="20" id="${id}" value="${val}" placeholder="0"${isKnockoutHot ? ` oninput="updateQualifierFromScore('${mid}')"` : ''}>`;
+    const qEditHot = (curQ) => {
+      if (!isKnockoutHot) return '';
+      const hf = FLAGS_MAP[home] || '', af = FLAGS_MAP[away] || '';
+      return `<div class="bq-row" id="bq-${mid}" data-qualifier="${curQ || ''}">
+        <span class="bq-label">¿Pasa?</span>
+        <button class="bq-btn${curQ === 'home' ? ' bq-active' : ''}" onclick="selectQualifier('${mid}','home')">${hf} ${home}</button>
+        <button class="bq-btn${curQ === 'away' ? ' bq-active' : ''}" onclick="selectQualifier('${mid}','away')">${af} ${away}</button>
+      </div>`;
+    };
+    const qReadHot = (curQ) => {
+      if (!isKnockoutHot || !curQ) return '';
+      const name = curQ === 'home' ? home : away;
+      const flag = curQ === 'home' ? (FLAGS_MAP[home] || '') : (FLAGS_MAP[away] || '');
+      return `<div class="bq-row"><span class="bq-label">Pasa:</span><span class="bq-val">${flag} ${name}</span></div>`;
+    };
 
     // Primera vez sin apuesta y ventana abierta → formulario
     const body = (!hasBet && open) ? `
-        ${betRow(home, away, `<input class="bet-score-input" type="number" min="0" max="20" id="h-${mid}" value="" placeholder="0"><span class="bet-dash">–</span><input class="bet-score-input" type="number" min="0" max="20" id="a-${mid}" value="" placeholder="0">`)}
+        ${betRow(home, away, `${inpHot('h-' + mid, '')}<span class="bet-dash">–</span>${inpHot('a-' + mid, '')}`)}
+        ${qEditHot(null)}
         <div class="bet-actions">
           <button class="bet-submit" onclick="submitBet('${mid}')">+ Apostar</button>
         </div>
         <div class="bet-lock-info">Cierra 5 min antes del pitido</div>` : `
         ${betRow(home, away, `<span class="bsr-score">${b.home_score ?? '–'}</span><span class="bet-dash">–</span><span class="bsr-score">${b.away_score ?? '–'}</span>`)}
+        ${qReadHot(b.qualifier)}
         <div class="bet-actions">
           ${hasBet ? '<span class="bet-saved">✓ Apuesta guardada</span>' : `<span class="bet-closed">Apuestas cerradas</span>`}
         </div>`;
@@ -1101,10 +1213,17 @@ async function renderMisApuestas(el) {
 
     const doubleBadge = double ? `<span class="bet-double-badge">🇪🇸 ×2</span>` : '';
     const isLiveBet = result?.status === 'live';
+    const isKO = result?.phase === 'knockout';
+    const betQualHtml = isKO && b.qualifier
+      ? `<div class="bq-row"><span class="bq-label">Apostaste pasa:</span><span class="bq-val">${b.qualifier === 'home' ? (FLAGS_MAP[home] || '') + ' ' + home : (FLAGS_MAP[away] || '') + ' ' + away}</span></div>`
+      : '';
+    const advHtml = isKO && result?.winner && !isLiveBet
+      ? ` · pasa ${result.winner === 'home' ? (FLAGS_MAP[home] || '') + ' ' + home : (FLAGS_MAP[away] || '') + ' ' + away}`
+      : '';
     const resultSection = result ? `
       <div class="bet-result-row">
         <span class="bet-result-label" style="${isLiveBet?'color:var(--pos)':''}">${isLiveBet?'● En vivo':'Resultado'}</span>
-        <span class="bet-result-score">${result.home_score} – ${result.away_score}</span>
+        <span class="bet-result-score">${result.home_score} – ${result.away_score}${advHtml}</span>
         ${ptsLabel(pts)}
       </div>` : '';
 
@@ -1119,6 +1238,7 @@ async function renderMisApuestas(el) {
         ${doubleBadge}
         <div class="bet-meta">${fmtDate(m[0])} · <span class="${isNight(m[1])?'night':''}">${m[1]}${isNight(m[1])?' 🌙':''}</span></div>
         ${betRow(home, away, `<span class="bsr-score">${b.home_score}</span><span class="bet-dash">–</span><span class="bsr-score">${b.away_score}</span>`)}
+        ${betQualHtml}
         ${resultSection}${verGrupo}
       </div>`;
   }).join('');
@@ -1155,7 +1275,7 @@ async function setTorneoLbScope(scope) {
 async function renderClasificacion(el) {
   const [{ data: allUsers }, { data: bets }, raw] = await Promise.all([
     db.from('users').select('id, name, group_id'),
-    db.from('bets').select('user_id, match_id, home_score, away_score'),
+    db.from('bets').select('user_id, match_id, home_score, away_score, qualifier'),
     getMatchResults(),
   ]);
 
@@ -1176,7 +1296,13 @@ async function renderClasificacion(el) {
 
   const resultMap = {};
   Object.entries(raw).forEach(([id, r]) => {
-    resultMap[id] = { home_score: r.home, away_score: r.away, status: r.status };
+    resultMap[id] = {
+      home_score: r.home_90 ?? r.home,
+      away_score: r.away_90 ?? r.away,
+      status: r.status,
+      phase: r.phase,
+      winner: r.winner,
+    };
   });
   const hasResults = Object.keys(raw).length > 0;
 

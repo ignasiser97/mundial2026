@@ -452,6 +452,16 @@ footer a:hover { color:var(--text); }
   cursor:pointer; transition:background .15s, color .15s;
 }
 .sq-btn:active { background:var(--accent); color:#000; }
+.bq-row { display:flex; align-items:center; gap:8px; padding:6px 0; }
+.bq-label { font-size:11px; color:var(--muted); white-space:nowrap; }
+.bq-val { font-size:13px; }
+.bq-btn {
+  flex:1; padding:7px 4px; border:1px solid var(--border); border-radius:8px;
+  background:transparent; color:var(--text); font-size:12px; cursor:pointer;
+  transition:background .15s, border-color .15s, color .15s;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.bq-btn.bq-active { background:var(--accent); border-color:var(--accent); color:#000; font-weight:700; }
 .bsr-tname--link { cursor:pointer; text-decoration:underline; text-decoration-color:var(--border); text-underline-offset:3px; }
 .bsr-tname--link:active { color:var(--accent); }
 #team-popup-overlay {

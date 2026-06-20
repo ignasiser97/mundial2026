@@ -7,11 +7,13 @@ Slug correcto: fifa.world  (no fifa.world-cup)
 import json
 import re
 import sys
-from datetime import datetime, timezone, date, timedelta
+from datetime import datetime, timezone, date as _date, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import requests
+
+KNOCKOUT_START = _date(2026, 6, 29)
 
 OUT_FILE = Path(__file__).parent.parent / "standings.json"
 MADRID   = ZoneInfo("Europe/Madrid")
@@ -88,9 +90,12 @@ def fetch_scoreboard(dates_param: str) -> dict:
 
 
 def parse_scoreboard(data: dict) -> tuple:
-    """Returns (results_dict, event_ids for ft matches)."""
-    results   = {}
-    event_ids = []
+    """Returns (results_dict, event_id_to_teams).
+
+    event_id_to_teams: {event_id: (home_es, away_es, mid, is_knockout)}
+    """
+    results          = {}
+    event_id_to_teams = {}
     for event in data.get("events", []):
         comp  = event.get("competitions", [{}])[0]
         state = comp.get("status", {}).get("type", {}).get("state", "")
@@ -110,16 +115,32 @@ def parse_scoreboard(data: dict) -> tuple:
         except Exception:
             continue
 
+        match_date  = _date.fromisoformat(date_str)
+        is_knockout = match_date >= KNOCKOUT_START
         mid    = to_match_id(home_es, away_es, date_str, time_str)
         status = "live" if state == "in" else "ft"
-        results[mid] = {
+
+        entry = {
             "home":   int(home.get("score") or 0),
             "away":   int(away.get("score") or 0),
             "status": status,
         }
+
+        # Determinar ganador y fase en partidos terminados de eliminatorias
         if status == "ft":
-            event_ids.append(event["id"])
-    return results, event_ids
+            if is_knockout:
+                entry["phase"] = "knockout"
+                home_winner = home.get("winner", False)
+                away_winner = away.get("winner", False)
+                if home_winner:
+                    entry["winner"] = "home"
+                elif away_winner:
+                    entry["winner"] = "away"
+            event_id_to_teams[event["id"]] = (home_es, away_es, mid, is_knockout)
+
+        results[mid] = entry
+
+    return results, event_id_to_teams
 
 
 def fetch_summary(event_id: str) -> dict:
@@ -133,18 +154,40 @@ def fetch_summary(event_id: str) -> dict:
     return resp.json()
 
 
-def parse_top_stats(event_ids: list) -> tuple:
-    """Extrae goles y asistencias de los keyEvents de cada partido."""
-    goals   = {}  # player -> {player, team, flag, goals, assists}
-    assists = {}
+def parse_summaries(event_id_to_teams: dict) -> tuple:
+    """Extrae goles, asistencias y marcadores a 90 min de cada partido.
 
-    for eid in event_ids:
+    Returns (top_scorers, top_assists, knockout_90_scores)
+    knockout_90_scores: {mid: (home_90, away_90)}
+    """
+    goals              = {}  # player -> {player, team, flag, goals, assists}
+    assists            = {}
+    knockout_90_scores = {}
+
+    for eid, (home_es, away_es, mid, is_knockout) in event_id_to_teams.items():
         try:
             data = fetch_summary(eid)
         except Exception as e:
             print(f"  AVISO summary {eid}: {e}", file=sys.stderr)
             continue
 
+        # Marcador a 90 min para eliminatorias
+        if is_knockout:
+            home_90, away_90, in_reg = 0, 0, True
+            for ke in data.get("keyEvents", []):
+                t = ke.get("type", {}).get("type", "")
+                if t == "end-regular-time":
+                    in_reg = False
+                if ke.get("scoringPlay") and in_reg:
+                    team_en = ke.get("team", {}).get("displayName", "")
+                    team_es = NAMES_ES.get(team_en, team_en)
+                    if team_es == home_es:
+                        home_90 += 1
+                    elif team_es == away_es:
+                        away_90 += 1
+            knockout_90_scores[mid] = (home_90, away_90)
+
+        # Goles y asistencias
         for ke in data.get("keyEvents", []):
             if ke.get("type", {}).get("type") != "goal":
                 continue
@@ -169,33 +212,33 @@ def parse_top_stats(event_ids: list) -> tuple:
 
     top_scorers = sorted(goals.values(),   key=lambda x: -x["goals"])[:20]
     top_assists = sorted(assists.values(), key=lambda x: -x["assists"])[:20]
-    return top_scorers, top_assists
+    return top_scorers, top_assists, knockout_90_scores
 
 
 def fetch_all_results(existing: dict) -> tuple:
-    """Recorre día a día desde el 11 jun hasta hoy. Returns (results, event_ids)."""
-    start = date(2026, 6, 11)
+    """Recorre día a día desde el 11 jun hasta hoy. Returns (results, event_id_to_teams)."""
+    start = _date(2026, 6, 11)
     today = datetime.now(MADRID).date()
-    results   = dict(existing)
-    event_ids = []
+    results           = dict(existing)
+    event_id_to_teams = {}
 
     d = start
     while d <= today:
         dates_param = d.strftime("%Y%m%d")
         try:
             data = fetch_scoreboard(dates_param)
-            day_results, day_ids = parse_scoreboard(data)
+            day_results, day_teams = parse_scoreboard(data)
             for mid, r in day_results.items():
                 if r["status"] == "ft" or mid not in results:
                     results[mid] = r
-            event_ids.extend(day_ids)
+            event_id_to_teams.update(day_teams)
             if day_results:
                 print(f"  {d}: {len(day_results)} partidos")
         except Exception as e:
             print(f"  AVISO {d}: {e}", file=sys.stderr)
         d += timedelta(days=1)
 
-    return results, event_ids
+    return results, event_id_to_teams
 
 
 def fetch_groups() -> dict:
@@ -248,8 +291,8 @@ def main():
             pass
 
     print("Obteniendo resultados (ESPN, día a día)…")
-    match_results, event_ids = fetch_all_results(existing.get("matchResults", {}))
-    print(f"  → {len(match_results)} resultados, {len(event_ids)} partidos terminados")
+    match_results, event_id_to_teams = fetch_all_results(existing.get("matchResults", {}))
+    print(f"  → {len(match_results)} resultados, {len(event_id_to_teams)} partidos terminados")
 
     print("Obteniendo clasificaciones (ESPN standings)…")
     try:
@@ -263,10 +306,15 @@ def main():
         print("Sin datos de grupos — standings.json no se actualiza.", file=sys.stderr)
         sys.exit(0)
 
-    print(f"Obteniendo goleadores/asistentes ({len(event_ids)} summaries)…")
-    if event_ids:
-        top_scorers, top_assists = parse_top_stats(event_ids)
-        print(f"  → {len(top_scorers)} goleadores, {len(top_assists)} asistentes")
+    print(f"Obteniendo goleadores/asistentes ({len(event_id_to_teams)} summaries)…")
+    if event_id_to_teams:
+        top_scorers, top_assists, knockout_90 = parse_summaries(event_id_to_teams)
+        print(f"  → {len(top_scorers)} goleadores, {len(top_assists)} asistentes, {len(knockout_90)} marcadores 90min")
+        # Aplicar marcadores a 90 min para partidos de eliminatorias
+        for mid, (h90, a90) in knockout_90.items():
+            if mid in match_results:
+                match_results[mid]["home_90"] = h90
+                match_results[mid]["away_90"] = a90
     else:
         top_scorers = existing.get("topScorers", [])
         top_assists = existing.get("topAssists", [])
