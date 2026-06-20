@@ -20,35 +20,32 @@
 - [x] Próxima apuesta que cierra — bloque urgente en home de Quiniela con countdown en tiempo real
 - [x] Quiniela multigrupo: clasificación de torneo con filtro Mi grupo/Todos; apuestas de partido filtradas al grupo propio (Ver grupo, dropdown contador)
 - [x] Live scores: CF Worker proxy (mundial-live-scores.ignasiser97.workers.dev) + polling 60s en home + status live/ft en calendar, home y quiniela
-- [x] Apostar: ocultar partidos con resultado final (status ft); popup de resultados al clickar equipo
+- [x] Apostar: ocultar partidos con resultado final (status ft); popup de resultados al clickar equipo; hint one-time de anuncio
+- [x] Scraper: fix `to_spain_dt` (fromisoformat no soportaba sufijo `Z` en Python <3.11 → resultados silenciosamente perdidos); recuperados 7 partidos desde el 18 jun
+- [x] matches.js: hora Brasil vs Haití corregida 03:00 → 02:30 (ESPN marcó 00:30 UTC); MATCHES.sort() al cargar para garantizar orden cronológico siempre; fix entradas fuera de orden en 14 jun y 20 jun
 
 ## Pendiente
 
-### Inicio durante el torneo
-- [ ] Cuando el torneo esté en marcha, la página de Inicio muestra los partidos del día en grande: cuenta atrás a cada kickoff, canal, estadio, y resultado en directo si el partido ya ha empezado. Si no hay partidos hoy, mostrar los próximos. La cuenta atrás global al Mundial desaparece o pasa a secundaria.
-
-### Quiniela Cachorros
+### Quiniela
 - [ ] Desarrollar más funcionalidad según avance el torneo
 
 ### Otros
 - [ ] Marcador en directo dentro del partido (score live durante el partido)
-- [ ] Resultados de partidos ya jugados (marcadores finales en el calendario y en Apuestas pasadas)
 - [ ] Notificaciones push — infraestructura lista (SW, push.js, GitHub Actions cron, tablas Supabase), pendiente depurar inyección VAPID key y activar botón (#push-section oculto por CSS)
 - [ ] Comparador de estadísticas entre jugadores
 
-## Cuando empiece el Mundial (11 jun)
+## Estado del torneo (actualizado 20 jun)
 
-- [ ] **Activar home live**: cambiar `HOME_PREVIEW_STARTED = false` → el switch es automático por fecha, no hay que tocarlo
-- [ ] **Verificar ESPN scoreboard**: comprobar si `site.api.espn.com/apis/site/v2/sports/soccer/fifa.world-cup/scoreboard` devuelve solo partidos de hoy o el historial completo del torneo. Si devuelve historial, eliminar `matchResults` del scraper y usar únicamente el CF Worker (una sola fuente, sin merge). Si no, mantener el merge actual.
-- [ ] **Verificar slug ESPN**: confirmar que el slug `fifa.world-cup` es correcto en producción o descubrir el definitivo (el Worker tiene fallback al scoreboard general)
-- [ ] **Comprobar match_id del Worker**: verificar que los IDs generados por el CF Worker (ESPN) coinciden exactamente con los de `matchId()` en el frontend para al menos los primeros partidos
-- [ ] **Ajustar ventana de live polling**: actualmente `_liveInterval` se activa si un partido está dentro de los 130 min desde el kickoff — verificar que cubre prórrogas y penaltis correctamente
+- [x] **Home live activo**: `HOME_PREVIEW_STARTED` automático por fecha desde el 11 jun
+- [x] **Slug ESPN confirmado**: `fifa.world` (no `fifa.world-cup`); scraper y Worker funcionando
+- [x] **match_id verificado**: IDs del scraper coinciden con `matchId()` del frontend (salvo el caso Brasil-Haití resuelto por hora real vs programada)
+- [x] **Alineaciones ESPN exploradas**: `summary?event={id}` devuelve `rosters` (titulares, suplentes, formación, `subbedIn/Out`) y `keyEvents` (goles, tarjetas, cambios con minuto). Dato disponible ~1h antes del pitido. Descartado implementar por ahora.
 - [ ] **Activar botón de notificaciones push**: descomentar `#push-section` en CSS y depurar inyección de VAPID key en el deploy
-- [ ] **Alineaciones vía ESPN**: el scoreboard ya devuelve `event.id` por partido — con ese ID se puede pegar a `site.api.espn.com/apis/site/v2/sports/soccer/fifa.world-cup/summary?event={id}` para obtener alineaciones, formación, goles y tarjetas. Verificar estructura de respuesta y cuándo publica ESPN las alineaciones oficiales (~1h antes del partido). Requiere guardar el ESPN event ID en el CF Worker y exponerlo al frontend.
+- [ ] **Ajustar ventana de live polling**: verificar que los 130 min desde kickoff cubren prórrogas y penaltis
 
 ## Ideas a valorar
 - [ ] "Yo estuve aquí" — botón por partido, activo solo durante la ventana del partido (mismo criterio que el chat: día del partido hasta kickoff +3h). Un click por usuario por partido. Al final del mundial, contador de partidos vistos visible en Apuestas. Auth: login de Apuestas. Tabla: `checkins (id, match_id, user_id, created_at)`, unique constraint en (match_id, user_id).
 - [ ] Chat por partido — comentarios en tiempo real (Supabase Realtime). Ventana: día del partido hasta kickoff +3h. Auth: login de Apuestas (solo lectura si no estás logueado). Tabla: `comments (id, match_id, user_id, text varchar(140), created_at)`. UI: icono 💬 en fila del Calendario cuando el chat está activo.
-- [ ] Alineaciones por partido — investigar fuente de datos (API-Football /fixtures/lineups, Wikipedia, Sofascore scraping)
+- [ ] Alineaciones por partido — datos disponibles vía ESPN `summary?event={id}` (rosters + keyEvents); descartado por ahora pero trivial de añadir
 - [ ] Widget de "próximo partido de España" para compartir como imagen
 - [ ] Historial de ediciones anteriores del Mundial
