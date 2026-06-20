@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-20T19:23:47Z",
+  "updated": "2026-06-20T21:16:58Z",
   "groups": {
     "A": [
       {
@@ -1051,6 +1051,11 @@
       "home": 5,
       "away": 1,
       "status": "ft"
+    },
+    "2026-06-20_22:00_Alemania_vs_CostadeMarfil": {
+      "home": 0,
+      "away": 1,
+      "status": "live"
     }
   }
 }
