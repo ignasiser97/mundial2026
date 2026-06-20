@@ -1037,14 +1037,14 @@
       "away": 1,
       "status": "ft"
     },
-    "2026-06-20_02:30_Brasil_vs_Haití": {
-      "home": 3,
-      "away": 0,
-      "status": "ft"
-    },
     "2026-06-20_05:00_Turquía_vs_Paraguay": {
       "home": 0,
       "away": 1,
+      "status": "ft"
+    },
+    "2026-06-20_03:00_Brasil_vs_Haití": {
+      "home": 3,
+      "away": 0,
       "status": "ft"
     }
   }

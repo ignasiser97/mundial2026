@@ -62,11 +62,18 @@ def to_spain_dt(iso_date: str):
     return dt.strftime("%Y-%m-%d"), dt.strftime("%H:%M")
 
 
+# Partidos que ESPN marcó a hora distinta de la programada en matches.js.
+# La key de Supabase se genera desde matches.js, así que usamos la hora programada.
+TIME_CORRECTIONS = {
+    "2026-06-20_02:30_Brasil_vs_Haití": "2026-06-20_03:00_Brasil_vs_Haití",
+}
+
 def to_match_id(home_es: str, away_es: str, date_str: str, time_str: str) -> str:
     label = f"{home_es} vs {away_es}"
     label = re.sub(r"\s+vs\s+", "_vs_", label)
     label = label.replace(" ", "")
-    return f"{date_str}_{time_str}_{label}"
+    mid = f"{date_str}_{time_str}_{label}"
+    return TIME_CORRECTIONS.get(mid, mid)
 
 
 def fetch_scoreboard(dates_param: str) -> dict:
