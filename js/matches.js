@@ -34,7 +34,7 @@ const MATCHES = [
   ['2026-06-20','05:00','Turquía vs Paraguay · Grupo D',           "Levi's Stadium, San Francisco",        'USA','d', 0,'groups'],
   ['2026-06-19','21:00','Estados Unidos vs Australia · Grupo D',   'Lumen Field, Seattle',                  'USA','dl',0,'groups'],
   ['2026-06-20','00:00','Escocia vs Marruecos · Grupo C',          'Lincoln Financial Field, Filadelfia',   'USA','d', 0,'groups'],
-  ['2026-06-20','03:00','Brasil vs Haití · Grupo C',               'Gillette Stadium, Boston',              'USA','d', 0,'groups'],
+  ['2026-06-20','02:30','Brasil vs Haití · Grupo C',               'Gillette Stadium, Boston',              'USA','d', 0,'groups'],
   ['2026-06-20','19:00','Países Bajos vs Suecia · Grupo F',        'NRG Stadium, Houston',                  'USA','dl',0,'groups'],
   ['2026-06-20','22:00','Alemania vs Costa de Marfil · Grupo E',   'BMO Field, Toronto',                   'CAN','dl',0,'groups'],
   ['2026-06-21','02:00','Ecuador vs Curazao · Grupo E',            'Arrowhead Stadium, Kansas City',        'USA','d', 0,'groups'],

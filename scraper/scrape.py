@@ -58,7 +58,7 @@ FLAGS = {
 
 
 def to_spain_dt(iso_date: str):
-    dt = datetime.fromisoformat(iso_date).astimezone(MADRID)
+    dt = datetime.fromisoformat(iso_date.replace("Z", "+00:00")).astimezone(MADRID)
     return dt.strftime("%Y-%m-%d"), dt.strftime("%H:%M")
 
 
