@@ -811,7 +811,7 @@ async function renderApostar(el) {
 
   const sections = upcomingDates.map(date => {
     const label = date === today ? `Hoy · ${fmtDate(date)}` : fmtDate(date);
-    const cards = MATCHES.filter(m => m[0] === date && !isFinished(matchId(m))).map(m => {
+    const cards = MATCHES.filter(m => m[0] === date && !isFinished(matchId(m))).sort((a,b)=>a[1].localeCompare(b[1])).map(m => {
       const mid     = matchId(m);
       const saved   = qnlBets[mid];
       const open    = isBetOpen(m);
