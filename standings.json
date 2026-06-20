@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-19T22:02:48Z",
+  "updated": "2026-06-20T00:08:33Z",
   "groups": {
     "A": [
       {
@@ -117,13 +117,13 @@
       {
         "team": "Escocia",
         "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-        "pj": 1,
+        "pj": 2,
         "g": 1,
         "e": 0,
-        "p": 0,
+        "p": 1,
         "gf": 1,
-        "gc": 0,
-        "dg": 1,
+        "gc": 1,
+        "dg": 0,
         "pts": 3
       },
       {
@@ -141,14 +141,14 @@
       {
         "team": "Marruecos",
         "flag": "🇲🇦",
-        "pj": 1,
-        "g": 0,
+        "pj": 2,
+        "g": 1,
         "e": 1,
         "p": 0,
-        "gf": 1,
+        "gf": 2,
         "gc": 1,
-        "dg": 0,
-        "pts": 1
+        "dg": 1,
+        "pts": 4
       }
     ],
     "D": [
@@ -625,6 +625,13 @@
       "assists": 0
     },
     {
+      "player": "Ismael Saibari",
+      "team": "Marruecos",
+      "flag": "🇲🇦",
+      "goals": 2,
+      "assists": 0
+    },
+    {
       "player": "Yasin Ayari",
       "team": "Suecia",
       "flag": "🇸🇪",
@@ -688,13 +695,6 @@
       "assists": 0
     },
     {
-      "player": "Ismael Saibari",
-      "team": "Marruecos",
-      "flag": "🇲🇦",
-      "goals": 1,
-      "assists": 0
-    },
-    {
       "player": "Vinícius Júnior",
       "team": "Brasil",
       "flag": "🇧🇷",
@@ -745,6 +745,13 @@
     }
   ],
   "topAssists": [
+    {
+      "player": "Brahim Díaz",
+      "team": "Marruecos",
+      "flag": "🇲🇦",
+      "goals": 0,
+      "assists": 2
+    },
     {
       "player": "Joshua Kimmich",
       "team": "Alemania",
@@ -819,13 +826,6 @@
       "player": "Alex Freeman",
       "team": "Estados Unidos",
       "flag": "🇺🇸",
-      "goals": 0,
-      "assists": 1
-    },
-    {
-      "player": "Brahim Díaz",
-      "team": "Marruecos",
-      "flag": "🇲🇦",
       "goals": 0,
       "assists": 1
     },
@@ -1035,7 +1035,7 @@
     "2026-06-20_00:00_Escocia_vs_Marruecos": {
       "home": 0,
       "away": 1,
-      "status": "live"
+      "status": "ft"
     }
   }
 }
