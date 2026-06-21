@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-21T21:12:25Z",
+  "updated": "2026-06-21T23:10:40Z",
   "groups": {
     "A": [
       {
@@ -1076,6 +1076,11 @@
       "home": 0,
       "away": 0,
       "status": "ft"
+    },
+    "2026-06-22_00:00_Uruguay_vs_CaboVerde": {
+      "home": 2,
+      "away": 1,
+      "status": "live"
     }
   }
 }
