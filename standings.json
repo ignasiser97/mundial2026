@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-21T19:27:24Z",
+  "updated": "2026-06-21T21:12:25Z",
   "groups": {
     "A": [
       {
@@ -305,26 +305,26 @@
       {
         "team": "Bélgica",
         "flag": "🇧🇪",
-        "pj": 1,
+        "pj": 2,
         "g": 0,
-        "e": 1,
+        "e": 2,
         "p": 0,
         "gf": 1,
         "gc": 1,
         "dg": 0,
-        "pts": 1
+        "pts": 2
       },
       {
         "team": "RI de Irán",
         "flag": "🇮🇷",
-        "pj": 1,
+        "pj": 2,
         "g": 0,
-        "e": 1,
+        "e": 2,
         "p": 0,
         "gf": 2,
         "gc": 2,
         "dg": 0,
-        "pts": 1
+        "pts": 2
       },
       {
         "team": "Egipto",
@@ -716,13 +716,6 @@
       "assists": 0
     },
     {
-      "player": "Mikel Oyarzabal",
-      "team": "España",
-      "flag": "🇪🇸",
-      "goals": 2,
-      "assists": 0
-    },
-    {
       "player": "Julián Quiñones",
       "team": "México",
       "flag": "🇲🇽",
@@ -740,6 +733,13 @@
       "player": "Oh Hyeon-Gyu",
       "team": "Corea del Sur",
       "flag": "🇰🇷",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Maurício",
+      "team": "Paraguay",
+      "flag": "🇵🇾",
       "goals": 1,
       "assists": 0
     }
@@ -1074,8 +1074,8 @@
     },
     "2026-06-21_21:00_Bélgica_vs_RIdeIrán": {
       "home": 0,
-      "away": 1,
-      "status": "live"
+      "away": 0,
+      "status": "ft"
     }
   }
 }
