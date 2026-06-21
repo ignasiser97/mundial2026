@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-21T17:26:11Z",
+  "updated": "2026-06-21T19:27:24Z",
   "groups": {
     "A": [
       {
@@ -355,14 +355,14 @@
       {
         "team": "España",
         "flag": "🇪🇸",
-        "pj": 1,
-        "g": 0,
+        "pj": 2,
+        "g": 1,
         "e": 1,
         "p": 0,
-        "gf": 0,
+        "gf": 4,
         "gc": 0,
-        "dg": 0,
-        "pts": 1
+        "dg": 4,
+        "pts": 4
       },
       {
         "team": "Uruguay",
@@ -379,13 +379,13 @@
       {
         "team": "Arabia Saudí",
         "flag": "🇸🇦",
-        "pj": 1,
+        "pj": 2,
         "g": 0,
         "e": 1,
-        "p": 0,
+        "p": 1,
         "gf": 1,
-        "gc": 1,
-        "dg": 0,
+        "gc": 5,
+        "dg": -4,
         "pts": 1
       },
       {
@@ -716,6 +716,13 @@
       "assists": 0
     },
     {
+      "player": "Mikel Oyarzabal",
+      "team": "España",
+      "flag": "🇪🇸",
+      "goals": 2,
+      "assists": 0
+    },
+    {
       "player": "Julián Quiñones",
       "team": "México",
       "flag": "🇲🇽",
@@ -733,13 +740,6 @@
       "player": "Oh Hyeon-Gyu",
       "team": "Corea del Sur",
       "flag": "🇰🇷",
-      "goals": 1,
-      "assists": 0
-    },
-    {
-      "player": "Maurício",
-      "team": "Paraguay",
-      "flag": "🇵🇾",
       "goals": 1,
       "assists": 0
     }
@@ -1070,6 +1070,11 @@
     "2026-06-21_18:00_España_vs_ArabiaSaudí": {
       "home": 4,
       "away": 0,
+      "status": "ft"
+    },
+    "2026-06-21_21:00_Bélgica_vs_RIdeIrán": {
+      "home": 0,
+      "away": 1,
       "status": "live"
     }
   }
