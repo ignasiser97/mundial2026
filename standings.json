@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-20T23:06:37Z",
+  "updated": "2026-06-21T04:02:59Z",
   "groups": {
     "A": [
       {
@@ -205,14 +205,14 @@
       {
         "team": "Ecuador",
         "flag": "🇪🇨",
-        "pj": 1,
+        "pj": 2,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 1,
         "gf": 0,
         "gc": 1,
         "dg": -1,
-        "pts": 0
+        "pts": 1
       },
       {
         "team": "Alemania",
@@ -241,14 +241,14 @@
       {
         "team": "Curazao",
         "flag": "🇨🇼",
-        "pj": 1,
+        "pj": 2,
         "g": 0,
-        "e": 0,
+        "e": 1,
         "p": 1,
         "gf": 1,
         "gc": 7,
         "dg": -6,
-        "pts": 0
+        "pts": 1
       }
     ],
     "F": [
@@ -604,13 +604,6 @@
   },
   "topScorers": [
     {
-      "player": "Deniz Undav",
-      "team": "Alemania",
-      "flag": "🇩🇪",
-      "goals": 3,
-      "assists": 0
-    },
-    {
       "player": "Lionel Messi",
       "team": "Argentina",
       "flag": "🇦🇷",
@@ -649,6 +642,13 @@
       "player": "Vinícius Júnior",
       "team": "Brasil",
       "flag": "🇧🇷",
+      "goals": 2,
+      "assists": 0
+    },
+    {
+      "player": "Deniz Undav",
+      "team": "Alemania",
+      "flag": "🇩🇪",
       "goals": 2,
       "assists": 0
     },
@@ -1056,6 +1056,16 @@
       "home": 2,
       "away": 1,
       "status": "ft"
+    },
+    "2026-06-21_02:00_Ecuador_vs_Curazao": {
+      "home": 0,
+      "away": 0,
+      "status": "ft"
+    },
+    "2026-06-21_06:00_Túnez_vs_Japón": {
+      "home": 0,
+      "away": 0,
+      "status": "live"
     }
   }
 }
