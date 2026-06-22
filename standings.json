@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-22T18:12:06Z",
+  "updated": "2026-06-22T21:30:56Z",
   "groups": {
     "A": [
       {
@@ -455,25 +455,25 @@
       {
         "team": "Argentina",
         "flag": "🇦🇷",
-        "pj": 1,
-        "g": 1,
+        "pj": 2,
+        "g": 2,
         "e": 0,
         "p": 0,
-        "gf": 3,
+        "gf": 5,
         "gc": 0,
-        "dg": 3,
-        "pts": 3
+        "dg": 5,
+        "pts": 6
       },
       {
         "team": "Austria",
         "flag": "🇦🇹",
-        "pj": 1,
+        "pj": 2,
         "g": 1,
         "e": 0,
-        "p": 0,
+        "p": 1,
         "gf": 3,
-        "gc": 1,
-        "dg": 2,
+        "gc": 3,
+        "dg": 0,
         "pts": 3
       },
       {
@@ -604,16 +604,16 @@
   },
   "topScorers": [
     {
-      "player": "Deniz Undav",
-      "team": "Alemania",
-      "flag": "🇩🇪",
-      "goals": 3,
-      "assists": 0
-    },
-    {
       "player": "Lionel Messi",
       "team": "Argentina",
       "flag": "🇦🇷",
+      "goals": 5,
+      "assists": 0
+    },
+    {
+      "player": "Deniz Undav",
+      "team": "Alemania",
+      "flag": "🇩🇪",
       "goals": 3,
       "assists": 0
     },
@@ -1088,6 +1088,11 @@
       "status": "ft"
     },
     "2026-06-22_19:00_Argentina_vs_Austria": {
+      "home": 2,
+      "away": 0,
+      "status": "ft"
+    },
+    "2026-06-22_23:00_Francia_vs_Irak": {
       "home": 1,
       "away": 0,
       "status": "live"
