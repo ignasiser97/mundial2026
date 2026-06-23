@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-23T21:42:32Z",
+  "updated": "2026-06-23T23:07:47Z",
   "groups": {
     "A": [
       {
@@ -555,14 +555,14 @@
       {
         "team": "Inglaterra",
         "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-        "pj": 1,
+        "pj": 2,
         "g": 1,
-        "e": 0,
+        "e": 1,
         "p": 0,
         "gf": 4,
         "gc": 2,
         "dg": 2,
-        "pts": 3
+        "pts": 4
       },
       {
         "team": "Croacia",
@@ -591,14 +591,14 @@
       {
         "team": "Ghana",
         "flag": "🇬🇭",
-        "pj": 1,
+        "pj": 2,
         "g": 1,
-        "e": 0,
+        "e": 1,
         "p": 0,
         "gf": 1,
         "gc": 0,
         "dg": 1,
-        "pts": 3
+        "pts": 4
       }
     ]
   },
@@ -1113,6 +1113,11 @@
       "status": "ft"
     },
     "2026-06-23_22:00_Inglaterra_vs_Ghana": {
+      "home": 0,
+      "away": 0,
+      "status": "ft"
+    },
+    "2026-06-24_01:00_Panamá_vs_Croacia": {
       "home": 0,
       "away": 0,
       "status": "live"
