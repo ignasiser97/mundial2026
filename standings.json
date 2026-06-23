@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-23T19:30:15Z",
+  "updated": "2026-06-23T21:42:32Z",
   "groups": {
     "A": [
       {
@@ -730,16 +730,16 @@
       "assists": 0
     },
     {
-      "player": "Cristiano Ronaldo",
-      "team": "Portugal",
-      "flag": "🇵🇹",
-      "goals": 2,
-      "assists": 0
-    },
-    {
       "player": "Julián Quiñones",
       "team": "México",
       "flag": "🇲🇽",
+      "goals": 1,
+      "assists": 0
+    },
+    {
+      "player": "Hwang In-Beom",
+      "team": "Corea del Sur",
+      "flag": "🇰🇷",
       "goals": 1,
       "assists": 0
     }
@@ -1111,6 +1111,11 @@
       "home": 5,
       "away": 0,
       "status": "ft"
+    },
+    "2026-06-23_22:00_Inglaterra_vs_Ghana": {
+      "home": 0,
+      "away": 0,
+      "status": "live"
     }
   }
 }
