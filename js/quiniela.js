@@ -1272,11 +1272,28 @@ async function setTorneoLbScope(scope) {
   await renderTorneoClasificacion(el);
 }
 
+async function fetchAllBets() {
+  const PAGE = 1000;
+  let all = [], page = 0;
+  while (true) {
+    const { data } = await db.from('bets')
+      .select('user_id, match_id, home_score, away_score, qualifier')
+      .range(page * PAGE, (page + 1) * PAGE - 1);
+    if (!data?.length) break;
+    all = all.concat(data);
+    if (data.length < PAGE) break;
+    page++;
+  }
+  return all;
+}
+
 async function renderClasificacion(el) {
-  const [{ data: allUsers }, { data: bets }, raw] = await Promise.all([
-    db.from('users').select('id, name, group_id'),
-    db.from('bets').select('user_id, match_id, home_score, away_score, qualifier').limit(5000),
-    getMatchResults(),
+  const [[{ data: allUsers }, raw], bets] = await Promise.all([
+    Promise.all([
+      db.from('users').select('id, name, group_id'),
+      getMatchResults(),
+    ]),
+    fetchAllBets(),
   ]);
 
   if (!allUsers?.length) {
