@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-23T07:47:33Z",
+  "updated": "2026-06-23T16:26:34Z",
   "groups": {
     "A": [
       {
@@ -618,16 +618,16 @@
       "assists": 0
     },
     {
-      "player": "Deniz Undav",
-      "team": "Alemania",
-      "flag": "🇩🇪",
-      "goals": 3,
-      "assists": 0
-    },
-    {
       "player": "Erling Haaland",
       "team": "Noruega",
       "flag": "🇳🇴",
+      "goals": 4,
+      "assists": 0
+    },
+    {
+      "player": "Deniz Undav",
+      "team": "Alemania",
+      "flag": "🇩🇪",
       "goals": 3,
       "assists": 0
     },
