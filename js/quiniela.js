@@ -1275,7 +1275,7 @@ async function setTorneoLbScope(scope) {
 async function renderClasificacion(el) {
   const [{ data: allUsers }, { data: bets }, raw] = await Promise.all([
     db.from('users').select('id, name, group_id'),
-    db.from('bets').select('user_id, match_id, home_score, away_score, qualifier'),
+    db.from('bets').select('user_id, match_id, home_score, away_score, qualifier').limit(5000),
     getMatchResults(),
   ]);
 
