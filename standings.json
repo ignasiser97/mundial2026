@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-24T18:50:33Z",
+  "updated": "2026-06-24T20:47:15Z",
   "groups": {
     "A": [
       {
@@ -1126,6 +1126,16 @@
       "home": 1,
       "away": 0,
       "status": "ft"
+    },
+    "2026-06-24_21:00_Bosnia_vs_Catar": {
+      "home": 3,
+      "away": 1,
+      "status": "live"
+    },
+    "2026-06-24_21:00_Suiza_vs_Canadá": {
+      "home": 2,
+      "away": 1,
+      "status": "live"
     }
   }
 }
