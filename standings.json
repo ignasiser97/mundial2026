@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-24T03:27:24Z",
+  "updated": "2026-06-24T07:38:48Z",
   "groups": {
     "A": [
       {
@@ -505,14 +505,14 @@
       {
         "team": "Colombia",
         "flag": "🇨🇴",
-        "pj": 1,
-        "g": 1,
+        "pj": 2,
+        "g": 2,
         "e": 0,
         "p": 0,
-        "gf": 3,
+        "gf": 4,
         "gc": 1,
-        "dg": 2,
-        "pts": 3
+        "dg": 3,
+        "pts": 6
       },
       {
         "team": "Portugal",
@@ -541,13 +541,13 @@
       {
         "team": "RD Congo",
         "flag": "🇨🇩",
-        "pj": 1,
+        "pj": 2,
         "g": 0,
         "e": 1,
-        "p": 0,
+        "p": 1,
         "gf": 1,
-        "gc": 1,
-        "dg": 0,
+        "gc": 2,
+        "dg": -1,
         "pts": 1
       }
     ],
@@ -688,6 +688,13 @@
       "assists": 0
     },
     {
+      "player": "Daniel Muñoz",
+      "team": "Colombia",
+      "flag": "🇨🇴",
+      "goals": 2,
+      "assists": 0
+    },
+    {
       "player": "Johan Manzambi",
       "team": "Suiza",
       "flag": "🇨🇭",
@@ -733,13 +740,6 @@
       "player": "Julián Quiñones",
       "team": "México",
       "flag": "🇲🇽",
-      "goals": 1,
-      "assists": 0
-    },
-    {
-      "player": "Hwang In-Beom",
-      "team": "Corea del Sur",
-      "flag": "🇰🇷",
       "goals": 1,
       "assists": 0
     }
@@ -1123,9 +1123,9 @@
       "status": "ft"
     },
     "2026-06-24_04:00_Colombia_vs_RDCongo": {
-      "home": 0,
+      "home": 1,
       "away": 0,
-      "status": "live"
+      "status": "ft"
     }
   }
 }
