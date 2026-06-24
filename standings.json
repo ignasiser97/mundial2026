@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-24T20:47:15Z",
+  "updated": "2026-06-24T22:16:00Z",
   "groups": {
     "A": [
       {
@@ -55,49 +55,49 @@
       {
         "team": "Canadá",
         "flag": "🇨🇦",
-        "pj": 2,
+        "pj": 3,
         "g": 1,
         "e": 1,
-        "p": 0,
-        "gf": 7,
-        "gc": 1,
-        "dg": 6,
+        "p": 1,
+        "gf": 8,
+        "gc": 3,
+        "dg": 5,
         "pts": 4
       },
       {
         "team": "Bosnia",
         "flag": "🇧🇦",
-        "pj": 2,
-        "g": 0,
+        "pj": 3,
+        "g": 1,
         "e": 1,
         "p": 1,
-        "gf": 2,
-        "gc": 5,
-        "dg": -3,
-        "pts": 1
+        "gf": 5,
+        "gc": 6,
+        "dg": -1,
+        "pts": 4
       },
       {
         "team": "Suiza",
         "flag": "🇨🇭",
-        "pj": 2,
-        "g": 1,
+        "pj": 3,
+        "g": 2,
         "e": 1,
         "p": 0,
-        "gf": 5,
-        "gc": 2,
-        "dg": 3,
-        "pts": 4
+        "gf": 7,
+        "gc": 3,
+        "dg": 4,
+        "pts": 7
       },
       {
         "team": "Catar",
         "flag": "🇶🇦",
-        "pj": 2,
+        "pj": 3,
         "g": 0,
         "e": 1,
-        "p": 1,
-        "gf": 1,
-        "gc": 7,
-        "dg": -6,
+        "p": 2,
+        "gf": 2,
+        "gc": 10,
+        "dg": -8,
         "pts": 1
       }
     ],
@@ -632,6 +632,13 @@
       "assists": 0
     },
     {
+      "player": "Johan Manzambi",
+      "team": "Suiza",
+      "flag": "🇨🇭",
+      "goals": 3,
+      "assists": 0
+    },
+    {
       "player": "Jonathan David",
       "team": "Canadá",
       "flag": "🇨🇦",
@@ -695,9 +702,16 @@
       "assists": 0
     },
     {
-      "player": "Johan Manzambi",
+      "player": "Rubén Vargas",
       "team": "Suiza",
       "flag": "🇨🇭",
+      "goals": 2,
+      "assists": 0
+    },
+    {
+      "player": "Ermin Mahmic",
+      "team": "Bosnia",
+      "flag": "🇧🇦",
       "goals": 2,
       "assists": 0
     },
@@ -727,20 +741,6 @@
       "team": "España",
       "flag": "🇪🇸",
       "goals": 2,
-      "assists": 0
-    },
-    {
-      "player": "Ismaïla Sarr",
-      "team": "Senegal",
-      "flag": "🇸🇳",
-      "goals": 2,
-      "assists": 0
-    },
-    {
-      "player": "Julián Quiñones",
-      "team": "México",
-      "flag": "🇲🇽",
-      "goals": 1,
       "assists": 0
     }
   ],
@@ -784,6 +784,13 @@
       "player": "Chris Wood",
       "team": "Nueva Zelanda",
       "flag": "🇳🇿",
+      "goals": 0,
+      "assists": 2
+    },
+    {
+      "player": "Breel Embolo",
+      "team": "Suiza",
+      "flag": "🇨🇭",
       "goals": 0,
       "assists": 2
     },
@@ -875,13 +882,6 @@
       "player": "Takefusa Kubo",
       "team": "Japón",
       "flag": "🇯🇵",
-      "goals": 0,
-      "assists": 1
-    },
-    {
-      "player": "Ryan Gravenberch",
-      "team": "Países Bajos",
-      "flag": "🇳🇱",
       "goals": 0,
       "assists": 1
     }
@@ -1130,10 +1130,20 @@
     "2026-06-24_21:00_Bosnia_vs_Catar": {
       "home": 3,
       "away": 1,
-      "status": "live"
+      "status": "ft"
     },
     "2026-06-24_21:00_Suiza_vs_Canadá": {
       "home": 2,
+      "away": 1,
+      "status": "ft"
+    },
+    "2026-06-25_00:00_Marruecos_vs_Haití": {
+      "home": 0,
+      "away": 1,
+      "status": "live"
+    },
+    "2026-06-25_00:00_Escocia_vs_Brasil": {
+      "home": 0,
       "away": 1,
       "status": "live"
     }
