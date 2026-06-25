@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-24T22:16:00Z",
+  "updated": "2026-06-25T00:11:06Z",
   "groups": {
     "A": [
       {
@@ -105,50 +105,50 @@
       {
         "team": "Brasil",
         "flag": "🇧🇷",
-        "pj": 2,
-        "g": 1,
+        "pj": 3,
+        "g": 2,
         "e": 1,
         "p": 0,
-        "gf": 4,
+        "gf": 7,
         "gc": 1,
-        "dg": 3,
-        "pts": 4
+        "dg": 6,
+        "pts": 7
       },
       {
         "team": "Escocia",
         "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-        "pj": 2,
+        "pj": 3,
         "g": 1,
         "e": 0,
-        "p": 1,
+        "p": 2,
         "gf": 1,
-        "gc": 1,
-        "dg": 0,
+        "gc": 4,
+        "dg": -3,
         "pts": 3
       },
       {
         "team": "Haití",
         "flag": "🇭🇹",
-        "pj": 2,
+        "pj": 3,
         "g": 0,
         "e": 0,
-        "p": 2,
-        "gf": 0,
-        "gc": 4,
-        "dg": -4,
+        "p": 3,
+        "gf": 2,
+        "gc": 8,
+        "dg": -6,
         "pts": 0
       },
       {
         "team": "Marruecos",
         "flag": "🇲🇦",
-        "pj": 2,
-        "g": 1,
+        "pj": 3,
+        "g": 2,
         "e": 1,
         "p": 0,
-        "gf": 2,
-        "gc": 1,
-        "dg": 1,
-        "pts": 4
+        "gf": 6,
+        "gc": 3,
+        "dg": 3,
+        "pts": 7
       }
     ],
     "D": [
@@ -625,6 +625,20 @@
       "assists": 0
     },
     {
+      "player": "Ismael Saibari",
+      "team": "Marruecos",
+      "flag": "🇲🇦",
+      "goals": 3,
+      "assists": 0
+    },
+    {
+      "player": "Vinícius Júnior",
+      "team": "Brasil",
+      "flag": "🇧🇷",
+      "goals": 3,
+      "assists": 0
+    },
+    {
       "player": "Deniz Undav",
       "team": "Alemania",
       "flag": "🇩🇪",
@@ -646,6 +660,13 @@
       "assists": 0
     },
     {
+      "player": "Matheus Cunha",
+      "team": "Brasil",
+      "flag": "🇧🇷",
+      "goals": 3,
+      "assists": 0
+    },
+    {
       "player": "Cyle Larin",
       "team": "Canadá",
       "flag": "🇨🇦",
@@ -656,20 +677,6 @@
       "player": "Folarin Balogun",
       "team": "Estados Unidos",
       "flag": "🇺🇸",
-      "goals": 2,
-      "assists": 0
-    },
-    {
-      "player": "Ismael Saibari",
-      "team": "Marruecos",
-      "flag": "🇲🇦",
-      "goals": 2,
-      "assists": 0
-    },
-    {
-      "player": "Vinícius Júnior",
-      "team": "Brasil",
-      "flag": "🇧🇷",
       "goals": 2,
       "assists": 0
     },
@@ -712,13 +719,6 @@
       "player": "Ermin Mahmic",
       "team": "Bosnia",
       "flag": "🇧🇦",
-      "goals": 2,
-      "assists": 0
-    },
-    {
-      "player": "Matheus Cunha",
-      "team": "Brasil",
-      "flag": "🇧🇷",
       "goals": 2,
       "assists": 0
     },
@@ -770,6 +770,13 @@
       "player": "Brahim Díaz",
       "team": "Marruecos",
       "flag": "🇲🇦",
+      "goals": 0,
+      "assists": 2
+    },
+    {
+      "player": "Bruno Guimarães",
+      "team": "Brasil",
+      "flag": "🇧🇷",
       "goals": 0,
       "assists": 2
     },
@@ -847,13 +854,6 @@
       "player": "Alex Freeman",
       "team": "Estados Unidos",
       "flag": "🇺🇸",
-      "goals": 0,
-      "assists": 1
-    },
-    {
-      "player": "Bruno Guimarães",
-      "team": "Brasil",
-      "flag": "🇧🇷",
       "goals": 0,
       "assists": 1
     },
@@ -1138,14 +1138,14 @@
       "status": "ft"
     },
     "2026-06-25_00:00_Marruecos_vs_Haití": {
-      "home": 0,
-      "away": 1,
-      "status": "live"
+      "home": 4,
+      "away": 2,
+      "status": "ft"
     },
     "2026-06-25_00:00_Escocia_vs_Brasil": {
       "home": 0,
-      "away": 1,
-      "status": "live"
+      "away": 3,
+      "status": "ft"
     }
   }
 }
