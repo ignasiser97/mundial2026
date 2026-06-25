@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-25T19:04:05Z",
+  "updated": "2026-06-25T20:04:39Z",
   "groups": {
     "A": [
       {
@@ -1037,14 +1037,14 @@
       "away": 1,
       "status": "ft"
     },
-    "2026-06-20_05:00_Turquía_vs_Paraguay": {
-      "home": 0,
-      "away": 1,
-      "status": "ft"
-    },
     "2026-06-20_03:00_Brasil_vs_Haití": {
       "home": 3,
       "away": 0,
+      "status": "ft"
+    },
+    "2026-06-20_05:00_Turquía_vs_Paraguay": {
+      "home": 0,
+      "away": 1,
       "status": "ft"
     },
     "2026-06-20_19:00_PaísesBajos_vs_Suecia": {
@@ -1156,6 +1156,16 @@
       "home": 1,
       "away": 0,
       "status": "ft"
+    },
+    "2026-06-25_22:00_Curazao_vs_CostadeMarfil": {
+      "home": 0,
+      "away": 0,
+      "status": "live"
+    },
+    "2026-06-25_22:00_Ecuador_vs_Alemania": {
+      "home": 0,
+      "away": 1,
+      "status": "live"
     }
   }
 }
