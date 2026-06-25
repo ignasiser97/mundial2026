@@ -1,54 +1,54 @@
 {
-  "updated": "2026-06-25T00:11:06Z",
+  "updated": "2026-06-25T05:04:04Z",
   "groups": {
     "A": [
       {
         "team": "México",
         "flag": "🇲🇽",
-        "pj": 2,
-        "g": 2,
+        "pj": 3,
+        "g": 3,
         "e": 0,
         "p": 0,
-        "gf": 3,
+        "gf": 6,
         "gc": 0,
-        "dg": 3,
-        "pts": 6
+        "dg": 6,
+        "pts": 9
       },
       {
         "team": "Rep. Checa",
         "flag": "🇨🇿",
-        "pj": 2,
+        "pj": 3,
         "g": 0,
         "e": 1,
-        "p": 1,
+        "p": 2,
         "gf": 2,
-        "gc": 3,
-        "dg": -1,
+        "gc": 6,
+        "dg": -4,
         "pts": 1
       },
       {
         "team": "Corea del Sur",
         "flag": "🇰🇷",
-        "pj": 2,
+        "pj": 3,
         "g": 1,
         "e": 0,
-        "p": 1,
+        "p": 2,
         "gf": 2,
-        "gc": 2,
-        "dg": 0,
+        "gc": 3,
+        "dg": -1,
         "pts": 3
       },
       {
         "team": "Sudáfrica",
         "flag": "🇿🇦",
-        "pj": 2,
-        "g": 0,
+        "pj": 3,
+        "g": 1,
         "e": 1,
         "p": 1,
-        "gf": 1,
+        "gf": 2,
         "gc": 3,
-        "dg": -2,
-        "pts": 1
+        "dg": -1,
+        "pts": 4
       }
     ],
     "B": [
@@ -667,6 +667,13 @@
       "assists": 0
     },
     {
+      "player": "Julián Quiñones",
+      "team": "México",
+      "flag": "🇲🇽",
+      "goals": 2,
+      "assists": 0
+    },
+    {
       "player": "Cyle Larin",
       "team": "Canadá",
       "flag": "🇨🇦",
@@ -733,13 +740,6 @@
       "player": "Cody Gakpo",
       "team": "Países Bajos",
       "flag": "🇳🇱",
-      "goals": 2,
-      "assists": 0
-    },
-    {
-      "player": "Mikel Oyarzabal",
-      "team": "España",
-      "flag": "🇪🇸",
       "goals": 2,
       "assists": 0
     }
@@ -1145,6 +1145,16 @@
     "2026-06-25_00:00_Escocia_vs_Brasil": {
       "home": 0,
       "away": 3,
+      "status": "ft"
+    },
+    "2026-06-25_03:00_Rep.Checa_vs_México": {
+      "home": 0,
+      "away": 3,
+      "status": "ft"
+    },
+    "2026-06-25_03:00_Sudáfrica_vs_CoreadelSur": {
+      "home": 1,
+      "away": 0,
       "status": "ft"
     }
   }
