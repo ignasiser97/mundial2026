@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-25T21:41:16Z",
+  "updated": "2026-06-25T23:16:42Z",
   "groups": {
     "A": [
       {
@@ -205,49 +205,49 @@
       {
         "team": "Ecuador",
         "flag": "🇪🇨",
-        "pj": 2,
-        "g": 0,
+        "pj": 3,
+        "g": 1,
         "e": 1,
         "p": 1,
-        "gf": 0,
-        "gc": 1,
-        "dg": -1,
-        "pts": 1
+        "gf": 2,
+        "gc": 2,
+        "dg": 0,
+        "pts": 4
       },
       {
         "team": "Alemania",
         "flag": "🇩🇪",
-        "pj": 2,
+        "pj": 3,
         "g": 2,
         "e": 0,
-        "p": 0,
-        "gf": 9,
-        "gc": 2,
-        "dg": 7,
+        "p": 1,
+        "gf": 10,
+        "gc": 4,
+        "dg": 6,
         "pts": 6
       },
       {
         "team": "Costa de Marfil",
         "flag": "🇨🇮",
-        "pj": 2,
-        "g": 1,
+        "pj": 3,
+        "g": 2,
         "e": 0,
         "p": 1,
-        "gf": 2,
+        "gf": 4,
         "gc": 2,
-        "dg": 0,
-        "pts": 3
+        "dg": 2,
+        "pts": 6
       },
       {
         "team": "Curazao",
         "flag": "🇨🇼",
-        "pj": 2,
+        "pj": 3,
         "g": 0,
         "e": 1,
-        "p": 1,
+        "p": 2,
         "gf": 1,
-        "gc": 7,
-        "dg": -6,
+        "gc": 9,
+        "dg": -8,
         "pts": 1
       }
     ],
@@ -781,6 +781,13 @@
       "assists": 2
     },
     {
+      "player": "Florian Wirtz",
+      "team": "Alemania",
+      "flag": "🇩🇪",
+      "goals": 0,
+      "assists": 2
+    },
+    {
       "player": "Joshua Kimmich",
       "team": "Alemania",
       "flag": "🇩🇪",
@@ -861,13 +868,6 @@
       "player": "Paul Okon-Engstler",
       "team": "Australia",
       "flag": "🇦🇺",
-      "goals": 0,
-      "assists": 1
-    },
-    {
-      "player": "Florian Wirtz",
-      "team": "Alemania",
-      "flag": "🇩🇪",
       "goals": 0,
       "assists": 1
     },
@@ -1159,12 +1159,22 @@
     },
     "2026-06-25_22:00_Curazao_vs_CostadeMarfil": {
       "home": 0,
+      "away": 2,
+      "status": "ft"
+    },
+    "2026-06-25_22:00_Ecuador_vs_Alemania": {
+      "home": 2,
+      "away": 1,
+      "status": "ft"
+    },
+    "2026-06-26_01:00_Japón_vs_Suecia": {
+      "home": 0,
       "away": 0,
       "status": "live"
     },
-    "2026-06-25_22:00_Ecuador_vs_Alemania": {
+    "2026-06-26_01:00_Túnez_vs_PaísesBajos": {
       "home": 0,
-      "away": 1,
+      "away": 2,
       "status": "live"
     }
   }
