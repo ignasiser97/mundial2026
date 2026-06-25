@@ -282,6 +282,26 @@ function showSabiasQueBanner() {
   document.body.appendChild(overlay);
 }
 
+// ── Meme Sergio ────────────────────────────────────────────────
+
+function showMemeSergio() {
+  const KEY = 'meme-sergio-v1';
+  if (localStorage.getItem(KEY)) return;
+  const overlay = document.createElement('div');
+  overlay.id = 'sabiasque-overlay';
+  overlay.innerHTML = `
+    <div class="sq-card">
+      <div class="sq-eyebrow" style="color:var(--neg);letter-spacing:1px">#TodosSomosSergio</div>
+      <div class="sq-title" style="font-size:28px;line-height:1.1">54 intentos.<br>0 exactos.</div>
+      <div class="sq-fact">Sergio no predice el fútbol, lo siente.</div>
+      <button class="sq-btn" onclick="
+        localStorage.setItem('${KEY}','1');
+        document.getElementById('sabiasque-overlay').remove();
+      ">🫂 Ánimo, Sergio</button>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
 // ── Init ───────────────────────────────────────────────────────
 tsInit();
 cpRender();
@@ -289,3 +309,4 @@ renderHome();
 renderCalendar();
 showSpainDayBanner();
 showSabiasQueBanner();
+showMemeSergio();
