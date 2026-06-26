@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-26T03:32:51Z",
+  "updated": "2026-06-26T07:51:09Z",
   "groups": {
     "A": [
       {
@@ -155,49 +155,49 @@
       {
         "team": "Paraguay",
         "flag": "🇵🇾",
-        "pj": 2,
+        "pj": 3,
         "g": 1,
-        "e": 0,
+        "e": 1,
         "p": 1,
         "gf": 2,
         "gc": 4,
         "dg": -2,
-        "pts": 3
+        "pts": 4
       },
       {
         "team": "Turquía",
         "flag": "🇹🇷",
-        "pj": 2,
-        "g": 0,
+        "pj": 3,
+        "g": 1,
         "e": 0,
         "p": 2,
-        "gf": 0,
-        "gc": 3,
-        "dg": -3,
-        "pts": 0
+        "gf": 3,
+        "gc": 5,
+        "dg": -2,
+        "pts": 3
       },
       {
         "team": "Australia",
         "flag": "🇦🇺",
-        "pj": 2,
+        "pj": 3,
         "g": 1,
-        "e": 0,
+        "e": 1,
         "p": 1,
         "gf": 2,
         "gc": 2,
         "dg": 0,
-        "pts": 3
+        "pts": 4
       },
       {
         "team": "Estados Unidos",
         "flag": "🇺🇸",
-        "pj": 2,
+        "pj": 3,
         "g": 2,
         "e": 0,
-        "p": 0,
-        "gf": 6,
-        "gc": 1,
-        "dg": 5,
+        "p": 1,
+        "gf": 8,
+        "gc": 4,
+        "dg": 4,
         "pts": 6
       }
     ],
@@ -1180,12 +1180,12 @@
     "2026-06-26_04:00_Paraguay_vs_Australia": {
       "home": 0,
       "away": 0,
-      "status": "live"
+      "status": "ft"
     },
     "2026-06-26_04:00_Turquía_vs_EstadosUnidos": {
-      "home": 2,
+      "home": 3,
       "away": 2,
-      "status": "live"
+      "status": "ft"
     }
   }
 }
