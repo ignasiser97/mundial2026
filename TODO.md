@@ -23,6 +23,7 @@
 - [x] Apostar: ocultar partidos con resultado final (status ft); popup de resultados al clickar equipo; hint one-time de anuncio
 - [x] Scraper: fix `to_spain_dt` (fromisoformat no soportaba sufijo `Z` en Python <3.11 → resultados silenciosamente perdidos); recuperados 7 partidos desde el 18 jun
 - [x] matches.js: hora Brasil vs Haití corregida 03:00 → 02:30 (ESPN marcó 00:30 UTC); MATCHES.sort() al cargar para garantizar orden cronológico siempre; fix entradas fuera de orden en 14 jun y 20 jun
+- [x] Eliminatorias: equipos reales en Calendario y Bracket — buildFullSlotMap() resuelve 1º/2º de grupo desde standings.json y cascada ganadores (Pxx) desde matchResults; automático para r32, r16, cuartos, semis
 
 ## Pendiente
 

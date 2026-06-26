@@ -141,8 +141,9 @@ document.addEventListener('click', e => {
 
 // ── Render calendario ──────────────────────────────────────────
 async function renderCalendar() {
-  const [results, oddsData] = await Promise.all([getMatchResults(), getOddsData()]);
+  const [results, oddsData, standingsData] = await Promise.all([getMatchResults(), getOddsData(), getStandingsData()]);
   const allOdds = oddsData.odds || {};
+  const slotMap = buildFullSlotMap(standingsData);
   const filtered = MATCHES.filter(([date,time,label,,,ch,flags])=>{
     const vd=viewDate(date,time);
     if(fDate && vd!==fDate) return false;
@@ -183,9 +184,18 @@ async function renderCalendar() {
       const rowCls = ['match-row',isPast?'past-match':'',flags===1?'spain':flags===2?'spain-pos':'',groupLetter?'match-row-link':''].filter(Boolean).join(' ');
       const onclick = groupLetter ? ` onclick="navigateToGroup('${groupLetter}')"` : '';
 
-      const [homeTeam, awayTeam] = matchTeams(m);
-      const homeFlag = FLAGS_MAP[homeTeam] || '';
-      const awayFlag = FLAGS_MAP[awayTeam] || '';
+      const [homeSlot, awaySlot] = matchTeams(m);
+      let homeTeam, awayTeam, homeFlag, awayFlag, homeProvisional, awayProvisional;
+      if (phase === 'groups') {
+        homeTeam = homeSlot; awayTeam = awaySlot;
+        homeFlag = FLAGS_MAP[homeTeam] || ''; awayFlag = FLAGS_MAP[awayTeam] || '';
+        homeProvisional = false; awayProvisional = false;
+      } else {
+        const he = slotMap[homeSlot], ae = slotMap[awaySlot];
+        homeTeam = he?.team || homeSlot; awayTeam = ae?.team || awaySlot;
+        homeFlag = he?.flag || ''; awayFlag = ae?.flag || '';
+        homeProvisional = he?.provisional ?? true; awayProvisional = ae?.provisional ?? true;
+      }
 
       const badges = (ch.includes('d') ? '<span class="badge bd">DAZN</span>' : '') +
                      (ch.includes('l') ? '<span class="badge bl">LA 1</span>' : '');
@@ -210,15 +220,17 @@ async function renderCalendar() {
       const awayTnCls = awayFlag ? 'mrow-tname mrow-tname-link' : 'mrow-tname';
       const homeTnClick = homeFlag ? ` onclick="sqdGoToTeam('${homeTeam}');event.stopPropagation()"` : '';
       const awayTnClick = awayFlag ? ` onclick="sqdGoToTeam('${awayTeam}');event.stopPropagation()"` : '';
+      const homeProvHtml = homeProvisional ? '<span class="bkt-prov"> ~</span>' : '';
+      const awayProvHtml = awayProvisional ? '<span class="bkt-prov"> ~</span>' : '';
 
       html += `<div class="${rowCls}"${onclick}>
         <div class="mrow-home">
           ${homeFlag ? `<span class="mrow-flag">${homeFlag}</span>` : ''}
-          <span class="${homeTnCls}"${homeTnClick}>${homeTeam}</span>
+          <span class="${homeTnCls}"${homeTnClick}>${homeTeam}${homeProvHtml}</span>
         </div>
         <div class="mrow-center">${centerHtml}</div>
         <div class="mrow-away">
-          <span class="${awayTnCls}"${awayTnClick}>${awayTeam}</span>
+          <span class="${awayTnCls}"${awayTnClick}>${awayTeam}${awayProvHtml}</span>
           ${awayFlag ? `<span class="mrow-flag">${awayFlag}</span>` : ''}
         </div>
         <div class="mrow-meta">${badges} ${venueName}${metaRight}</div>

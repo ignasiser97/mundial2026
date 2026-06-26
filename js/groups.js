@@ -210,19 +210,7 @@ function bktGoToDate(date) {
 }
 
 let bktMap = {};
-let bktSlotMap = {};  // '1º A' → {team, flag, pj}
-
-function buildBktSlotMap(groups) {
-  const map = {};
-  for (const [letter, teams] of Object.entries(groups)) {
-    const sorted = [...teams].sort((a, b) =>
-      b.pts - a.pts || b.dg - a.dg || b.gf - a.gf
-    );
-    if (sorted[0]) map[`1º ${letter}`] = sorted[0];
-    if (sorted[1]) map[`2º ${letter}`] = sorted[1];
-  }
-  return map;
-}
+let bktSlotMap = {};  // '1º A' / 'P73' → { team, flag, provisional }
 
 function bktSlotLabel(slot) {
   const entry = bktSlotMap[slot];
@@ -233,8 +221,7 @@ function bktSlotLabel(slot) {
       ? `<span class="bkt-nav-link"${nav}>${slot}</span>`
       : slot;
   }
-  const prov  = entry.pj < 3;
-  const label = `${entry.flag || ''} ${entry.team}${prov ? '<span class="bkt-prov"> ~</span>' : ''}`;
+  const label = `${entry.flag || ''} ${entry.team}${entry.provisional ? '<span class="bkt-prov"> ~</span>' : ''}`;
   return letter
     ? `<span class="bkt-nav-link"${nav}>${label}</span>`
     : label;
@@ -243,9 +230,9 @@ function bktSlotLabel(slot) {
 function bktCard(code, pmap, extra='') {
   const m = pmap[code];
   if (!m) return `<div class="bkt-m${extra}"><div class="bkt-team">-</div><div class="bkt-div"></div><div class="bkt-team">-</div></div>`;
-  const isR32 = m[7] === 'r32';
+  const phase = m[7];
   let home = '-', away = '-';
-  if (isR32) {
+  if (phase !== '3p' && phase !== 'final') {
     [home, away] = matchTeams(m).map(bktSlotLabel);
   }
   return `<div class="bkt-m${extra} clickable" onclick="bktGoToDate('${m[0]}')">
@@ -274,7 +261,7 @@ async function renderBracket() {
 
   try {
     const data = await getStandingsData();
-    bktSlotMap = buildBktSlotMap(data?.groups || {});
+    bktSlotMap = buildFullSlotMap(data);
   } catch { bktSlotMap = {}; }
 
   const leftHTML  = bktColumn(BKT_LEFT,  BKT_LEFT_LABELS,  'l');

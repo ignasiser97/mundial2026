@@ -155,6 +155,58 @@ function matchTeams(m) {
   return [parts[0]?.trim() || '', parts[1]?.trim() || ''];
 }
 
+// Construye mapa completo de slots de eliminatorias:
+//   '1º A' / '2º A' → { team, flag, provisional } desde grupos
+//   'P73', 'P74'... → ganadores en cascada desde matchResults
+// FLAGS_MAP debe estar disponible en scope global (calendar.js)
+function buildFullSlotMap(data) {
+  const map = {};
+
+  // Lookup inverso: nombre sin espacios → nombre original (para decodificar IDs del scraper)
+  const noSpaceToTeam = {};
+  for (const t of Object.keys(FLAGS_MAP)) noSpaceToTeam[t.replace(/\s/g, '')] = t;
+
+  // 1. Posiciones de grupo
+  if (data?.groups) {
+    for (const [letter, teams] of Object.entries(data.groups)) {
+      const sorted = [...teams].sort((a, b) => b.pts - a.pts || b.dg - a.dg || b.gf - a.gf);
+      const done = sorted.every(t => t.pj >= 3);
+      if (sorted[0]) map[`1º ${letter}`] = { team: sorted[0].team, flag: sorted[0].flag || '', provisional: !done };
+      if (sorted[1]) map[`2º ${letter}`] = { team: sorted[1].team, flag: sorted[1].flag || '', provisional: !done };
+    }
+  }
+
+  // 2. Resultados de eliminatorias indexados por fecha+hora (stable key)
+  const matchResults = data?.matchResults || {};
+  const resultByDT = {};
+  for (const [mid, result] of Object.entries(matchResults)) {
+    if (result.phase !== 'knockout' || result.status !== 'ft') continue;
+    const dtKey = mid.substring(0, 16);  // "YYYY-MM-DD_HH:MM"
+    const [homeRaw, awayRaw] = mid.substring(17).split('_vs_');
+    resultByDT[dtKey] = {
+      result,
+      homeTeam: noSpaceToTeam[homeRaw] || homeRaw,
+      awayTeam: noSpaceToTeam[awayRaw] || awayRaw,
+    };
+  }
+
+  // 3. Cascada en orden cronológico: ganador de cada partido → slot Pxx
+  const koMatches = MATCHES.filter(m => m[7] !== 'groups')
+    .sort((a, b) => (a[0]+a[1]).localeCompare(b[0]+b[1]));
+
+  for (const m of koMatches) {
+    const pcode = m[2].match(/\(P(\d+)\)/)?.[1];
+    if (!pcode) continue;
+    const resInfo = resultByDT[`${m[0]}_${m[1]}`];
+    if (!resInfo) continue;
+    const { result, homeTeam, awayTeam } = resInfo;
+    const winner = result.winner === 'home' ? homeTeam : result.winner === 'away' ? awayTeam : null;
+    if (winner) map[`P${pcode}`] = { team: winner, flag: FLAGS_MAP[winner] || '', provisional: false };
+  }
+
+  return map;
+}
+
 // Escapa HTML para contenido externo/usuarios
 function escHtml(s) {
   return String(s)
