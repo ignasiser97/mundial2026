@@ -1,88 +1,52 @@
 {
-  "updated": "2026-06-25T17:03:34.750509+00:00",
+  "updated": "2026-06-26T16:54:50.516557+00:00",
   "odds": {
-    "2026-06-25_22:00_Curazao_vs_CostadeMarfil": {
-      "home": 17.5,
-      "draw": 8.6,
-      "away": 1.2,
-      "bookmaker": "Betfair"
-    },
-    "2026-06-25_22:00_Ecuador_vs_Alemania": {
-      "home": 5.4,
-      "draw": 5.0,
-      "away": 1.61,
-      "bookmaker": "Betfair"
-    },
-    "2026-06-26_01:00_Japón_vs_Suecia": {
-      "home": 1.99,
-      "draw": 3.55,
-      "away": 4.5,
-      "bookmaker": "Betfair"
-    },
-    "2026-06-26_01:00_Túnez_vs_PaísesBajos": {
-      "home": 34.0,
-      "draw": 12.0,
-      "away": 1.12,
-      "bookmaker": "Betfair"
-    },
-    "2026-06-26_04:00_Paraguay_vs_Australia": {
-      "home": 2.76,
-      "draw": 2.36,
-      "away": 4.6,
-      "bookmaker": "Betfair"
-    },
-    "2026-06-26_04:00_Turquía_vs_EstadosUnidos": {
-      "home": 4.1,
-      "draw": 4.4,
-      "away": 1.88,
-      "bookmaker": "Betfair"
-    },
     "2026-06-26_21:00_Noruega_vs_Francia": {
-      "home": 5.4,
-      "draw": 4.9,
-      "away": 1.63,
+      "home": 7.0,
+      "draw": 5.4,
+      "away": 1.47,
       "bookmaker": "Betfair"
     },
     "2026-06-26_21:00_Senegal_vs_Irak": {
-      "home": 1.26,
-      "draw": 7.2,
-      "away": 14.5,
+      "home": 1.25,
+      "draw": 7.6,
+      "away": 14.0,
       "bookmaker": "Betfair"
     },
     "2026-06-27_02:00_CaboVerde_vs_ArabiaSaudí": {
-      "home": 2.76,
-      "draw": 3.4,
-      "away": 2.84,
+      "home": 2.72,
+      "draw": 3.45,
+      "away": 2.86,
       "bookmaker": "Betfair"
     },
     "2026-06-27_02:00_Uruguay_vs_España": {
-      "home": 8.0,
-      "draw": 4.4,
-      "away": 1.54,
+      "home": 6.4,
+      "draw": 3.7,
+      "away": 1.72,
       "bookmaker": "Betfair"
     },
     "2026-06-27_05:00_NuevaZelanda_vs_Bélgica": {
-      "home": 18.5,
-      "draw": 8.8,
-      "away": 1.2,
+      "home": 16.0,
+      "draw": 8.2,
+      "away": 1.22,
       "bookmaker": "Betfair"
     },
     "2026-06-27_05:00_Egipto_vs_RIdeIrán": {
-      "home": 2.54,
-      "draw": 2.74,
-      "away": 4.0,
+      "home": 2.56,
+      "draw": 2.72,
+      "away": 4.1,
       "bookmaker": "Betfair"
     },
     "2026-06-27_23:00_Croacia_vs_Ghana": {
-      "home": 1.83,
+      "home": 1.82,
       "draw": 3.4,
-      "away": 6.0,
+      "away": 6.2,
       "bookmaker": "Betfair"
     },
     "2026-06-27_23:00_Panamá_vs_Inglaterra": {
       "home": 20.0,
-      "draw": 8.8,
-      "away": 1.19,
+      "draw": 9.2,
+      "away": 1.18,
       "bookmaker": "Betfair"
     },
     "2026-06-28_01:30_Colombia_vs_Portugal": {
@@ -92,33 +56,45 @@
       "bookmaker": "Betfair"
     },
     "2026-06-28_01:30_RDCongo_vs_Uzbekistán": {
-      "home": 1.8,
-      "draw": 4.2,
-      "away": 4.7,
+      "home": 1.83,
+      "draw": 4.1,
+      "away": 4.6,
       "bookmaker": "Betfair"
     },
     "2026-06-28_04:00_Argelia_vs_Austria": {
-      "home": 4.0,
-      "draw": 2.4,
-      "away": 2.98,
+      "home": 4.3,
+      "draw": 2.28,
+      "away": 3.0,
       "bookmaker": "Betfair"
     },
     "2026-06-28_04:00_Jordania_vs_Argentina": {
-      "home": 19.5,
-      "draw": 8.4,
-      "away": 1.2,
+      "home": 18.5,
+      "draw": 9.0,
+      "away": 1.19,
       "bookmaker": "Betfair"
     },
     "2026-06-28_21:00_Sudáfrica_vs_Canadá": {
-      "home": 5.6,
-      "draw": 3.7,
-      "away": 1.79,
+      "home": 5.8,
+      "draw": 3.75,
+      "away": 1.76,
+      "bookmaker": "Betfair"
+    },
+    "2026-06-29_19:00_Brasil_vs_Japón": {
+      "home": 1.76,
+      "draw": 3.9,
+      "away": 5.5,
+      "bookmaker": "Betfair"
+    },
+    "2026-06-30_03:00_PaísesBajos_vs_Marruecos": {
+      "home": 2.22,
+      "draw": 3.35,
+      "away": 3.85,
       "bookmaker": "Betfair"
     },
     "2026-07-02_02:00_EstadosUnidos_vs_Bosnia": {
-      "home": 1.5,
-      "draw": 3.75,
-      "away": 4.4,
+      "home": 1.41,
+      "draw": 5.1,
+      "away": 9.4,
       "bookmaker": "Betfair"
     }
   }
