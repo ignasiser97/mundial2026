@@ -194,6 +194,7 @@ async function loadQuiniela() {
   if (qnlLoaded && qnlUser) { renderQnlContainer(); return; }
   wrap.innerHTML = '<div class="empty">Cargando…</div>';
   getStandingsData().then(d => buildFullSlotMap(d));
+  showKnockoutRulesBanner();
   const uid = localStorage.getItem('qnl_uid');
   const gid = localStorage.getItem('qnl_gid');
   if (uid && gid) {
@@ -792,6 +793,51 @@ async function showTeamPopup(team) {
   document.body.appendChild(overlay);
 }
 
+// ── Líder del grupo en eliminatorias ──────────────────────────
+
+let _koLeaderId = null;
+
+function computeLeaderId(allBets, matchResultsMap, groupUserIds) {
+  const pts = {};
+  groupUserIds.forEach(uid => { pts[uid] = 0; });
+  (allBets || []).forEach(b => {
+    if (!Object.prototype.hasOwnProperty.call(pts, b.user_id)) return;
+    const r = matchResultsMap[b.match_id];
+    if (!r || r.status !== 'ft') return;
+    const result = { home_score: r.home_90 ?? r.home, away_score: r.away_90 ?? r.away, status: r.status, phase: r.phase, winner: r.winner };
+    const p = calcPoints(b, result, isSpainMatch(b.match_id));
+    if (p !== null) pts[b.user_id] += p;
+  });
+  let leaderId = null, maxPts = -1;
+  Object.entries(pts).forEach(([uid, p]) => { if (p > maxPts) { maxPts = p; leaderId = uid; } });
+  return leaderId;
+}
+
+function showKnockoutRulesBanner() {
+  const KEY = 'knockout-rules-v1';
+  if (localStorage.getItem(KEY)) return;
+  const overlay = document.createElement('div');
+  overlay.id = 'sabiasque-overlay';
+  overlay.innerHTML = `
+    <div class="sq-card">
+      <div class="sq-eyebrow" style="letter-spacing:1px">ELIMINATORIAS — NUEVAS REGLAS</div>
+      <div class="sq-title">EL PASA IMPORTA</div>
+      <div class="sq-fact" style="text-align:left">
+        El marcador se apuesta <strong>a 90 minutos</strong> — sin prórroga ni penaltis.<br><br>
+        ✓ Exacto a 90 min → <strong>3 pts</strong><br>
+        ✓ Aciertas quién pasa → <strong>1 pt</strong><br>
+        ✗ Fallo → <strong>0 pts</strong><br><br>
+        Si puede acabar en empate, usa el botón <strong>"Pasa"</strong> para indicar quién avanza aunque sea por penaltis.<br><br>
+        👀 <strong>El líder del grupo tiene las cartas boca arriba.</strong> Su apuesta es visible para todos antes de que arranque el partido. Las del resto permanecen ocultas hasta el cierre.
+      </div>
+      <button class="sq-btn" onclick="
+        localStorage.setItem('${KEY}','1');
+        document.getElementById('sabiasque-overlay').remove();
+      ">✓ Entendido</button>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
 // ── Apostar ────────────────────────────────────────────────────
 
 async function renderApostar(el) {
@@ -810,12 +856,14 @@ async function renderApostar(el) {
     .flatMap(date => MATCHES.filter(m => m[0] === date))
     .map(m => matchId(m));
 
-  const [{ data: groupBetsRaw }, oddsData, groupUserIds, matchResultsMap] = await Promise.all([
+  const groupUserIds = await ensureGroupUserIds();
+  const [{ data: groupBetsRaw }, { data: allGroupBetsRaw }, oddsData, matchResultsMap] = await Promise.all([
     db.from('bets').select('match_id, home_score, away_score, qualifier, user_id, users(name)').in('match_id', candidateIds),
+    db.from('bets').select('user_id, match_id, home_score, away_score, qualifier').in('user_id', groupUserIds),
     getOddsData(),
-    ensureGroupUserIds(),
     getMatchResults(),
   ]);
+  _koLeaderId = computeLeaderId(allGroupBetsRaw, matchResultsMap, groupUserIds);
   const allOdds = oddsData.odds || {};
 
   const isFinished = mid => matchResultsMap[mid]?.status === 'ft';
@@ -856,18 +904,23 @@ async function renderApostar(el) {
         dropContent = `<div style="font-size:12px;color:var(--muted);text-align:center;padding:2px 0">Nadie ha apostado aún</div>`;
       } else {
         const rows = bets.map(b => {
-          const score = started
+          const isLeader = isKnockout && b.user_id === _koLeaderId;
+          const showScore = started || isLeader;
+          const score = showScore
             ? `<span class="bdrop-score">${b.home_score} – ${b.away_score}</span>`
             : `<span class="bdrop-hidden">oculto</span>`;
-          return `<div class="bdrop-row"><span>${b.users.name}</span>${score}</div>`;
+          const crown = isLeader && !started ? ' 👑' : '';
+          return `<div class="bdrop-row"><span>${b.users.name}${crown}</span>${score}</div>`;
         }).join('');
         const note = !started
-          ? `<div class="bdrop-note">Los marcadores se revelan al inicio del partido</div>`
+          ? (isKnockout
+              ? `<div class="bdrop-note">Solo el líder 👑 tiene el marcador visible antes del pitido</div>`
+              : `<div class="bdrop-note">Los marcadores se revelan al inicio del partido</div>`)
           : '';
         dropContent = rows + note;
       }
 
-      const verGrupoBtn = started
+      const verGrupoBtn = (started || isKnockout)
         ? `<button class="bet-toggle-bets" onclick="toggleGroupBets('${mid}',this)">Ver grupo</button>`
         : '';
 
@@ -1032,6 +1085,7 @@ async function toggleGroupBets(mid, btn) {
        </div>`
     : '';
 
+  const isKnockoutMatch = matchObj?.phase === 'knockout' || (matchObj && matchObj[7] !== 'groups');
   const rows = bets
     .sort((a, b) => {
       const pA = calcPoints(a, result, double) ?? -1;
@@ -1039,17 +1093,19 @@ async function toggleGroupBets(mid, btn) {
       return pB - pA;
     })
     .map(b => {
-      const isMe  = b.user_id === qnlUser?.id;
-      const pts   = calcPoints(b, result, double);
-      // Ocultar marcadores mientras las apuestas siguen abiertas, excepto la propia apuesta
-      const qualStr = result?.phase === 'knockout' && !betOpen
+      const isMe     = b.user_id === qnlUser?.id;
+      const isLeader = isKnockoutMatch && b.user_id === _koLeaderId;
+      const pts      = calcPoints(b, result, double);
+      const showScore = !betOpen || isMe || isLeader;
+      const qualStr = result?.phase === 'knockout' && showScore
         ? ` · pasa: ${b.qualifier ? (b.qualifier === 'home' ? matchHome : matchAway) : '?'}`
         : '';
-      const score = (!betOpen || isMe)
+      const crown = isLeader && betOpen ? ' 👑' : '';
+      const score = showScore
         ? `${b.home_score} – ${b.away_score}${qualStr}`
         : `<span style="color:var(--muted)">? – ?</span>`;
       return `<div class="group-bet-row">
-        <span class="gb-name">${b.users.name}${isMe ? ' 👈' : ''}</span>
+        <span class="gb-name">${b.users.name}${isMe ? ' 👈' : ''}${crown}</span>
         <span class="gb-score">${score}</span>
         ${pts !== null ? ptsLabel(pts) : ''}
       </div>`;
