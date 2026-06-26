@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-26T18:50:47Z",
+  "updated": "2026-06-26T20:45:58Z",
   "groups": {
     "A": [
       {
@@ -1186,6 +1186,16 @@
       "home": 3,
       "away": 2,
       "status": "ft"
+    },
+    "2026-06-26_21:00_Noruega_vs_Francia": {
+      "home": 1,
+      "away": 3,
+      "status": "live"
+    },
+    "2026-06-26_21:00_Senegal_vs_Irak": {
+      "home": 4,
+      "away": 0,
+      "status": "live"
     }
   }
 }
