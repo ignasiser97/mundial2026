@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-26T20:45:58Z",
+  "updated": "2026-06-26T22:11:59Z",
   "groups": {
     "A": [
       {
@@ -405,49 +405,49 @@
       {
         "team": "Noruega",
         "flag": "🇳🇴",
-        "pj": 2,
+        "pj": 3,
         "g": 2,
         "e": 0,
-        "p": 0,
-        "gf": 7,
-        "gc": 3,
-        "dg": 4,
+        "p": 1,
+        "gf": 8,
+        "gc": 7,
+        "dg": 1,
         "pts": 6
       },
       {
         "team": "Francia",
         "flag": "🇫🇷",
-        "pj": 2,
-        "g": 2,
+        "pj": 3,
+        "g": 3,
         "e": 0,
         "p": 0,
-        "gf": 6,
-        "gc": 1,
-        "dg": 5,
-        "pts": 6
+        "gf": 10,
+        "gc": 2,
+        "dg": 8,
+        "pts": 9
       },
       {
         "team": "Senegal",
         "flag": "🇸🇳",
-        "pj": 2,
-        "g": 0,
+        "pj": 3,
+        "g": 1,
         "e": 0,
         "p": 2,
-        "gf": 3,
+        "gf": 8,
         "gc": 6,
-        "dg": -3,
-        "pts": 0
+        "dg": 2,
+        "pts": 3
       },
       {
         "team": "Irak",
         "flag": "🇮🇶",
-        "pj": 2,
+        "pj": 3,
         "g": 0,
         "e": 0,
-        "p": 2,
+        "p": 3,
         "gf": 1,
-        "gc": 7,
-        "dg": -6,
+        "gc": 12,
+        "dg": -11,
         "pts": 0
       }
     ],
@@ -625,6 +625,13 @@
       "assists": 0
     },
     {
+      "player": "Ousmane Dembélé",
+      "team": "Francia",
+      "flag": "🇫🇷",
+      "goals": 4,
+      "assists": 0
+    },
+    {
       "player": "Ismael Saibari",
       "team": "Marruecos",
       "flag": "🇲🇦",
@@ -663,6 +670,13 @@
       "player": "Matheus Cunha",
       "team": "Brasil",
       "flag": "🇧🇷",
+      "goals": 3,
+      "assists": 0
+    },
+    {
+      "player": "Ismaïla Sarr",
+      "team": "Senegal",
+      "flag": "🇸🇳",
       "goals": 3,
       "assists": 0
     },
@@ -726,20 +740,6 @@
       "player": "Ermin Mahmic",
       "team": "Bosnia",
       "flag": "🇧🇦",
-      "goals": 2,
-      "assists": 0
-    },
-    {
-      "player": "Brian Brobbey",
-      "team": "Países Bajos",
-      "flag": "🇳🇱",
-      "goals": 2,
-      "assists": 0
-    },
-    {
-      "player": "Cody Gakpo",
-      "team": "Países Bajos",
-      "flag": "🇳🇱",
       "goals": 2,
       "assists": 0
     }
@@ -809,6 +809,13 @@
       "assists": 2
     },
     {
+      "player": "Iliman Ndiaye",
+      "team": "Senegal",
+      "flag": "🇸🇳",
+      "goals": 0,
+      "assists": 2
+    },
+    {
       "player": "Breel Embolo",
       "team": "Suiza",
       "flag": "🇨🇭",
@@ -826,6 +833,13 @@
       "player": "Denzel Dumfries",
       "team": "Países Bajos",
       "flag": "🇳🇱",
+      "goals": 0,
+      "assists": 2
+    },
+    {
+      "player": "Kylian Mbappé",
+      "team": "Francia",
+      "flag": "🇫🇷",
       "goals": 0,
       "assists": 2
     },
@@ -868,20 +882,6 @@
       "player": "Malik Tillman",
       "team": "Estados Unidos",
       "flag": "🇺🇸",
-      "goals": 0,
-      "assists": 1
-    },
-    {
-      "player": "Alex Freeman",
-      "team": "Estados Unidos",
-      "flag": "🇺🇸",
-      "goals": 0,
-      "assists": 1
-    },
-    {
-      "player": "Paul Okon-Engstler",
-      "team": "Australia",
-      "flag": "🇦🇺",
       "goals": 0,
       "assists": 1
     }
@@ -1189,13 +1189,13 @@
     },
     "2026-06-26_21:00_Noruega_vs_Francia": {
       "home": 1,
-      "away": 3,
-      "status": "live"
+      "away": 4,
+      "status": "ft"
     },
     "2026-06-26_21:00_Senegal_vs_Irak": {
-      "home": 4,
+      "home": 5,
       "away": 0,
-      "status": "live"
+      "status": "ft"
     }
   }
 }
