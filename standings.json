@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-25T23:16:42Z",
+  "updated": "2026-06-26T03:32:51Z",
   "groups": {
     "A": [
       {
@@ -255,49 +255,49 @@
       {
         "team": "Países Bajos",
         "flag": "🇳🇱",
-        "pj": 2,
-        "g": 1,
+        "pj": 3,
+        "g": 2,
         "e": 1,
         "p": 0,
-        "gf": 7,
-        "gc": 3,
-        "dg": 4,
-        "pts": 4
+        "gf": 10,
+        "gc": 4,
+        "dg": 6,
+        "pts": 7
       },
       {
         "team": "Suecia",
         "flag": "🇸🇪",
-        "pj": 2,
+        "pj": 3,
         "g": 1,
-        "e": 0,
+        "e": 1,
         "p": 1,
-        "gf": 6,
-        "gc": 6,
+        "gf": 7,
+        "gc": 7,
         "dg": 0,
-        "pts": 3
+        "pts": 4
       },
       {
         "team": "Japón",
         "flag": "🇯🇵",
-        "pj": 2,
+        "pj": 3,
         "g": 1,
-        "e": 1,
+        "e": 2,
         "p": 0,
-        "gf": 6,
-        "gc": 2,
+        "gf": 7,
+        "gc": 3,
         "dg": 4,
-        "pts": 4
+        "pts": 5
       },
       {
         "team": "Túnez",
         "flag": "🇹🇳",
-        "pj": 2,
+        "pj": 3,
         "g": 0,
         "e": 0,
-        "p": 2,
-        "gf": 1,
-        "gc": 9,
-        "dg": -8,
+        "p": 3,
+        "gf": 2,
+        "gc": 12,
+        "dg": -10,
         "pts": 0
       }
     ],
@@ -795,6 +795,13 @@
       "assists": 2
     },
     {
+      "player": "Viktor Gyökeres",
+      "team": "Suecia",
+      "flag": "🇸🇪",
+      "goals": 0,
+      "assists": 2
+    },
+    {
       "player": "Chris Wood",
       "team": "Nueva Zelanda",
       "flag": "🇳🇿",
@@ -805,6 +812,13 @@
       "player": "Breel Embolo",
       "team": "Suiza",
       "flag": "🇨🇭",
+      "goals": 0,
+      "assists": 2
+    },
+    {
+      "player": "Nathan Saliba",
+      "team": "Canadá",
+      "flag": "🇨🇦",
       "goals": 0,
       "assists": 2
     },
@@ -868,20 +882,6 @@
       "player": "Paul Okon-Engstler",
       "team": "Australia",
       "flag": "🇦🇺",
-      "goals": 0,
-      "assists": 1
-    },
-    {
-      "player": "Deniz Undav",
-      "team": "Alemania",
-      "flag": "🇩🇪",
-      "goals": 0,
-      "assists": 1
-    },
-    {
-      "player": "Takefusa Kubo",
-      "team": "Japón",
-      "flag": "🇯🇵",
       "goals": 0,
       "assists": 1
     }
@@ -1168,12 +1168,22 @@
       "status": "ft"
     },
     "2026-06-26_01:00_Japón_vs_Suecia": {
+      "home": 1,
+      "away": 1,
+      "status": "ft"
+    },
+    "2026-06-26_01:00_Túnez_vs_PaísesBajos": {
+      "home": 1,
+      "away": 3,
+      "status": "ft"
+    },
+    "2026-06-26_04:00_Paraguay_vs_Australia": {
       "home": 0,
       "away": 0,
       "status": "live"
     },
-    "2026-06-26_01:00_Túnez_vs_PaísesBajos": {
-      "home": 0,
+    "2026-06-26_04:00_Turquía_vs_EstadosUnidos": {
+      "home": 2,
       "away": 2,
       "status": "live"
     }
