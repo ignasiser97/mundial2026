@@ -193,6 +193,7 @@ async function loadQuiniela() {
   renderQnlAdmin();
   if (qnlLoaded && qnlUser) { renderQnlContainer(); return; }
   wrap.innerHTML = '<div class="empty">Cargando…</div>';
+  getStandingsData().then(d => buildFullSlotMap(d));
   const uid = localStorage.getItem('qnl_uid');
   const gid = localStorage.getItem('qnl_gid');
   if (uid && gid) {
@@ -391,7 +392,7 @@ function renderQnlHome(el) {
 
   let urgentHtml = '';
   if (next) {
-    const [home, away] = matchTeams(next);
+    const [home, away] = resolveTeams(next);
     const hf = FLAGS_MAP[home] || '';
     const af = FLAGS_MAP[away] || '';
     const subLabel = extras > 0
@@ -733,7 +734,7 @@ async function showTeamPopup(team) {
 
   const played = [], upcoming = [];
   for (const m of MATCHES) {
-    const [home, away] = matchTeams(m);
+    const [home, away] = resolveTeams(m);
     if (home !== team && away !== team) continue;
     const mid = matchId(m);
     const r = results[mid];
@@ -845,7 +846,7 @@ async function renderApostar(el) {
       const saved   = qnlBets[mid];
       const open    = isBetOpen(m);
       const started = isMatchStarted(m);
-      const [home, away] = matchTeams(m);
+      const [home, away] = resolveTeams(m);
       const bets    = groupBetsMap[mid] || [];
 
       const badge = `<span class="bet-count-badge">${bets.length}/${memberCount}</span>`;
@@ -1021,7 +1022,7 @@ async function toggleGroupBets(mid, btn) {
   }
 
   const isLiveResult = result?.status === 'live';
-  const [matchHome, matchAway] = matchObj ? matchTeams(matchObj) : ['', ''];
+  const [matchHome, matchAway] = matchObj ? resolveTeams(matchObj) : ['', ''];
   const advLabel = result?.phase === 'knockout' && result?.winner && !isLiveResult
     ? ` · Pasa: <strong>${result.winner === 'home' ? matchHome : matchAway}</strong>`
     : '';
@@ -1162,7 +1163,7 @@ async function renderMisApuestas(el) {
     const m    = lookup[b.match_id];
     const mid  = b.match_id;
     const open = isBetOpen(m);
-    const [home, away] = matchTeams(m);
+    const [home, away] = resolveTeams(m);
     const hasBet = b.home_score !== undefined && b.home_score !== null;
     const isKnockoutHot = m[7] !== 'groups';
 
@@ -1205,7 +1206,7 @@ async function renderMisApuestas(el) {
 
   const pastCards = past.map(b => {
     const m        = lookup[b.match_id];
-    const [home, away] = matchTeams(m);
+    const [home, away] = resolveTeams(m);
     const result   = resultMap[b.match_id];
     const double   = m[6] === 1;
     const pts      = calcPoints(b, result, double);

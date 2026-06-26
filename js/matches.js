@@ -204,7 +204,18 @@ function buildFullSlotMap(data) {
     if (winner) map[`P${pcode}`] = { team: winner, flag: FLAGS_MAP[winner] || '', provisional: false };
   }
 
+  _fullSlotMap = map;
   return map;
+}
+
+let _fullSlotMap = null;
+
+// Devuelve [homeTeam, awayTeam] resolviendo slots de eliminatorias si el mapa está cargado
+function resolveTeams(m) {
+  const [homeSlot, awaySlot] = matchTeams(m);
+  if (m[7] === 'groups' || !_fullSlotMap) return [homeSlot, awaySlot];
+  const he = _fullSlotMap[homeSlot], ae = _fullSlotMap[awaySlot];
+  return [he?.team || homeSlot, ae?.team || awaySlot];
 }
 
 // Escapa HTML para contenido externo/usuarios
