@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-26T22:11:59Z",
+  "updated": "2026-06-27T00:05:47Z",
   "groups": {
     "A": [
       {
@@ -1196,6 +1196,16 @@
       "home": 5,
       "away": 0,
       "status": "ft"
+    },
+    "2026-06-27_02:00_CaboVerde_vs_ArabiaSaudí": {
+      "home": 0,
+      "away": 0,
+      "status": "live"
+    },
+    "2026-06-27_02:00_Uruguay_vs_España": {
+      "home": 0,
+      "away": 0,
+      "status": "live"
     }
   }
 }
