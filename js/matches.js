@@ -255,12 +255,43 @@ async function refreshLiveResults() {
   } catch { /* keep previous value */ }
 }
 
+// Mapa lazy: "YYYY-MM-DD_HH:MM" → placeholder matchId (para partidos eliminatorios)
+let _koMatchIdMap = null;
+function _getKoMatchIdMap() {
+  if (_koMatchIdMap) return _koMatchIdMap;
+  _koMatchIdMap = {};
+  for (const m of MATCHES) {
+    if (m[7] === 'groups') continue;
+    _koMatchIdMap[`${m[0]}_${m[1]}`] = matchId(m);
+  }
+  return _koMatchIdMap;
+}
+
+// Bridge: añade entrada con placeholder key para que results[matchId(m)] funcione
+// en eliminatorias (el scraper usa nombres reales, el frontend usa '2ºA_vs_2ºB')
+function _bridgeKoResults(base) {
+  const koMap = _getKoMatchIdMap();
+  const bridged = { ...base };
+  for (const [mid, result] of Object.entries(base)) {
+    const dtKey = mid.substring(0, 16);
+    const placeholder = koMap[dtKey];
+    if (placeholder && !bridged[placeholder]) bridged[placeholder] = result;
+  }
+  return bridged;
+}
+
 function _mergeLive(base) {
   if (!_liveResults) return base;
+  const koMap = _getKoMatchIdMap();
   const merged = { ...base };
   for (const [mid, live] of Object.entries(_liveResults)) {
-    // Never let a stale 'live' entry overwrite a finished 'ft' result from standings.json
     if (!merged[mid] || merged[mid].status !== 'ft') merged[mid] = live;
+    // Bridge también el resultado en vivo al placeholder key de eliminatorias
+    const dtKey = mid.substring(0, 16);
+    const placeholder = koMap[dtKey];
+    if (placeholder && (!merged[placeholder] || merged[placeholder].status !== 'ft')) {
+      merged[placeholder] = live;
+    }
   }
   return merged;
 }
@@ -268,7 +299,7 @@ function _mergeLive(base) {
 async function getMatchResults() {
   if (_matchResults !== null) return _mergeLive(_matchResults);
   const data = await getStandingsData();
-  _matchResults = data.matchResults || {};
+  _matchResults = _bridgeKoResults(data.matchResults || {});
   return _mergeLive(_matchResults);
 }
 

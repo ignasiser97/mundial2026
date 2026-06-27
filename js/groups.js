@@ -211,6 +211,7 @@ function bktGoToDate(date) {
 
 let bktMap = {};
 let bktSlotMap = {};  // '1º A' / 'P73' → { team, flag, provisional }
+let bktResults = {};  // matchId(placeholder) → result
 
 function bktSlotLabel(slot) {
   const entry = bktSlotMap[slot];
@@ -235,9 +236,23 @@ function bktCard(code, pmap, extra='') {
   if (phase !== '3p' && phase !== 'final') {
     [home, away] = matchTeams(m).map(bktSlotLabel);
   }
+  const result = bktResults[matchId(m)];
+  let midHtml;
+  if (result?.status === 'live') {
+    midHtml = `<div class="bkt-score live">● ${result.home} – ${result.away}</div>`;
+  } else if (result?.status === 'ft') {
+    const h90 = result.home_90 ?? result.home;
+    const a90 = result.away_90 ?? result.away;
+    const hasET  = result.home !== h90 || result.away !== a90;
+    const hasPen = !hasET && h90 === a90 && result.winner;
+    const note   = hasPen ? '<div class="bkt-score-note">pen.</div>' : hasET ? '<div class="bkt-score-note">p.e.</div>' : '';
+    midHtml = `<div class="bkt-score">${h90} – ${a90}</div>${note}`;
+  } else {
+    midHtml = `<div class="bkt-div"></div>`;
+  }
   return `<div class="bkt-m${extra} clickable" onclick="bktGoToDate('${m[0]}')">
     <div class="bkt-team">${home}</div>
-    <div class="bkt-div"></div>
+    ${midHtml}
     <div class="bkt-team">${away}</div>
     <div class="bkt-date">${m[1]} · ${m[0].slice(5).replace('-','/')}</div>
   </div>`;
@@ -260,9 +275,10 @@ async function renderBracket() {
   bktMap = buildPMap();
 
   try {
-    const data = await getStandingsData();
+    const [data, results] = await Promise.all([getStandingsData(), getMatchResults()]);
     bktSlotMap = buildFullSlotMap(data);
-  } catch { bktSlotMap = {}; }
+    bktResults = results;
+  } catch { bktSlotMap = {}; bktResults = {}; }
 
   const leftHTML  = bktColumn(BKT_LEFT,  BKT_LEFT_LABELS,  'l');
   const rightHTML = bktColumn(BKT_RIGHT, BKT_RIGHT_LABELS, 'r');

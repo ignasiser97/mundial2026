@@ -26,6 +26,9 @@
 - [x] Eliminatorias: equipos reales en Calendario y Bracket — buildFullSlotMap() resuelve 1º/2º de grupo desde standings.json y cascada ganadores (Pxx) desde matchResults; automático para r32, r16, cuartos, semis
 - [x] Eliminatorias Apuestas: banner explicativo (marcador 90 min, pasa, líder visible); apuesta del líder del grupo visible antes del pitido, resto ocultas hasta cierre
 - [x] Tab "Bracket" en el menú inferior: bracket como primera pestaña y vista por defecto; grupos pasan a segunda pestaña
+- [x] Fix eliminatorias: bridge placeholder matchId → nombres reales en getMatchResults(); calendario y quiniela scoring ahora encuentran resultados de r32+
+- [x] Fix scraper: KNOCKOUT_START corregido a 28 jun (primer partido r32); partidos del 28 jun recibirán phase/winner correctos
+- [x] Bracket: muestra resultado a 90 min en tarjetas de partidos jugados; indicador pen./p.e. si aplica; score en vivo en verde
 
 ## Pendiente
 

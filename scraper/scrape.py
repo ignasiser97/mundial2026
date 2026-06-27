@@ -13,7 +13,7 @@ from zoneinfo import ZoneInfo
 
 import requests
 
-KNOCKOUT_START = _date(2026, 6, 29)
+KNOCKOUT_START = _date(2026, 6, 28)
 
 OUT_FILE = Path(__file__).parent.parent / "standings.json"
 MADRID   = ZoneInfo("Europe/Madrid")
