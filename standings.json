@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-27T00:05:47Z",
+  "updated": "2026-06-27T04:52:31Z",
   "groups": {
     "A": [
       {
@@ -355,50 +355,50 @@
       {
         "team": "España",
         "flag": "🇪🇸",
-        "pj": 2,
-        "g": 1,
+        "pj": 3,
+        "g": 2,
         "e": 1,
         "p": 0,
-        "gf": 4,
+        "gf": 5,
         "gc": 0,
-        "dg": 4,
-        "pts": 4
+        "dg": 5,
+        "pts": 7
       },
       {
         "team": "Uruguay",
         "flag": "🇺🇾",
-        "pj": 2,
+        "pj": 3,
         "g": 0,
         "e": 2,
-        "p": 0,
+        "p": 1,
         "gf": 3,
-        "gc": 3,
-        "dg": 0,
+        "gc": 4,
+        "dg": -1,
         "pts": 2
       },
       {
         "team": "Arabia Saudí",
         "flag": "🇸🇦",
-        "pj": 2,
+        "pj": 3,
         "g": 0,
-        "e": 1,
+        "e": 2,
         "p": 1,
         "gf": 1,
         "gc": 5,
         "dg": -4,
-        "pts": 1
+        "pts": 2
       },
       {
         "team": "Cabo Verde",
         "flag": "🇨🇻",
-        "pj": 2,
+        "pj": 3,
         "g": 0,
-        "e": 2,
+        "e": 3,
         "p": 0,
         "gf": 2,
         "gc": 2,
         "dg": 0,
-        "pts": 2
+        "pts": 3
       }
     ],
     "I": [
@@ -674,6 +674,13 @@
       "assists": 0
     },
     {
+      "player": "Brian Brobbey",
+      "team": "Países Bajos",
+      "flag": "🇳🇱",
+      "goals": 3,
+      "assists": 0
+    },
+    {
       "player": "Ismaïla Sarr",
       "team": "Senegal",
       "flag": "🇸🇳",
@@ -733,13 +740,6 @@
       "player": "Rubén Vargas",
       "team": "Suiza",
       "flag": "🇨🇭",
-      "goals": 2,
-      "assists": 0
-    },
-    {
-      "player": "Ermin Mahmic",
-      "team": "Bosnia",
-      "flag": "🇧🇦",
       "goals": 2,
       "assists": 0
     }
@@ -1200,11 +1200,21 @@
     "2026-06-27_02:00_CaboVerde_vs_ArabiaSaudí": {
       "home": 0,
       "away": 0,
-      "status": "live"
+      "status": "ft"
     },
     "2026-06-27_02:00_Uruguay_vs_España": {
       "home": 0,
-      "away": 0,
+      "away": 1,
+      "status": "ft"
+    },
+    "2026-06-27_05:00_Egipto_vs_RIdeIrán": {
+      "home": 1,
+      "away": 1,
+      "status": "live"
+    },
+    "2026-06-27_05:00_NuevaZelanda_vs_Bélgica": {
+      "home": 1,
+      "away": 4,
       "status": "live"
     }
   }
