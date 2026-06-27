@@ -1061,7 +1061,7 @@ html,body { overscroll-behavior-y: contain; }
   </button>
   <button class="tab-btn" data-tab="grp" onclick="switchTab('grp')">
     <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></span>
-    Grupos
+    Bracket
   </button>
   <button class="tab-btn" data-tab="qnl" onclick="switchTab('qnl')">
     <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
@@ -1195,18 +1195,18 @@ html,body { overscroll-behavior-y: contain; }
 <!-- ══ GRUPOS ══ -->
 <div id="grp-tab" class="hidden">
   <div class="grp-subtabs">
-    <button class="grp-stab active" onclick="grpSwitchSub('grupos')">Grupos</button>
-    <button class="grp-stab"        onclick="grpSwitchSub('bracket')">Bracket</button>
+    <button class="grp-stab active" onclick="grpSwitchSub('bracket')">Bracket</button>
+    <button class="grp-stab"        onclick="grpSwitchSub('grupos')">Grupos</button>
   </div>
-  <div id="grp-sub-grupos">
+  <div id="grp-sub-bracket">
+    <div id="bracket-content"></div>
+  </div>
+  <div id="grp-sub-grupos" class="hidden">
     <div class="groups-wrap">
       <div id="last-updated" class="last-updated">Cargando…</div>
       <div id="grp-filter-bar" class="grp-filter-bar hidden"></div>
       <div id="groups-content"><div class="empty">Cargando clasificaciones…</div></div>
     </div>
-  </div>
-  <div id="grp-sub-bracket" class="hidden">
-    <div id="bracket-content"></div>
   </div>
 
 </div>

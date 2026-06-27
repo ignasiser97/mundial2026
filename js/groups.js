@@ -1,4 +1,4 @@
-let grpSubTab    = 'grupos';
+let grpSubTab    = 'bracket';
 let bracketPhase = 'r32';
 let grpLoaded    = false;
 
@@ -16,7 +16,7 @@ const BRACKET_PHASES = [
 function grpSwitchSub(sub) {
   grpSubTab = sub;
   document.querySelectorAll('.grp-stab').forEach((b,i) =>
-    b.classList.toggle('active', ['grupos','bracket'][i] === sub)
+    b.classList.toggle('active', ['bracket','grupos'][i] === sub)
   );
   document.getElementById('grp-sub-grupos').classList.toggle('hidden', sub !== 'grupos');
   document.getElementById('grp-sub-bracket').classList.toggle('hidden', sub !== 'bracket');

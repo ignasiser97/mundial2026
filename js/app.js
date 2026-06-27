@@ -34,7 +34,7 @@
     if (!triggered) return;
     clearMatchResultsCache();
     const tab = document.querySelector('.tab-btn.active')?.dataset.tab;
-    if      (tab === 'grp') { tabLoaded.grp=false; loadGroups(); }
+    if      (tab === 'grp') { tabLoaded.grp=false; loadGroups(); if (grpSubTab === 'bracket') renderBracket(); }
     else if (tab === 'sts') { tabLoaded.sts=false; loadStats(); }
     else if (tab === 'nws') { loadNews(true); }
     else if (tab === 'qnl') { qnlLoaded=false; loadQuiniela(); }
@@ -101,7 +101,7 @@ function switchTab(tab) {
     }
   });
   showHint(tab);
-  if (tab === 'grp' && !tabLoaded.grp) { tabLoaded.grp = true; loadGroups(); }
+  if (tab === 'grp' && !tabLoaded.grp) { tabLoaded.grp = true; loadGroups(); renderBracket(); }
   if (tab === 'sts' && !tabLoaded.sts) { tabLoaded.sts = true; loadStats(); }
   if (tab === 'sim' && !tabLoaded.sim) { tabLoaded.sim = true; simInit(); }
   if (tab === 'sqd' && !tabLoaded.sqd) { tabLoaded.sqd = true; initSquads(); }

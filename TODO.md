@@ -25,6 +25,7 @@
 - [x] matches.js: hora Brasil vs Haití corregida 03:00 → 02:30 (ESPN marcó 00:30 UTC); MATCHES.sort() al cargar para garantizar orden cronológico siempre; fix entradas fuera de orden en 14 jun y 20 jun
 - [x] Eliminatorias: equipos reales en Calendario y Bracket — buildFullSlotMap() resuelve 1º/2º de grupo desde standings.json y cascada ganadores (Pxx) desde matchResults; automático para r32, r16, cuartos, semis
 - [x] Eliminatorias Apuestas: banner explicativo (marcador 90 min, pasa, líder visible); apuesta del líder del grupo visible antes del pitido, resto ocultas hasta cierre
+- [x] Tab "Bracket" en el menú inferior: bracket como primera pestaña y vista por defecto; grupos pasan a segunda pestaña
 
 ## Pendiente
 
