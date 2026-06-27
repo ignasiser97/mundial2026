@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-27T04:52:31Z",
+  "updated": "2026-06-27T07:48:30Z",
   "groups": {
     "A": [
       {
@@ -305,49 +305,49 @@
       {
         "team": "Bélgica",
         "flag": "🇧🇪",
-        "pj": 2,
-        "g": 0,
+        "pj": 3,
+        "g": 1,
         "e": 2,
         "p": 0,
-        "gf": 1,
-        "gc": 1,
-        "dg": 0,
-        "pts": 2
+        "gf": 6,
+        "gc": 2,
+        "dg": 4,
+        "pts": 5
       },
       {
         "team": "RI de Irán",
         "flag": "🇮🇷",
-        "pj": 2,
+        "pj": 3,
         "g": 0,
-        "e": 2,
+        "e": 3,
         "p": 0,
-        "gf": 2,
-        "gc": 2,
+        "gf": 3,
+        "gc": 3,
         "dg": 0,
-        "pts": 2
+        "pts": 3
       },
       {
         "team": "Egipto",
         "flag": "🇪🇬",
-        "pj": 2,
+        "pj": 3,
         "g": 1,
-        "e": 1,
+        "e": 2,
         "p": 0,
-        "gf": 4,
-        "gc": 2,
+        "gf": 5,
+        "gc": 3,
         "dg": 2,
-        "pts": 4
+        "pts": 5
       },
       {
         "team": "Nueva Zelanda",
         "flag": "🇳🇿",
-        "pj": 2,
+        "pj": 3,
         "g": 0,
         "e": 1,
-        "p": 1,
-        "gf": 3,
-        "gc": 5,
-        "dg": -2,
+        "p": 2,
+        "gf": 4,
+        "gc": 10,
+        "dg": -6,
         "pts": 1
       }
     ],
@@ -653,6 +653,13 @@
       "assists": 0
     },
     {
+      "player": "Elijah Just",
+      "team": "Nueva Zelanda",
+      "flag": "🇳🇿",
+      "goals": 3,
+      "assists": 0
+    },
+    {
       "player": "Johan Manzambi",
       "team": "Suiza",
       "flag": "🇨🇭",
@@ -723,9 +730,9 @@
       "assists": 0
     },
     {
-      "player": "Elijah Just",
-      "team": "Nueva Zelanda",
-      "flag": "🇳🇿",
+      "player": "Ramin Rezaeian",
+      "team": "RI de Irán",
+      "flag": "🇮🇷",
       "goals": 2,
       "assists": 0
     },
@@ -733,13 +740,6 @@
       "player": "Daniel Muñoz",
       "team": "Colombia",
       "flag": "🇨🇴",
-      "goals": 2,
-      "assists": 0
-    },
-    {
-      "player": "Rubén Vargas",
-      "team": "Suiza",
-      "flag": "🇨🇭",
       "goals": 2,
       "assists": 0
     }
@@ -1210,12 +1210,12 @@
     "2026-06-27_05:00_Egipto_vs_RIdeIrán": {
       "home": 1,
       "away": 1,
-      "status": "live"
+      "status": "ft"
     },
     "2026-06-27_05:00_NuevaZelanda_vs_Bélgica": {
       "home": 1,
-      "away": 4,
-      "status": "live"
+      "away": 5,
+      "status": "ft"
     }
   }
 }
