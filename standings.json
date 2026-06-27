@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-27T21:01:33Z",
+  "updated": "2026-06-27T23:00:37Z",
   "groups": {
     "A": [
       {
@@ -555,49 +555,49 @@
       {
         "team": "Inglaterra",
         "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-        "pj": 2,
-        "g": 1,
+        "pj": 3,
+        "g": 2,
         "e": 1,
         "p": 0,
-        "gf": 4,
+        "gf": 6,
         "gc": 2,
-        "dg": 2,
-        "pts": 4
+        "dg": 4,
+        "pts": 7
       },
       {
         "team": "Croacia",
         "flag": "🇭🇷",
-        "pj": 2,
-        "g": 1,
+        "pj": 3,
+        "g": 2,
         "e": 0,
         "p": 1,
-        "gf": 3,
-        "gc": 4,
-        "dg": -1,
-        "pts": 3
+        "gf": 5,
+        "gc": 5,
+        "dg": 0,
+        "pts": 6
       },
       {
         "team": "Panamá",
         "flag": "🇵🇦",
-        "pj": 2,
+        "pj": 3,
         "g": 0,
         "e": 0,
-        "p": 2,
+        "p": 3,
         "gf": 0,
-        "gc": 2,
-        "dg": -2,
+        "gc": 4,
+        "dg": -4,
         "pts": 0
       },
       {
         "team": "Ghana",
         "flag": "🇬🇭",
-        "pj": 2,
+        "pj": 3,
         "g": 1,
         "e": 1,
-        "p": 0,
-        "gf": 1,
-        "gc": 0,
-        "dg": 1,
+        "p": 1,
+        "gf": 2,
+        "gc": 2,
+        "dg": 0,
         "pts": 4
       }
     ]
@@ -1215,6 +1215,16 @@
     "2026-06-27_05:00_NuevaZelanda_vs_Bélgica": {
       "home": 1,
       "away": 5,
+      "status": "ft"
+    },
+    "2026-06-27_23:00_Croacia_vs_Ghana": {
+      "home": 2,
+      "away": 1,
+      "status": "ft"
+    },
+    "2026-06-27_23:00_Panamá_vs_Inglaterra": {
+      "home": 0,
+      "away": 2,
       "status": "ft"
     }
   }
