@@ -166,19 +166,18 @@ async function renderCalendar() {
     const vd=viewDate(m[0],m[1]);
     (byDay[vd]=byDay[vd]||[]).push(m);
   }
-  // Primer día >= hoy para el ancla de scroll
-  const anchorDay = Object.keys(byDay).sort().find(vd => vd >= today) || '';
+  const sortedDays = Object.keys(byDay).sort();
+  const anchorDay = sortedDays.find(vd => vd >= today) || '';
 
-  let html='', lastPhase='';
-  for(const vd of Object.keys(byDay).sort()){
-    const isPast    = vd < today;
-    const isToday   = vd === today;
-    const anchorId  = vd === anchorDay ? ' id="cal-today"' : '';
-    const dayCls    = isPast ? ' past-day' : isToday ? ' today-day' : '';
-    html+=`<div class="day-header${dayCls}"${anchorId}>${fmtDate(vd)}${isToday ? ' <span class="day-today-badge">HOY</span>' : ''}</div>`;
+  // Construye el HTML de un día completo (cabecera + filas de partidos)
+  function buildDayHtml(vd, isPast, lastPhaseRef) {
+    const isToday  = vd === today;
+    const anchorId = vd === anchorDay ? ' id="cal-today"' : '';
+    const dayCls   = isPast ? ' past-day' : isToday ? ' today-day' : '';
+    let out = `<div class="day-header${dayCls}"${anchorId}>${fmtDate(vd)}${isToday ? ' <span class="day-today-badge">HOY</span>' : ''}</div>`;
     for(const m of byDay[vd]){
       const [,time,label,venue,,ch,flags,phase]=m;
-      if(phase!==lastPhase){ html+=`<div class="phase-banner">${PHASES[phase]||phase}</div>`; lastPhase=phase; }
+      if(phase!==lastPhaseRef.v){ out+=`<div class="phase-banner">${PHASES[phase]||phase}</div>`; lastPhaseRef.v=phase; }
       const night = isNight(time);
       const groupLetter = phase==='groups' ? (label.match(/Grupo ([A-L])/)?.[1] || null) : null;
       const rowCls = ['match-row',isPast?'past-match':'',flags===1?'spain':flags===2?'spain-pos':'',groupLetter?'match-row-link':''].filter(Boolean).join(' ');
@@ -193,8 +192,8 @@ async function renderCalendar() {
       } else {
         const he = slotMap[homeSlot], ae = slotMap[awaySlot];
         homeTeam = he?.team || homeSlot; awayTeam = ae?.team || awaySlot;
-        homeFlag = he?.flag || ''; awayFlag = ae?.flag || '';
-        homeProvisional = he?.provisional ?? true; awayProvisional = ae?.provisional ?? true;
+        homeFlag = he?.flag || FLAGS_MAP[homeSlot] || ''; awayFlag = ae?.flag || FLAGS_MAP[awaySlot] || '';
+        homeProvisional = he?.provisional ?? false; awayProvisional = ae?.provisional ?? false;
       }
 
       const badges = (ch.includes('d') ? '<span class="badge bd">DAZN</span>' : '') +
@@ -223,7 +222,7 @@ async function renderCalendar() {
       const homeProvHtml = homeProvisional ? '<span class="bkt-prov"> ~</span>' : '';
       const awayProvHtml = awayProvisional ? '<span class="bkt-prov"> ~</span>' : '';
 
-      html += `<div class="${rowCls}"${onclick}>
+      out += `<div class="${rowCls}"${onclick}>
         <div class="mrow-home">
           ${homeFlag ? `<span class="mrow-flag">${homeFlag}</span>` : ''}
           <span class="${homeTnCls}"${homeTnClick}>${homeTeam}${homeProvHtml}</span>
@@ -237,13 +236,39 @@ async function renderCalendar() {
         ${oddsHtml}
       </div>`;
     }
+    return out;
   }
-  document.getElementById('cal-content').innerHTML=html;
 
-  // Sin filtro de fecha → scroll automático al día de hoy
-  if(!fDate && anchorDay){
-    requestAnimationFrame(()=>{
-      document.getElementById('cal-today')?.scrollIntoView({ block:'start' });
+  // Con filtro de fecha: mostrar todo junto sin separación pasado/futuro
+  if (fDate) {
+    const lp = { v: '' };
+    const html = sortedDays.map(vd => buildDayHtml(vd, vd < today, lp)).join('');
+    document.getElementById('cal-content').innerHTML = html;
+    return;
+  }
+
+  // Sin filtro: pasados en desplegable, próximos directamente
+  const pastDays     = sortedDays.filter(vd => vd < today);
+  const upcomingDays = sortedDays.filter(vd => vd >= today);
+
+  const lpPast = { v: '' };
+  const pastInner = pastDays.map(vd => buildDayHtml(vd, true, lpPast)).join('');
+
+  const lpUp = { v: '' };
+  const upcomingHtml = upcomingDays.map(vd => buildDayHtml(vd, false, lpUp)).join('');
+
+  const pastBlock = pastInner
+    ? `<details class="cal-past-section">
+         <summary class="cal-past-summary">Partidos pasados <span class="cal-past-count">${pastDays.length} días</span></summary>
+         ${pastInner}
+       </details>`
+    : '';
+
+  document.getElementById('cal-content').innerHTML = pastBlock + upcomingHtml;
+
+  if (anchorDay) {
+    requestAnimationFrame(() => {
+      document.getElementById('cal-today')?.scrollIntoView({ block: 'start' });
     });
   }
 }
