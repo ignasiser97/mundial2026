@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-27T23:00:37Z",
+  "updated": "2026-06-28T03:38:26Z",
   "groups": {
     "A": [
       {
@@ -505,50 +505,50 @@
       {
         "team": "Colombia",
         "flag": "🇨🇴",
-        "pj": 2,
+        "pj": 3,
         "g": 2,
-        "e": 0,
+        "e": 1,
         "p": 0,
         "gf": 4,
         "gc": 1,
         "dg": 3,
-        "pts": 6
+        "pts": 7
       },
       {
         "team": "Portugal",
         "flag": "🇵🇹",
-        "pj": 2,
+        "pj": 3,
         "g": 1,
-        "e": 1,
+        "e": 2,
         "p": 0,
         "gf": 6,
         "gc": 1,
         "dg": 5,
-        "pts": 4
+        "pts": 5
       },
       {
         "team": "Uzbekistán",
         "flag": "🇺🇿",
-        "pj": 2,
+        "pj": 3,
         "g": 0,
         "e": 0,
-        "p": 2,
-        "gf": 1,
-        "gc": 8,
-        "dg": -7,
+        "p": 3,
+        "gf": 2,
+        "gc": 11,
+        "dg": -9,
         "pts": 0
       },
       {
         "team": "RD Congo",
         "flag": "🇨🇩",
-        "pj": 2,
-        "g": 0,
+        "pj": 3,
+        "g": 1,
         "e": 1,
         "p": 1,
-        "gf": 1,
-        "gc": 2,
-        "dg": -1,
-        "pts": 1
+        "gf": 4,
+        "gc": 3,
+        "dg": 1,
+        "pts": 4
       }
     ],
     "L": [
@@ -1226,6 +1226,33 @@
       "home": 0,
       "away": 2,
       "status": "ft"
+    },
+    "2026-06-28_01:30_Colombia_vs_Portugal": {
+      "home": 0,
+      "away": 0,
+      "status": "ft",
+      "phase": "knockout",
+      "home_90": 0,
+      "away_90": 0
+    },
+    "2026-06-28_01:30_RDCongo_vs_Uzbekistán": {
+      "home": 3,
+      "away": 1,
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "home",
+      "home_90": 3,
+      "away_90": 1
+    },
+    "2026-06-28_04:00_Argelia_vs_Austria": {
+      "home": 2,
+      "away": 2,
+      "status": "live"
+    },
+    "2026-06-28_04:00_Jordania_vs_Argentina": {
+      "home": 1,
+      "away": 2,
+      "status": "live"
     }
   }
 }
