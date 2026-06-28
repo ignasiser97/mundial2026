@@ -1230,36 +1230,22 @@
     "2026-06-28_01:30_Colombia_vs_Portugal": {
       "home": 0,
       "away": 0,
-      "status": "ft",
-      "phase": "knockout",
-      "home_90": 0,
-      "away_90": 0
+      "status": "ft"
     },
     "2026-06-28_01:30_RDCongo_vs_Uzbekistán": {
       "home": 3,
       "away": 1,
-      "status": "ft",
-      "phase": "knockout",
-      "winner": "home",
-      "home_90": 3,
-      "away_90": 1
+      "status": "ft"
     },
     "2026-06-28_04:00_Argelia_vs_Austria": {
       "home": 3,
       "away": 3,
-      "status": "ft",
-      "phase": "knockout",
-      "home_90": 3,
-      "away_90": 3
+      "status": "ft"
     },
     "2026-06-28_04:00_Jordania_vs_Argentina": {
       "home": 1,
       "away": 3,
-      "status": "ft",
-      "phase": "knockout",
-      "winner": "away",
-      "home_90": 1,
-      "away_90": 3
+      "status": "ft"
     },
     "2026-06-28_21:00_Sudáfrica_vs_Canadá": {
       "home": 0,

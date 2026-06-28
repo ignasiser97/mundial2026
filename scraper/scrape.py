@@ -7,13 +7,15 @@ Slug correcto: fifa.world  (no fifa.world-cup)
 import json
 import re
 import sys
-from datetime import datetime, timezone, date as _date, timedelta
+from datetime import datetime, timezone, date as _date, timedelta, time as _time
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import requests
 
-KNOCKOUT_START = _date(2026, 6, 28)
+# Primer partido r32: 28 jun 21:00 hora España → corte a las 20:00 para no
+# marcar como knockout los partidos de grupos que también son del 28 jun (01:30 y 04:00)
+KNOCKOUT_START = datetime(2026, 6, 28, 20, 0)
 
 OUT_FILE = Path(__file__).parent.parent / "standings.json"
 MADRID   = ZoneInfo("Europe/Madrid")
@@ -115,8 +117,8 @@ def parse_scoreboard(data: dict) -> tuple:
         except Exception:
             continue
 
-        match_date  = _date.fromisoformat(date_str)
-        is_knockout = match_date >= KNOCKOUT_START
+        match_dt    = datetime.fromisoformat(f"{date_str}T{time_str}:00")
+        is_knockout = match_dt >= KNOCKOUT_START
         mid    = to_match_id(home_es, away_es, date_str, time_str)
         status = "live" if state == "in" else "ft"
 
