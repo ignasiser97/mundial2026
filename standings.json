@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-28T19:17:30Z",
+  "updated": "2026-06-28T20:59:59Z",
   "groups": {
     "A": [
       {
@@ -1249,8 +1249,12 @@
     },
     "2026-06-28_21:00_Sudáfrica_vs_Canadá": {
       "home": 0,
-      "away": 0,
-      "status": "live"
+      "away": 1,
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "away",
+      "home_90": 0,
+      "away_90": 1
     }
   }
 }
