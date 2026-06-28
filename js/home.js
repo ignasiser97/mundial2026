@@ -141,7 +141,7 @@ async function renderHomeLive(el) {
     const links = `
       <div class="home-quick-links">
         <button class="home-ql-btn" onclick="switchTab('qnl')">⚽<span>Apuestas</span></button>
-        <button class="home-ql-btn" onclick="switchTab('grp')">📊<span>Grupos</span></button>
+        <button class="home-ql-btn" onclick="switchTab('grp')">🏆<span>Bracket</span></button>
         <button class="home-ql-btn" onclick="switchTab('cal')">📅<span>Calendario</span></button>
       </div>`;
 
