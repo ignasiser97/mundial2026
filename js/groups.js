@@ -218,9 +218,9 @@ function bktSlotLabel(slot) {
   const letter = slot.match(/[A-L]$/) ? slot.slice(-1) : null;
   const nav = letter ? ` onclick="navigateToGroup('${letter}')"` : '';
   if (!entry) {
-    return letter
-      ? `<span class="bkt-nav-link"${nav}>${slot}</span>`
-      : slot;
+    const flag = FLAGS_MAP[slot] || '';
+    const text = flag ? `${flag} ${slot}` : slot;
+    return letter ? `<span class="bkt-nav-link"${nav}>${text}</span>` : text;
   }
   const label = `${entry.flag || ''} ${entry.team}${entry.provisional ? '<span class="bkt-prov"> ~</span>' : ''}`;
   return letter
