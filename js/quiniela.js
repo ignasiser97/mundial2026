@@ -124,7 +124,8 @@ function calcPoints(bet, result, double = false) {
     else {
       const betWin = bet.qualifier
         || (bet.home_score > bet.away_score ? 'home' : bet.home_score < bet.away_score ? 'away' : null);
-      pts = betWin && betWin === result.winner ? 1 : 0;
+      const winner = result.winner ?? (h90 > a90 ? 'home' : h90 < a90 ? 'away' : null);
+      pts = betWin && betWin === winner ? 1 : 0;
     }
   } else {
     if (bet.home_score === result.home_score && bet.away_score === result.away_score) pts = 3;
@@ -1076,8 +1077,11 @@ async function toggleGroupBets(mid, btn) {
 
   const isLiveResult = result?.status === 'live';
   const [matchHome, matchAway] = matchObj ? resolveTeams(matchObj) : ['', ''];
-  const advLabel = result?.phase === 'knockout' && result?.winner && !isLiveResult
-    ? ` · Pasa: <strong>${result.winner === 'home' ? matchHome : matchAway}</strong>`
+  const _rWinner = result?.winner ?? (result?.phase === 'knockout' && result?.status === 'ft'
+    ? (result.home_score > result.away_score ? 'home' : result.home_score < result.away_score ? 'away' : null)
+    : null);
+  const advLabel = result?.phase === 'knockout' && _rWinner && !isLiveResult
+    ? ` · Pasa: <strong>${_rWinner === 'home' ? matchHome : matchAway}</strong>`
     : '';
   const resultHeader = result
     ? `<div style="font-size:11px;color:${isLiveResult?'var(--pos)':'var(--muted)'};text-align:center;margin-bottom:8px">
@@ -1271,11 +1275,14 @@ async function renderMisApuestas(el) {
     const doubleBadge = double ? `<span class="bet-double-badge">🇪🇸 ×2</span>` : '';
     const isLiveBet = result?.status === 'live';
     const isKO = result?.phase === 'knockout';
+    const koWinner = result?.winner ?? (isKO && result?.status === 'ft'
+      ? (result.home_score > result.away_score ? 'home' : result.home_score < result.away_score ? 'away' : null)
+      : null);
     const betQualHtml = isKO && b.qualifier
       ? `<div class="bq-row"><span class="bq-label">Apostaste pasa:</span><span class="bq-val">${b.qualifier === 'home' ? (FLAGS_MAP[home] || '') + ' ' + home : (FLAGS_MAP[away] || '') + ' ' + away}</span></div>`
       : '';
-    const advHtml = isKO && result?.winner && !isLiveBet
-      ? ` · pasa ${result.winner === 'home' ? (FLAGS_MAP[home] || '') + ' ' + home : (FLAGS_MAP[away] || '') + ' ' + away}`
+    const advHtml = isKO && koWinner && !isLiveBet
+      ? ` · pasa ${koWinner === 'home' ? (FLAGS_MAP[home] || '') + ' ' + home : (FLAGS_MAP[away] || '') + ' ' + away}`
       : '';
     const resultSection = result ? `
       <div class="bet-result-row">

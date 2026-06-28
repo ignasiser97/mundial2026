@@ -29,6 +29,8 @@
 - [x] Fix eliminatorias: bridge placeholder matchId → nombres reales en getMatchResults(); calendario y quiniela scoring ahora encuentran resultados de r32+
 - [x] Fix scraper: KNOCKOUT_START corregido a 28 jun (primer partido r32); partidos del 28 jun recibirán phase/winner correctos
 - [x] Bracket: muestra resultado a 90 min en tarjetas de partidos jugados; indicador pen./p.e. si aplica; score en vivo en verde
+- [x] Fix home: usa resolveTeams() (en vez de matchTeams) para mostrar equipos reales en eliminatorias, no códigos de slot (2º A)
+- [x] Fix scoring eliminatorias: calcPoints infiere ganador por marcador si result.winner no viene de ESPN; scraper añade fallback igual
 
 ## Pendiente
 

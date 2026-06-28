@@ -82,7 +82,8 @@ async function renderHomeLive(el) {
 
   try {
     await refreshLiveResults();
-    const [results, oddsData] = await Promise.all([getMatchResults(), getOddsData()]);
+    const [results, oddsData, standingsData] = await Promise.all([getMatchResults(), getOddsData(), getStandingsData()]);
+    buildFullSlotMap(standingsData);
     const allOdds = oddsData.odds || {};
     const today = spainToday();
     const now = Date.now();
@@ -124,7 +125,7 @@ async function renderHomeLive(el) {
         <div class="home-section-label">Partidos de hoy</div>
         <div class="home-live-matches">${cards}</div>`;
     } else if (nextMatch) {  // (cierre del bloque liveMatches.length > 0 está arriba)
-      const [home, away] = matchTeams(nextMatch);
+      const [home, away] = resolveTeams(nextMatch);
       const hf = FLAGS_MAP[home] || '';
       const af = FLAGS_MAP[away] || '';
       matchSection = `
@@ -169,7 +170,7 @@ async function renderHomeLive(el) {
 function _homeLiveRow(m, results, allOdds) {
   const mid    = matchId(m);
   const result = results[mid];
-  const [homeTeam, awayTeam] = matchTeams(m);
+  const [homeTeam, awayTeam] = resolveTeams(m);
   const hf      = FLAGS_MAP[homeTeam] || '';
   const af      = FLAGS_MAP[awayTeam] || '';
   const night   = isNight(m[1]);
@@ -205,7 +206,7 @@ function _homeLiveRow(m, results, allOdds) {
 }
 
 function _homeLiveScoreboard(m, result) {
-  const [homeTeam, awayTeam] = matchTeams(m);
+  const [homeTeam, awayTeam] = resolveTeams(m);
   const hf = FLAGS_MAP[homeTeam] || '';
   const af = FLAGS_MAP[awayTeam] || '';
 

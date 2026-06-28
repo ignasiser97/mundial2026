@@ -136,6 +136,14 @@ def parse_scoreboard(data: dict) -> tuple:
                     entry["winner"] = "home"
                 elif away_winner:
                     entry["winner"] = "away"
+                else:
+                    # Fallback: inferir por marcador (cubre partidos sin ET/penaltis)
+                    h = int(home.get("score") or 0)
+                    a = int(away.get("score") or 0)
+                    if h > a:
+                        entry["winner"] = "home"
+                    elif a > h:
+                        entry["winner"] = "away"
             event_id_to_teams[event["id"]] = (home_es, away_es, mid, is_knockout)
 
         results[mid] = entry
