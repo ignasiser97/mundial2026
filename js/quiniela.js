@@ -861,14 +861,12 @@ async function renderApostar(el) {
     .map(m => matchId(m));
 
   const groupUserIds = await ensureGroupUserIds();
-  const [{ data: groupBetsRaw }, { data: allGroupBetsRaw }, oddsData, matchResultsMap] = await Promise.all([
+  const [{ data: groupBetsRaw }, { data: allGroupBetsRaw }, matchResultsMap] = await Promise.all([
     db.from('bets').select('match_id, home_score, away_score, qualifier, user_id, users(name)').in('match_id', candidateIds),
     db.from('bets').select('user_id, match_id, home_score, away_score, qualifier').in('user_id', groupUserIds),
-    getOddsData(),
     getMatchResults(),
   ]);
   _koLeaderId = computeLeaderId(allGroupBetsRaw, matchResultsMap, groupUserIds);
-  const allOdds = oddsData.odds || {};
 
   const isFinished = mid => matchResultsMap[mid]?.status === 'ft';
 
@@ -991,8 +989,6 @@ async function renderApostar(el) {
           <div id="gbets-${mid}" class="hidden"></div>`;
       }
 
-      const o = !started && allOdds[mid];
-      const oddsLine = o ? `<div class="bet-odds">${oddsChips(o)}</div>` : '';
       const doubleBadge = m[6] === 1 ? `<span class="bet-double-badge">🇪🇸 ×2</span>` : '';
 
       return `
@@ -1001,7 +997,6 @@ async function renderApostar(el) {
           <div class="bet-card-header" onclick="toggleBetDropdown('${mid}')">
             <div class="bet-meta"><span class="${isNight(m[1])?'night':''}">${m[1]}${isNight(m[1])?' 🌙':''}</span> · ${m[3].split(',').pop().trim()}</div>
           </div>
-          ${oddsLine}
           <div id="bdrop-${mid}" class="bet-dropdown hidden">${dropContent}</div>
           ${body}
         </div>`;

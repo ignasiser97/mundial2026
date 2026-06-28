@@ -141,8 +141,7 @@ document.addEventListener('click', e => {
 
 // ── Render calendario ──────────────────────────────────────────
 async function renderCalendar() {
-  const [results, oddsData, standingsData] = await Promise.all([getMatchResults(), getOddsData(), getStandingsData()]);
-  const allOdds = oddsData.odds || {};
+  const [results, standingsData] = await Promise.all([getMatchResults(), getStandingsData()]);
   const slotMap = buildFullSlotMap(standingsData);
   const filtered = MATCHES.filter(([date,time,label,,,ch,flags])=>{
     const vd=viewDate(date,time);
@@ -205,8 +204,6 @@ async function renderCalendar() {
 
       const mid = matchId(m);
       const result = results[mid];
-      const o = !result && allOdds[mid];
-      const oddsHtml = o ? `<div class="odds-row">${oddsChips(o)}</div>` : '';
       const isLive = result?.status === 'live';
       const started = isPast || Date.now() >= spainToUTC(m[0], m[1]);
       const centerHtml = result
@@ -233,7 +230,6 @@ async function renderCalendar() {
           ${awayFlag ? `<span class="mrow-flag">${awayFlag}</span>` : ''}
         </div>
         <div class="mrow-meta">${badges} ${venueName}${metaRight}</div>
-        ${oddsHtml}
       </div>`;
     }
     return out;

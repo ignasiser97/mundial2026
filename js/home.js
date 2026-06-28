@@ -82,9 +82,8 @@ async function renderHomeLive(el) {
 
   try {
     await refreshLiveResults();
-    const [results, oddsData, standingsData] = await Promise.all([getMatchResults(), getOddsData(), getStandingsData()]);
+    const [results, standingsData] = await Promise.all([getMatchResults(), getStandingsData()]);
     buildFullSlotMap(standingsData);
-    const allOdds = oddsData.odds || {};
     const today = spainToday();
     const now = Date.now();
 
@@ -116,11 +115,11 @@ async function renderHomeLive(el) {
     if (liveMatches.length) {
       const scoreboards = liveMatches.map(m => _homeLiveScoreboard(m, results[matchId(m)])).join('');
       const rest = otherMatches.length
-        ? `<div class="home-section-label" style="margin-top:18px">Resto del día</div><div class="home-live-matches">${otherMatches.map(m => _homeLiveRow(m, results, allOdds)).join('')}</div>`
+        ? `<div class="home-section-label" style="margin-top:18px">Resto del día</div><div class="home-live-matches">${otherMatches.map(m => _homeLiveRow(m, results)).join('')}</div>`
         : '';
       matchSection = scoreboards + rest;
     } else if (todayMatches.length) {
-      const cards = todayMatches.map(m => _homeLiveRow(m, results, allOdds)).join('');
+      const cards = todayMatches.map(m => _homeLiveRow(m, results)).join('');
       matchSection = `
         <div class="home-section-label">Partidos de hoy</div>
         <div class="home-live-matches">${cards}</div>`;
@@ -167,7 +166,7 @@ async function renderHomeLive(el) {
   }
 }
 
-function _homeLiveRow(m, results, allOdds) {
+function _homeLiveRow(m, results) {
   const mid    = matchId(m);
   const result = results[mid];
   const [homeTeam, awayTeam] = resolveTeams(m);
@@ -183,8 +182,6 @@ function _homeLiveRow(m, results, allOdds) {
       ? `<div class="mrow-time" style="color:var(--pos)">EN VIVO</div><div class="mrow-sub">● EN DIRECTO</div>`
       : `<div class="mrow-time${night?' night':''}">${m[1]}</div><div class="mrow-sub">ESP${night?' 🌙':''}</div>`;
 
-  const o = !result && !started && allOdds[mid];
-  const oddsHtml = o ? `<div class="odds-row">${oddsChips(o)}</div>` : '';
 
   const flags  = m[6];
   const rowCls = ['match-row match-row-link', flags===1?'spain':flags===2?'spain-pos':''].filter(Boolean).join(' ');
@@ -201,7 +198,6 @@ function _homeLiveRow(m, results, allOdds) {
       ${af ? `<span class="mrow-flag">${af}</span>` : ''}
     </div>
     <div class="mrow-meta">${m[3].split(',')[0]} · ${PHASES[m[7]]||m[7]}</div>
-    ${oddsHtml}
   </div>`;
 }
 
