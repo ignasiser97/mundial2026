@@ -341,6 +341,9 @@ async function loadMyBets() {
   const { data } = await db.from('bets').select('*').eq('user_id', qnlUser.id);
   qnlBets = {};
   (data || []).forEach(b => { qnlBets[b.match_id] = b; });
+  for (const [oldId, newId] of Object.entries(OLD_THIRD_PLACE_BET_IDS)) {
+    if (qnlBets[oldId] && !qnlBets[newId]) qnlBets[newId] = qnlBets[oldId];
+  }
   qnlBetsDirty = false;
 }
 
@@ -1203,6 +1206,9 @@ async function renderMisApuestas(el) {
 
   const lookup = {};
   MATCHES.forEach(m => { lookup[matchId(m)] = m; });
+  for (const [oldId, newId] of Object.entries(OLD_THIRD_PLACE_BET_IDS)) {
+    if (!lookup[oldId] && lookup[newId]) lookup[oldId] = lookup[newId];
+  }
 
   const hot = [], past = [];
   myBets.forEach(b => {

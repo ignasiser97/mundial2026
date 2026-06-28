@@ -78,19 +78,19 @@ const MATCHES = [
   // ── DIECISEISAVOS ──────────────────────────────────────────────
   ['2026-06-28','21:00','2º A vs 2º B · 1/32 (P73)',              'SoFi Stadium, Los Ángeles',             'USA','d', 0,'r32'],
   ['2026-06-29','19:00','1º C vs 2º F · 1/32 (P76)',              'NRG Stadium, Houston',                  'USA','d', 0,'r32'],
-  ['2026-06-29','22:30','1º E vs 3º · 1/32 (P74)',                'Gillette Stadium, Boston',              'USA','d', 0,'r32'],
+  ['2026-06-29','22:30','Alemania vs Paraguay · 1/32 (P74)',       'Gillette Stadium, Boston',              'USA','d', 0,'r32'],
   ['2026-06-30','03:00','1º F vs 2º C · 1/32 (P75)',              'Estadio BBVA, Guadalupe',               'MEX','d', 0,'r32'],
   ['2026-06-30','19:00','2º E vs 2º I · 1/32 (P78)',              'AT&T Stadium, Dallas',                  'USA','d', 0,'r32'],
-  ['2026-06-30','23:00','1º I vs 3º · 1/32 (P77)',                'MetLife Stadium, Nueva Jersey',         'USA','d', 0,'r32'],
-  ['2026-07-01','03:00','1º A vs 3º · 1/32 (P79)',                'Estadio Azteca, Ciudad de México',      'MEX','d', 0,'r32'],
-  ['2026-07-01','18:00','1º L vs 3º · 1/32 (P80)',                'Mercedes-Benz Stadium, Atlanta',        'USA','dl',0,'r32'],
-  ['2026-07-01','22:00','1º G vs 3º · 1/32 (P82)',                'Lumen Field, Seattle',                  'USA','d', 0,'r32'],
-  ['2026-07-02','02:00','1º D vs 3º · 1/32 (P81)',                "Levi's Stadium, San Francisco",        'USA','d', 0,'r32'],
-  ['2026-07-02','21:00','1º H vs 2º J · 1/32 (P84)',              'SoFi Stadium, Los Ángeles',             'USA','dl',2,'r32'],
-  ['2026-07-03','00:00','1º J vs 2º H · 1/32 (P86)',              'Hard Rock Stadium, Miami',              'USA','d', 2,'r32'],
+  ['2026-06-30','23:00','Francia vs Suecia · 1/32 (P77)',          'MetLife Stadium, Nueva Jersey',         'USA','d', 0,'r32'],
+  ['2026-07-01','03:00','México vs Ecuador · 1/32 (P79)',          'Estadio Azteca, Ciudad de México',      'MEX','d', 0,'r32'],
+  ['2026-07-01','18:00','Inglaterra vs RD Congo · 1/32 (P80)',     'Mercedes-Benz Stadium, Atlanta',        'USA','dl',0,'r32'],
+  ['2026-07-01','22:00','Bélgica vs Senegal · 1/32 (P82)',         'Lumen Field, Seattle',                  'USA','d', 0,'r32'],
+  ['2026-07-02','02:00','Estados Unidos vs Bosnia · 1/32 (P81)',   "Levi's Stadium, San Francisco",        'USA','d', 0,'r32'],
+  ['2026-07-02','21:00','1º H vs 2º J · 1/32 (P84)',              'SoFi Stadium, Los Ángeles',             'USA','dl',1,'r32'],
+  ['2026-07-03','00:00','1º J vs 2º H · 1/32 (P86)',              'Hard Rock Stadium, Miami',              'USA','d', 0,'r32'],
   ['2026-07-03','01:00','2º K vs 2º L · 1/32 (P83)',              'BMO Field, Toronto',                   'CAN','d', 0,'r32'],
-  ['2026-07-03','03:30','1º K vs 3º · 1/32 (P87)',                'Arrowhead Stadium, Kansas City',        'USA','d', 0,'r32'],
-  ['2026-07-03','05:00','1º B vs 3º · 1/32 (P85)',                'BC Place, Vancouver',                  'CAN','d', 0,'r32'],
+  ['2026-07-03','03:30','Colombia vs Ghana · 1/32 (P87)',          'Arrowhead Stadium, Kansas City',        'USA','d', 0,'r32'],
+  ['2026-07-03','05:00','Suiza vs Argelia · 1/32 (P85)',           'BC Place, Vancouver',                  'CAN','d', 0,'r32'],
   ['2026-07-03','20:00','2º D vs 2º G · 1/32 (P88)',              'AT&T Stadium, Dallas',                  'USA','dl',0,'r32'],
   // ── OCTAVOS ────────────────────────────────────────────────────
   ['2026-07-04','19:00','P73 vs P75 · Octavos (P90)',             'NRG Stadium, Houston',                  'USA','dl',0,'r16'],
@@ -267,6 +267,19 @@ function _getKoMatchIdMap() {
   return _koMatchIdMap;
 }
 
+// Apuestas colocadas antes de que se confirmase el bracket usaban '1ºX_vs_3º'.
+// Este mapa permite encontrar el partido real y puntuar esas apuestas correctamente.
+const OLD_THIRD_PLACE_BET_IDS = {
+  '2026-06-29_22:30_1ºE_vs_3º': '2026-06-29_22:30_Alemania_vs_Paraguay',
+  '2026-06-30_23:00_1ºI_vs_3º': '2026-06-30_23:00_Francia_vs_Suecia',
+  '2026-07-01_03:00_1ºA_vs_3º': '2026-07-01_03:00_México_vs_Ecuador',
+  '2026-07-01_18:00_1ºL_vs_3º': '2026-07-01_18:00_Inglaterra_vs_RDCongo',
+  '2026-07-01_22:00_1ºG_vs_3º': '2026-07-01_22:00_Bélgica_vs_Senegal',
+  '2026-07-02_02:00_1ºD_vs_3º': '2026-07-02_02:00_EstadosUnidos_vs_Bosnia',
+  '2026-07-03_03:30_1ºK_vs_3º': '2026-07-03_03:30_Colombia_vs_Ghana',
+  '2026-07-03_05:00_1ºB_vs_3º': '2026-07-03_05:00_Suiza_vs_Argelia',
+};
+
 // Bridge: añade entrada con placeholder key para que results[matchId(m)] funcione
 // en eliminatorias (el scraper usa nombres reales, el frontend usa '2ºA_vs_2ºB')
 function _bridgeKoResults(base) {
@@ -276,6 +289,10 @@ function _bridgeKoResults(base) {
     const dtKey = mid.substring(0, 16);
     const placeholder = koMap[dtKey];
     if (placeholder && !bridged[placeholder]) bridged[placeholder] = result;
+  }
+  // Bridge antiguas apuestas de terceros → resultado actual
+  for (const [oldId, newId] of Object.entries(OLD_THIRD_PLACE_BET_IDS)) {
+    if (bridged[newId] && !bridged[oldId]) bridged[oldId] = bridged[newId];
   }
   return bridged;
 }

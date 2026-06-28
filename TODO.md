@@ -31,6 +31,7 @@
 - [x] Bracket: muestra resultado a 90 min en tarjetas de partidos jugados; indicador pen./p.e. si aplica; score en vivo en verde
 - [x] Fix home: usa resolveTeams() (en vez de matchTeams) para mostrar equipos reales en eliminatorias, no códigos de slot (2º A)
 - [x] Fix scoring eliminatorias: calcPoints infiere ganador por marcador si result.winner no viene de ESPN; scraper añade fallback igual
+- [x] Bracket confirmado: 8 terceros asignados (RD Congo·K, Suecia·F, Ecuador·E, Ghana·L, Bosnia·B, Argelia·J, Paraguay·D, Senegal·I); partidos 3º actualizados con equipos reales; flag España P84 confirmado (2→1); P86 Argentina vs Cabo Verde sin España (2→0); bridge de apuestas antiguas 1ºX_vs_3º → nombres reales
 
 ## Pendiente
 
