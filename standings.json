@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-29T19:04:08Z",
+  "updated": "2026-06-29T21:25:09Z",
   "groups": {
     "A": [
       {
@@ -1264,6 +1264,11 @@
       "winner": "home",
       "home_90": 2,
       "away_90": 1
+    },
+    "2026-06-29_22:30_Alemania_vs_Paraguay": {
+      "home": 0,
+      "away": 1,
+      "status": "live"
     }
   }
 }
