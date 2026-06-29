@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-29T16:52:10Z",
+  "updated": "2026-06-29T19:04:08Z",
   "groups": {
     "A": [
       {
@@ -746,6 +746,13 @@
   ],
   "topAssists": [
     {
+      "player": "Bruno Guimarães",
+      "team": "Brasil",
+      "flag": "🇧🇷",
+      "goals": 0,
+      "assists": 3
+    },
+    {
       "player": "Alexander Isak",
       "team": "Suecia",
       "flag": "🇸🇪",
@@ -770,13 +777,6 @@
       "player": "Brahim Díaz",
       "team": "Marruecos",
       "flag": "🇲🇦",
-      "goals": 0,
-      "assists": 2
-    },
-    {
-      "player": "Bruno Guimarães",
-      "team": "Brasil",
-      "flag": "🇧🇷",
       "goals": 0,
       "assists": 2
     },
@@ -1254,6 +1254,15 @@
       "phase": "knockout",
       "winner": "away",
       "home_90": 0,
+      "away_90": 1
+    },
+    "2026-06-29_19:00_Brasil_vs_Japón": {
+      "home": 2,
+      "away": 1,
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "home",
+      "home_90": 2,
       "away_90": 1
     }
   }
