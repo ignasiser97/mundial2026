@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-29T00:07:25Z",
+  "updated": "2026-06-29T05:48:50Z",
   "groups": {
     "A": [
       {
@@ -737,9 +737,9 @@
       "assists": 0
     },
     {
-      "player": "Daniel Muñoz",
-      "team": "Colombia",
-      "flag": "🇨🇴",
+      "player": "Jude Bellingham",
+      "team": "Inglaterra",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
       "goals": 2,
       "assists": 0
     }
@@ -816,6 +816,13 @@
       "assists": 2
     },
     {
+      "player": "Bukayo Saka",
+      "team": "Inglaterra",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "goals": 0,
+      "assists": 2
+    },
+    {
       "player": "Breel Embolo",
       "team": "Suiza",
       "flag": "🇨🇭",
@@ -875,13 +882,6 @@
       "player": "Promise David",
       "team": "Canadá",
       "flag": "🇨🇦",
-      "goals": 0,
-      "assists": 1
-    },
-    {
-      "player": "Christian Pulisic",
-      "team": "Estados Unidos",
-      "flag": "🇺🇸",
       "goals": 0,
       "assists": 1
     }
