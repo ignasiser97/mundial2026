@@ -860,9 +860,15 @@ async function renderApostar(el) {
     .flatMap(date => MATCHES.filter(m => m[0] === date))
     .map(m => matchId(m));
 
+  // Include old slot IDs so bets placed before bracket was confirmed still show up
+  const oldCandidateIds = Object.entries(OLD_THIRD_PLACE_BET_IDS)
+    .filter(([, newId]) => candidateIds.includes(newId))
+    .map(([oldId]) => oldId);
+  const allCandidateIds = oldCandidateIds.length ? [...candidateIds, ...oldCandidateIds] : candidateIds;
+
   const groupUserIds = await ensureGroupUserIds();
   const [{ data: groupBetsRaw }, { data: allGroupBetsRaw }, matchResultsMap] = await Promise.all([
-    db.from('bets').select('match_id, home_score, away_score, qualifier, user_id, users(name)').in('match_id', candidateIds),
+    db.from('bets').select('match_id, home_score, away_score, qualifier, user_id, users(name)').in('match_id', allCandidateIds),
     db.from('bets').select('user_id, match_id, home_score, away_score, qualifier').in('user_id', groupUserIds),
     getMatchResults(),
   ]);
@@ -885,6 +891,17 @@ async function renderApostar(el) {
     if (!groupBetsMap[b.match_id]) groupBetsMap[b.match_id] = [];
     groupBetsMap[b.match_id].push(b);
   });
+  // Merge bets stored under old slot IDs into their current match ID bucket
+  for (const [oldId, newId] of Object.entries(OLD_THIRD_PLACE_BET_IDS)) {
+    if (!groupBetsMap[oldId]) continue;
+    if (!groupBetsMap[newId]) groupBetsMap[newId] = [];
+    for (const b of groupBetsMap[oldId]) {
+      if (!groupBetsMap[newId].some(x => x.user_id === b.user_id)) {
+        groupBetsMap[newId].push(b);
+      }
+    }
+    delete groupBetsMap[oldId];
+  }
 
   const memberCount = qnlGroup?.members?.length || 0;
 
