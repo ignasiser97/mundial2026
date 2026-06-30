@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-30T00:03:54Z",
+  "updated": "2026-06-30T05:01:41Z",
   "groups": {
     "A": [
       {
@@ -688,6 +688,13 @@
       "assists": 0
     },
     {
+      "player": "Cody Gakpo",
+      "team": "Países Bajos",
+      "flag": "🇳🇱",
+      "goals": 3,
+      "assists": 0
+    },
+    {
       "player": "Ismaïla Sarr",
       "team": "Senegal",
       "flag": "🇸🇳",
@@ -733,13 +740,6 @@
       "player": "Ramin Rezaeian",
       "team": "RI de Irán",
       "flag": "🇮🇷",
-      "goals": 2,
-      "assists": 0
-    },
-    {
-      "player": "Jude Bellingham",
-      "team": "Inglaterra",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
       "goals": 2,
       "assists": 0
     }
@@ -844,6 +844,13 @@
       "assists": 2
     },
     {
+      "player": "Crysencio Summerville",
+      "team": "Países Bajos",
+      "flag": "🇳🇱",
+      "goals": 0,
+      "assists": 2
+    },
+    {
       "player": "Kylian Mbappé",
       "team": "Francia",
       "flag": "🇫🇷",
@@ -875,13 +882,6 @@
       "player": "Hwang In-Beom",
       "team": "Corea del Sur",
       "flag": "🇰🇷",
-      "goals": 0,
-      "assists": 1
-    },
-    {
-      "player": "Promise David",
-      "team": "Canadá",
-      "flag": "🇨🇦",
       "goals": 0,
       "assists": 1
     }
@@ -1266,6 +1266,15 @@
       "away_90": 1
     },
     "2026-06-29_22:30_Alemania_vs_Paraguay": {
+      "home": 1,
+      "away": 1,
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "away",
+      "home_90": 1,
+      "away_90": 1
+    },
+    "2026-06-30_03:00_PaísesBajos_vs_Marruecos": {
       "home": 1,
       "away": 1,
       "status": "ft",
