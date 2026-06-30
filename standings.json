@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-29T22:55:43Z",
+  "updated": "2026-06-30T00:03:54Z",
   "groups": {
     "A": [
       {
@@ -1266,9 +1266,13 @@
       "away_90": 1
     },
     "2026-06-29_22:30_Alemania_vs_Paraguay": {
-      "home": 0,
+      "home": 1,
       "away": 1,
-      "status": "live"
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "away",
+      "home_90": 1,
+      "away_90": 1
     }
   }
 }
