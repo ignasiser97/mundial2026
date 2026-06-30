@@ -1069,10 +1069,19 @@ async function toggleGroupBets(mid, btn) {
     ensureGroupUserIds(),
     getMatchResults(),
   ]);
-  const { data: bets } = await db.from('bets')
+  const oldMid = Object.entries(OLD_THIRD_PLACE_BET_IDS).find(([, v]) => v === mid)?.[0];
+  const midsToQuery = oldMid ? [mid, oldMid] : [mid];
+  const { data: betsRaw } = await db.from('bets')
     .select('home_score, away_score, qualifier, user_id, users(name)')
-    .eq('match_id', mid)
+    .in('match_id', midsToQuery)
     .in('user_id', groupUserIds);
+  // Deduplicate: prefer bet under current ID if user has both
+  const seenUsers = new Set();
+  const bets = (betsRaw || []).sort(b => b.match_id === mid ? -1 : 1).filter(b => {
+    if (seenUsers.has(b.user_id)) return false;
+    seenUsers.add(b.user_id);
+    return true;
+  });
   const raw_r = resultsMap[mid];
   const result = raw_r ? {
     home_score: raw_r.home_90 ?? raw_r.home,
