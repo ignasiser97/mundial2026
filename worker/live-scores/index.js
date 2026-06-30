@@ -111,16 +111,24 @@ function parseESPN({ data, wc_only }) {
     const { date, time } = toSpainDateTime(event.date);
     const mid = toMatchId(homeEs, awayEs, date, time);
 
-    const isLive = state === 'in';
-    matchResults[mid] = {
-      home:       parseInt(home.score || '0', 10),
-      away:       parseInt(away.score || '0', 10),
+    const isLive   = state === 'in';
+    const homeGoals = parseInt(home.score || '0', 10);
+    const awayGoals = parseInt(away.score || '0', 10);
+    const isKnockout = date >= '2026-06-28';
+    const entry = {
+      home:       homeGoals,
+      away:       awayGoals,
       status:     isLive ? 'live' : 'ft',
       clock:      isLive ? (comp.status?.displayClock || '') : '',
       period:     isLive ? (comp.status?.period || 1) : 0,
       periodName: isLive ? (comp.status?.type?.description || '') : '',
       goals:      [],
     };
+    if (isKnockout) {
+      entry.phase  = 'knockout';
+      entry.winner = homeGoals > awayGoals ? 'home' : homeGoals < awayGoals ? 'away' : null;
+    }
+    matchResults[mid] = entry;
     if (isLive) liveEvents[event.id] = mid;
   }
 
