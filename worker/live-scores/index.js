@@ -114,7 +114,7 @@ function parseESPN({ data, wc_only }) {
     const isLive   = state === 'in';
     const homeGoals = parseInt(home.score || '0', 10);
     const awayGoals = parseInt(away.score || '0', 10);
-    const isKnockout = date >= '2026-06-28';
+    const isKnockout = date > '2026-06-28' || (date === '2026-06-28' && time >= '21:00');
     const entry = {
       home:       homeGoals,
       away:       awayGoals,
