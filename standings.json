@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-30T20:56:15Z",
+  "updated": "2026-06-30T22:15:34Z",
   "groups": {
     "A": [
       {
@@ -1291,6 +1291,11 @@
       "winner": "away",
       "home_90": 1,
       "away_90": 2
+    },
+    "2026-06-30_23:00_Francia_vs_Suecia": {
+      "home": 2,
+      "away": 0,
+      "status": "live"
     }
   }
 }
