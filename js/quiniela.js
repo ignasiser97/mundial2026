@@ -120,13 +120,12 @@ function calcPoints(bet, result, double = false) {
   if (result.phase === 'knockout') {
     const h90 = result.home_90 ?? result.home_score;
     const a90 = result.away_90 ?? result.away_score;
-    if (bet.home_score === h90 && bet.away_score === a90) pts = 3;
-    else {
-      const betWin = bet.qualifier
-        || (bet.home_score > bet.away_score ? 'home' : bet.home_score < bet.away_score ? 'away' : null);
-      const winner = result.winner ?? (h90 > a90 ? 'home' : h90 < a90 ? 'away' : null);
-      pts = betWin && betWin === winner ? 1 : 0;
-    }
+    const betWin = bet.qualifier
+      || (bet.home_score > bet.away_score ? 'home' : bet.home_score < bet.away_score ? 'away' : null);
+    const winner = result.winner ?? (h90 > a90 ? 'home' : h90 < a90 ? 'away' : null);
+    const qualifierOk = betWin && betWin === winner ? 1 : 0;
+    if (bet.home_score === h90 && bet.away_score === a90) pts = 3 + qualifierOk;
+    else pts = qualifierOk;
   } else {
     if (bet.home_score === result.home_score && bet.away_score === result.away_score) pts = 3;
     else {
