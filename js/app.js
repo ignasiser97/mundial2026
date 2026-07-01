@@ -307,14 +307,14 @@ function showMemeSergio() {
 // ── Meme Jorge ─────────────────────────────────────────────────
 
 function showMemeJorge() {
-  const KEY = 'meme-jorge-v1';
+  const KEY = 'meme-jorge-v2';
   if (localStorage.getItem(KEY)) return;
   const overlay = document.createElement('div');
   overlay.id = 'sabiasque-overlay';
   overlay.innerHTML = `
     <div class="sq-card">
       <div class="sq-eyebrow" style="letter-spacing:1px">🍀 JORGE</div>
-      <div class="sq-title" style="font-size:28px;line-height:1.1">5 exactos<br>de 8</div>
+      <div class="sq-title" style="font-size:28px;line-height:1.1">5 exactos de 8<br>en la clasificatoria</div>
       <div class="sq-fact" style="font-style:italic">"No sabe lo que es un balón hulio"</div>
       <button class="sq-btn" onclick="
         localStorage.setItem('${KEY}','1');
