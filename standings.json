@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-01T06:59:41Z",
+  "updated": "2026-07-01T16:12:38Z",
   "groups": {
     "A": [
       {
@@ -1309,6 +1309,11 @@
       "winner": "home",
       "home_90": 2,
       "away_90": 0
+    },
+    "2026-07-01_18:00_Inglaterra_vs_RDCongo": {
+      "home": 0,
+      "away": 1,
+      "status": "live"
     }
   }
 }
