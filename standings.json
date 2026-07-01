@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-30T22:15:34Z",
+  "updated": "2026-07-01T00:04:32Z",
   "groups": {
     "A": [
       {
@@ -604,6 +604,13 @@
   },
   "topScorers": [
     {
+      "player": "Kylian Mbappé",
+      "team": "Francia",
+      "flag": "🇫🇷",
+      "goals": 6,
+      "assists": 0
+    },
+    {
       "player": "Erling Haaland",
       "team": "Noruega",
       "flag": "🇳🇴",
@@ -615,13 +622,6 @@
       "team": "Argentina",
       "flag": "🇦🇷",
       "goals": 5,
-      "assists": 0
-    },
-    {
-      "player": "Kylian Mbappé",
-      "team": "Francia",
-      "flag": "🇫🇷",
-      "goals": 4,
       "assists": 0
     },
     {
@@ -746,6 +746,13 @@
   ],
   "topAssists": [
     {
+      "player": "Michael Olise",
+      "team": "Francia",
+      "flag": "🇫🇷",
+      "goals": 0,
+      "assists": 5
+    },
+    {
       "player": "Bruno Guimarães",
       "team": "Brasil",
       "flag": "🇧🇷",
@@ -756,13 +763,6 @@
       "player": "Alexander Isak",
       "team": "Suecia",
       "flag": "🇸🇪",
-      "goals": 0,
-      "assists": 3
-    },
-    {
-      "player": "Michael Olise",
-      "team": "Francia",
-      "flag": "🇫🇷",
       "goals": 0,
       "assists": 3
     },
@@ -851,6 +851,13 @@
       "assists": 2
     },
     {
+      "player": "Ousmane Dembélé",
+      "team": "Francia",
+      "flag": "🇫🇷",
+      "goals": 0,
+      "assists": 2
+    },
+    {
       "player": "Martin Ødegaard",
       "team": "Noruega",
       "flag": "🇳🇴",
@@ -877,13 +884,6 @@
       "flag": "🇩🇿",
       "goals": 0,
       "assists": 2
-    },
-    {
-      "player": "Érik Lira",
-      "team": "México",
-      "flag": "🇲🇽",
-      "goals": 0,
-      "assists": 1
     }
   ],
   "matchResults": {
@@ -1293,9 +1293,13 @@
       "away_90": 2
     },
     "2026-06-30_23:00_Francia_vs_Suecia": {
-      "home": 2,
+      "home": 3,
       "away": 0,
-      "status": "live"
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "home",
+      "home_90": 3,
+      "away_90": 0
     }
   }
 }
