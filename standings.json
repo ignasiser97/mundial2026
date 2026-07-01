@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-01T22:10:00Z",
+  "updated": "2026-07-01T23:59:10Z",
   "groups": {
     "A": [
       {
@@ -632,6 +632,13 @@
       "assists": 0
     },
     {
+      "player": "Ismaïla Sarr",
+      "team": "Senegal",
+      "flag": "🇸🇳",
+      "goals": 4,
+      "assists": 0
+    },
+    {
       "player": "Julián Quiñones",
       "team": "México",
       "flag": "🇲🇽",
@@ -698,13 +705,6 @@
       "player": "Cody Gakpo",
       "team": "Países Bajos",
       "flag": "🇳🇱",
-      "goals": 3,
-      "assists": 0
-    },
-    {
-      "player": "Ismaïla Sarr",
-      "team": "Senegal",
-      "flag": "🇸🇳",
       "goals": 3,
       "assists": 0
     },
@@ -1320,9 +1320,13 @@
       "away_90": 0
     },
     "2026-07-01_22:00_Bélgica_vs_Senegal": {
-      "home": 0,
-      "away": 1,
-      "status": "live"
+      "home": 3,
+      "away": 2,
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "home",
+      "home_90": 2,
+      "away_90": 2
     }
   }
 }
