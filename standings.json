@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-01T23:59:10Z",
+  "updated": "2026-07-02T02:58:52Z",
   "groups": {
     "A": [
       {
@@ -646,6 +646,13 @@
       "assists": 0
     },
     {
+      "player": "Folarin Balogun",
+      "team": "Estados Unidos",
+      "flag": "🇺🇸",
+      "goals": 3,
+      "assists": 0
+    },
+    {
       "player": "Ismael Saibari",
       "team": "Marruecos",
       "flag": "🇲🇦",
@@ -712,13 +719,6 @@
       "player": "Cyle Larin",
       "team": "Canadá",
       "flag": "🇨🇦",
-      "goals": 2,
-      "assists": 0
-    },
-    {
-      "player": "Folarin Balogun",
-      "team": "Estados Unidos",
-      "flag": "🇺🇸",
       "goals": 2,
       "assists": 0
     },
@@ -1327,6 +1327,15 @@
       "winner": "home",
       "home_90": 2,
       "away_90": 2
+    },
+    "2026-07-02_02:00_EstadosUnidos_vs_Bosnia": {
+      "home": 2,
+      "away": 0,
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "home",
+      "home_90": 2,
+      "away_90": 0
     }
   }
 }
