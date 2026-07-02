@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-02T20:48:14Z",
+  "updated": "2026-07-02T21:55:18Z",
   "groups": {
     "A": [
       {
@@ -625,6 +625,13 @@
       "assists": 0
     },
     {
+      "player": "Mikel Oyarzabal",
+      "team": "España",
+      "flag": "🇪🇸",
+      "goals": 4,
+      "assists": 0
+    },
+    {
       "player": "Ousmane Dembélé",
       "team": "Francia",
       "flag": "🇫🇷",
@@ -733,13 +740,6 @@
       "player": "Amad Diallo",
       "team": "Costa de Marfil",
       "flag": "🇨🇮",
-      "goals": 2,
-      "assists": 0
-    },
-    {
-      "player": "Yasin Ayari",
-      "team": "Suecia",
-      "flag": "🇸🇪",
       "goals": 2,
       "assists": 0
     }
@@ -1338,9 +1338,13 @@
       "away_90": 0
     },
     "2026-07-02_21:00_España_vs_Austria": {
-      "home": 0,
+      "home": 3,
       "away": 0,
-      "status": "live"
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "home",
+      "home_90": 3,
+      "away_90": 0
     }
   }
 }
