@@ -98,7 +98,7 @@ const MATCHES = [
   ['2026-07-05','22:00','P76 vs P78 · Octavos (P91)',             'MetLife Stadium, Nueva Jersey',         'USA','dl',0,'r16'],
   ['2026-07-06','02:00','P79 vs P80 · Octavos (P92)',             'Estadio Azteca, Ciudad de México',      'MEX','dl',2,'r16'],
   ['2026-07-06','21:00','P83 vs P84 · Octavos (P93)',             'AT&T Stadium, Dallas',                  'USA','dl',2,'r16'],
-  ['2026-07-07','01:00','P81 vs P82 · Octavos (P94)',             'Lumen Field, Seattle',                  'USA','dl',0,'r16'],
+  ['2026-07-07','02:00','P81 vs P82 · Octavos (P94)',             'Lumen Field, Seattle',                  'USA','dl',0,'r16'],
   ['2026-07-07','18:00','P86 vs P88 · Octavos (P95)',             'Mercedes-Benz Stadium, Atlanta',        'USA','dl',2,'r16'],
   ['2026-07-07','22:00','P85 vs P87 · Octavos (P96)',             'BC Place, Vancouver',                  'CAN','dl',0,'r16'],
   // ── CUARTOS ────────────────────────────────────────────────────
