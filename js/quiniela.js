@@ -341,7 +341,9 @@ async function loadMyBets() {
   qnlBets = {};
   (data || []).forEach(b => { qnlBets[b.match_id] = b; });
   for (const [oldId, newId] of Object.entries(OLD_THIRD_PLACE_BET_IDS)) {
-    if (qnlBets[oldId] && !qnlBets[newId]) qnlBets[newId] = qnlBets[oldId];
+    if (qnlBets[oldId] && !qnlBets[newId]) {
+      qnlBets[newId] = { ...qnlBets[oldId], match_id: newId };
+    }
     delete qnlBets[oldId];
   }
   qnlBetsDirty = false;
@@ -806,10 +808,11 @@ function computeLeaderId(allBets, matchResultsMap, groupUserIds) {
   groupUserIds.forEach(uid => { pts[uid] = 0; });
   (allBets || []).forEach(b => {
     if (!Object.prototype.hasOwnProperty.call(pts, b.user_id)) return;
+    const normalMid = OLD_THIRD_PLACE_BET_IDS[b.match_id] ?? b.match_id;
     const r = matchResultsMap[b.match_id];
     if (!r || r.status !== 'ft') return;
     const result = { home_score: r.home_90 ?? r.home, away_score: r.away_90 ?? r.away, status: r.status, phase: r.phase, winner: r.winner };
-    const p = calcPoints(b, result, isSpainMatch(b.match_id));
+    const p = calcPoints(b, result, isSpainMatch(normalMid));
     if (p !== null) pts[b.user_id] += p;
   });
   let leaderId = null, maxPts = -1;
@@ -1070,8 +1073,8 @@ async function toggleGroupBets(mid, btn) {
     ensureGroupUserIds(),
     getMatchResults(),
   ]);
-  const oldMid = Object.entries(OLD_THIRD_PLACE_BET_IDS).find(([, v]) => v === mid)?.[0];
-  const midsToQuery = oldMid ? [mid, oldMid] : [mid];
+  const oldMids = Object.entries(OLD_THIRD_PLACE_BET_IDS).filter(([, v]) => v === mid).map(([k]) => k);
+  const midsToQuery = oldMids.length ? [mid, ...oldMids] : [mid];
   const { data: betsRaw } = await db.from('bets')
     .select('home_score, away_score, qualifier, user_id, users(name)')
     .in('match_id', midsToQuery)
@@ -1191,6 +1194,12 @@ async function submitBet(mid) {
 
   const btn = document.querySelector(`[onclick="submitBet('${mid}')"]`);
   if (btn) { btn.disabled = true; btn.textContent = 'Guardando…'; }
+  // Borrar apuestas bajo IDs viejos para este partido (evita doble puntuación)
+  const oldIds = Object.entries(OLD_THIRD_PLACE_BET_IDS)
+    .filter(([, v]) => v === mid).map(([k]) => k);
+  if (oldIds.length) {
+    await db.from('bets').delete().eq('user_id', qnlUser.id).in('match_id', oldIds);
+  }
   const payload = { user_id: qnlUser.id, match_id: mid, home_score, away_score };
   if (isKnockout) payload.qualifier = qualifier;
   const { error } = await db.from('bets').upsert(payload, { onConflict: 'user_id,match_id' });

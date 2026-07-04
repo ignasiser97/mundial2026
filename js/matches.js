@@ -306,11 +306,17 @@ function _mergeLive(base) {
   const merged = { ...base };
   for (const [mid, live] of Object.entries(_liveResults)) {
     if (!merged[mid] || merged[mid].status !== 'ft') merged[mid] = live;
-    // Bridge también el resultado en vivo al placeholder key de eliminatorias
+    // Bridge al placeholder key de eliminatorias
     const dtKey = mid.substring(0, 16);
     const placeholder = koMap[dtKey];
     if (placeholder && (!merged[placeholder] || merged[placeholder].status !== 'ft')) {
       merged[placeholder] = live;
+    }
+  }
+  // Bridge live a IDs viejos (apuestas guardadas antes de corrección de fecha/slot)
+  for (const [oldId, newId] of Object.entries(OLD_THIRD_PLACE_BET_IDS)) {
+    if (merged[newId] && (!merged[oldId] || merged[oldId].status !== 'ft')) {
+      merged[oldId] = merged[newId];
     }
   }
   return merged;
