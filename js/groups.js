@@ -250,11 +250,12 @@ function bktCard(code, pmap, extra='') {
   } else {
     midHtml = `<div class="bkt-div"></div>`;
   }
-  return `<div class="bkt-m${extra} clickable" onclick="bktGoToDate('${m[0]}')">
+  const calDate = viewDate(m[0], m[1]);
+  return `<div class="bkt-m${extra} clickable" onclick="bktGoToDate('${calDate}')">
     <div class="bkt-team">${home}</div>
     ${midHtml}
     <div class="bkt-team">${away}</div>
-    <div class="bkt-date">${m[1]} · ${m[0].slice(5).replace('-','/')}</div>
+    <div class="bkt-date">${m[1]} · ${calDate.slice(5).replace('-','/')}</div>
   </div>`;
 }
 

@@ -700,7 +700,7 @@ async function renderTorneoClasificacion(el) {
 
     return `<div class="torneo-lb-row${isMe ? ' me' : ''}">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <div class="torneo-lb-name">${u.name}${isMe ? ' 👈' : ''}${groupBadge}</div>
+        <div class="torneo-lb-name">${escHtml(u.name)}${isMe ? ' 👈' : ''}${groupBadge}</div>
         ${hasResults && show ? `<div class="torneo-total-pts">${total} pts</div>` : ''}
       </div>
       ${details}
@@ -937,7 +937,7 @@ async function renderApostar(el) {
             ? `<span class="bdrop-score">${b.home_score} – ${b.away_score}</span>`
             : `<span class="bdrop-hidden">oculto</span>`;
           const crown = isLeader && !started ? ' 👑' : '';
-          return `<div class="bdrop-row"><span>${b.users.name}${crown}</span>${score}</div>`;
+          return `<div class="bdrop-row"><span>${escHtml(b.users.name)}${crown}</span>${score}</div>`;
         }).join('');
         const note = !started
           ? (isKnockout
@@ -1141,7 +1141,7 @@ async function toggleGroupBets(mid, btn) {
         ? `${b.home_score} – ${b.away_score}${qualStr}`
         : `<span style="color:var(--muted)">? – ?</span>`;
       return `<div class="group-bet-row">
-        <span class="gb-name">${b.users.name}${isMe ? ' 👈' : ''}${crown}</span>
+        <span class="gb-name">${escHtml(b.users.name)}${isMe ? ' 👈' : ''}${crown}</span>
         <span class="gb-score">${score}</span>
         ${pts !== null ? ptsLabel(pts) : ''}
       </div>`;
@@ -1460,7 +1460,7 @@ async function renderClasificacion(el) {
       : '';
     return `<tr${isMe ? ' class="me"' : ''}>
       <td class="lb-rank">${i+1}</td>
-      <td class="lb-name">${u.name}${isMe ? ' 👈' : ''}${groupBadge}</td>
+      <td class="lb-name">${escHtml(u.name)}${isMe ? ' 👈' : ''}${groupBadge}</td>
       <td>${u.apuestas}</td>
       <td>${u.exactos}</td>
       <td>${u.ganadores}</td>
