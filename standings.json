@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-04T16:46:19Z",
+  "updated": "2026-07-04T17:52:16Z",
   "groups": {
     "A": [
       {
@@ -1390,6 +1390,11 @@
       "winner": "home",
       "home_90": 1,
       "away_90": 0
+    },
+    "2026-07-04_19:00_Canadá_vs_Marruecos": {
+      "home": 0,
+      "away": 0,
+      "status": "live"
     }
   }
 }
