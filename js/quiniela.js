@@ -1425,12 +1425,17 @@ async function renderClasificacion(el) {
 
   const stats = {};
   users.forEach(u => { stats[u.id] = { id: u.id, name: u.name, group_id: u.group_id, apuestas: 0, exactos: 0, ganadores: 0, pts: 0 }; });
+  // Deduplicar: si un usuario tiene bet bajo ID viejo Y nuevo, contar solo una vez
+  const seenBets = new Set();
   (bets || []).forEach(b => {
     if (!stats[b.user_id]) return;
+    const normalMid = OLD_THIRD_PLACE_BET_IDS[b.match_id] ?? b.match_id;
+    const dedupeKey = `${b.user_id}|${normalMid}`;
+    if (seenBets.has(dedupeKey)) return;
+    seenBets.add(dedupeKey);
     stats[b.user_id].apuestas++;
     const r = resultMap[b.match_id];
     if (r) {
-      const normalMid = OLD_THIRD_PLACE_BET_IDS[b.match_id] ?? b.match_id;
       const double   = isSpainMatch(normalMid);
       const pts      = calcPoints(b, r, double);
       const basePts  = double ? pts / 2 : pts;
