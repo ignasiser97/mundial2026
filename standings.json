@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-04T18:47:37Z",
+  "updated": "2026-07-04T20:01:33Z",
   "groups": {
     "A": [
       {
@@ -753,6 +753,13 @@
       "assists": 5
     },
     {
+      "player": "Brahim Díaz",
+      "team": "Marruecos",
+      "flag": "🇲🇦",
+      "goals": 0,
+      "assists": 4
+    },
+    {
       "player": "Bruno Guimarães",
       "team": "Brasil",
       "flag": "🇧🇷",
@@ -770,13 +777,6 @@
       "player": "Julio Enciso",
       "team": "Paraguay",
       "flag": "🇵🇾",
-      "goals": 0,
-      "assists": 2
-    },
-    {
-      "player": "Brahim Díaz",
-      "team": "Marruecos",
-      "flag": "🇲🇦",
       "goals": 0,
       "assists": 2
     },
@@ -879,9 +879,9 @@
       "assists": 2
     },
     {
-      "player": "Roberto Alvarado",
-      "team": "México",
-      "flag": "🇲🇽",
+      "player": "Achraf Hakimi",
+      "team": "Marruecos",
+      "flag": "🇲🇦",
       "goals": 0,
       "assists": 2
     }
@@ -1393,8 +1393,12 @@
     },
     "2026-07-04_19:00_Canadá_vs_Marruecos": {
       "home": 0,
-      "away": 0,
-      "status": "live"
+      "away": 3,
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "away",
+      "home_90": 0,
+      "away_90": 3
     }
   }
 }
