@@ -175,7 +175,7 @@ function showToast(msg) {
 function ptsLabel(pts) {
   if (pts === null || pts === undefined) return '';
   if (pts === 0) return '<span class="gb-pts-miss">0 pts</span>';
-  const isExact = pts === 3 || pts === 6;
+  const isExact = pts >= 3;
   return `<span class="${isExact ? 'gb-pts-exact' : 'gb-pts-win'}">+${pts}${isExact ? ' exacto!' : ' ganador'}</span>`;
 }
 
@@ -1421,11 +1421,12 @@ async function renderClasificacion(el) {
     stats[b.user_id].apuestas++;
     const r = resultMap[b.match_id];
     if (r) {
-      const double   = isSpainMatch(b.match_id);
+      const normalMid = OLD_THIRD_PLACE_BET_IDS[b.match_id] ?? b.match_id;
+      const double   = isSpainMatch(normalMid);
       const pts      = calcPoints(b, r, double);
       const basePts  = double ? pts / 2 : pts;
       stats[b.user_id].pts += pts;
-      if (basePts === 3) stats[b.user_id].exactos++;
+      if (basePts >= 3) stats[b.user_id].exactos++;
       if (basePts === 1) stats[b.user_id].ganadores++;
     }
   });
@@ -1460,7 +1461,7 @@ async function renderClasificacion(el) {
         <th>#</th>
         <th class="lb-name">Nombre</th>
         <th title="Apuestas realizadas">Ap.</th>
-        <th title="Resultados exactos (3 pts)">✓✓</th>
+        <th title="Resultados exactos (3-4 pts)">✓✓</th>
         <th title="Ganador correcto (1 pt)">✓</th>
         <th>Pts</th>
       </tr></thead>
