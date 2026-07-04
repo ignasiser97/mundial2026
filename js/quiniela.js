@@ -204,6 +204,7 @@ async function loadQuiniela() {
       if (data) {
         qnlUser  = data;
         qnlGroup = group;
+        qnlBetsDirty = true;
         await loadMyBets();
         qnlLoaded = true;
         renderQnlContainer();
@@ -806,9 +807,13 @@ let _koLeaderId = null;
 function computeLeaderId(allBets, matchResultsMap, groupUserIds) {
   const pts = {};
   groupUserIds.forEach(uid => { pts[uid] = 0; });
+  const seenBets = new Set();
   (allBets || []).forEach(b => {
     if (!Object.prototype.hasOwnProperty.call(pts, b.user_id)) return;
     const normalMid = OLD_THIRD_PLACE_BET_IDS[b.match_id] ?? b.match_id;
+    const dedupeKey = `${b.user_id}|${normalMid}`;
+    if (seenBets.has(dedupeKey)) return;
+    seenBets.add(dedupeKey);
     const r = matchResultsMap[b.match_id];
     if (!r || r.status !== 'ft') return;
     const result = { home_score: r.home_90 ?? r.home, away_score: r.away_90 ?? r.away, status: r.status, phase: r.phase, winner: r.winner };

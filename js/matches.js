@@ -96,22 +96,22 @@ const MATCHES = [
   ['2026-07-04','19:00','P73 vs P75 · Octavos (P90)',             'NRG Stadium, Houston',                  'USA','dl',0,'r16'],
   ['2026-07-04','23:00','P74 vs P77 · Octavos (P89)',             'Lincoln Financial Field, Filadelfia',   'USA','dl',0,'r16'],
   ['2026-07-05','22:00','P76 vs P78 · Octavos (P91)',             'MetLife Stadium, Nueva Jersey',         'USA','dl',0,'r16'],
-  ['2026-07-06','02:00','P79 vs P80 · Octavos (P92)',             'Estadio Azteca, Ciudad de México',      'MEX','dl',2,'r16'],
-  ['2026-07-06','21:00','P83 vs P84 · Octavos (P93)',             'AT&T Stadium, Dallas',                  'USA','dl',2,'r16'],
+  ['2026-07-06','02:00','P79 vs P80 · Octavos (P92)',             'Estadio Azteca, Ciudad de México',      'MEX','dl',0,'r16'],
+  ['2026-07-06','21:00','P83 vs P84 · Octavos (P93)',             'AT&T Stadium, Dallas',                  'USA','dl',1,'r16'],
   ['2026-07-07','02:00','P81 vs P82 · Octavos (P94)',             'Lumen Field, Seattle',                  'USA','dl',0,'r16'],
-  ['2026-07-07','18:00','P86 vs P88 · Octavos (P95)',             'Mercedes-Benz Stadium, Atlanta',        'USA','dl',2,'r16'],
+  ['2026-07-07','18:00','P86 vs P88 · Octavos (P95)',             'Mercedes-Benz Stadium, Atlanta',        'USA','dl',0,'r16'],
   ['2026-07-07','22:00','P85 vs P87 · Octavos (P96)',             'BC Place, Vancouver',                  'CAN','dl',0,'r16'],
   // ── CUARTOS ────────────────────────────────────────────────────
   ['2026-07-09','22:00','P89 vs P90 · Cuartos (P97)',             'Gillette Stadium, Boston',              'USA','dl',0,'qf'],
   ['2026-07-10','21:00','P93 vs P94 · Cuartos (P98)',             'SoFi Stadium, Los Ángeles',             'USA','dl',2,'qf'],
-  ['2026-07-11','23:00','P91 vs P92 · Cuartos (P99)',             'Hard Rock Stadium, Miami',              'USA','dl',2,'qf'],
+  ['2026-07-11','23:00','P91 vs P92 · Cuartos (P99)',             'Hard Rock Stadium, Miami',              'USA','dl',0,'qf'],
   ['2026-07-12','03:00','P95 vs P96 · Cuartos (P100)',            'Arrowhead Stadium, Kansas City',        'USA','dl',0,'qf'],
   // ── SEMIFINALES ────────────────────────────────────────────────
-  ['2026-07-14','21:00','Semifinal 1 · P97 vs P98',               'AT&T Stadium, Dallas',                  'USA','dl',0,'sf'],
+  ['2026-07-14','21:00','Semifinal 1 · P97 vs P98',               'AT&T Stadium, Dallas',                  'USA','dl',2,'sf'],
   ['2026-07-15','21:00','Semifinal 2 · P99 vs P100',              'Mercedes-Benz Stadium, Atlanta',        'USA','dl',0,'sf'],
   // ── TERCER PUESTO + FINAL ──────────────────────────────────────
-  ['2026-07-18','23:00','3er y 4º puesto',                         'Hard Rock Stadium, Miami',              'USA','dl',0,'3p'],
-  ['2026-07-19','21:00','Gran Final del Mundial 2026',             'MetLife Stadium, Nueva Jersey',         'USA','dl',0,'final'],
+  ['2026-07-18','23:00','3er y 4º puesto',                         'Hard Rock Stadium, Miami',              'USA','dl',2,'3p'],
+  ['2026-07-19','21:00','Gran Final del Mundial 2026',             'MetLife Stadium, Nueva Jersey',         'USA','dl',2,'final'],
 ];
 MATCHES.sort((a, b) => (a[0] + a[1]).localeCompare(b[0] + b[1]));
 
