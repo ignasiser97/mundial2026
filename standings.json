@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-04T20:01:33Z",
+  "updated": "2026-07-04T21:43:47Z",
   "groups": {
     "A": [
       {
@@ -1399,6 +1399,11 @@
       "winner": "away",
       "home_90": 0,
       "away_90": 3
+    },
+    "2026-07-04_23:00_Paraguay_vs_Francia": {
+      "home": 0,
+      "away": 0,
+      "status": "live"
     }
   }
 }
