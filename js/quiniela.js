@@ -342,6 +342,7 @@ async function loadMyBets() {
   (data || []).forEach(b => { qnlBets[b.match_id] = b; });
   for (const [oldId, newId] of Object.entries(OLD_THIRD_PLACE_BET_IDS)) {
     if (qnlBets[oldId] && !qnlBets[newId]) qnlBets[newId] = qnlBets[oldId];
+    delete qnlBets[oldId];
   }
   qnlBetsDirty = false;
 }
