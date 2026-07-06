@@ -561,12 +561,12 @@ async function renderTorneoApuesta(el) {
       <div class="torneo-field">
         <label class="torneo-label">👟 Máximo goleador <span class="torneo-pts">3 pts</span></label>
         <input class="qnl-input" id="tb-scorer" type="text" placeholder="Nombre del jugador"
-          value="${b.top_scorer||''}" maxlength="40" ${!open?'disabled':''}>
+          value="${escHtml(b.top_scorer||'')}" maxlength="40" ${!open?'disabled':''}>
       </div>
       <div class="torneo-field">
         <label class="torneo-label">🧤 Mejor portero (Guante de Oro) <span class="torneo-pts">2 pts</span></label>
         <input class="qnl-input" id="tb-keeper" type="text" placeholder="Nombre del portero"
-          value="${b.best_keeper||''}" maxlength="40" ${!open?'disabled':''}>
+          value="${escHtml(b.best_keeper||'')}" maxlength="40" ${!open?'disabled':''}>
       </div>
       <div class="torneo-field">
         <label class="torneo-label">⭐ Sorpresa del torneo <span class="torneo-pts">2 pts</span></label>
@@ -691,7 +691,7 @@ async function renderTorneoClasificacion(el) {
             const hit    = earned != null;
             return `<span class="torneo-lb-item">
               <span class="torneo-lb-cat">${f.label}</span>
-              <span style="${hit ? 'color:var(--pos)' : ''}">${val}</span>
+              <span style="${hit ? 'color:var(--pos)' : ''}">${escHtml(val)}</span>
               ${hit ? `<span class="torneo-lb-pts">+${earned}</span>` : ''}
             </span>`;
           }).join('')}
