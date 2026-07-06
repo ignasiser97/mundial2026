@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-06T20:45:49Z",
+  "updated": "2026-07-06T22:04:09Z",
   "groups": {
     "A": [
       {
@@ -1429,8 +1429,12 @@
     },
     "2026-07-06_21:00_Portugal_vs_España": {
       "home": 0,
-      "away": 0,
-      "status": "live"
+      "away": 1,
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "away",
+      "home_90": 0,
+      "away_90": 1
     }
   }
 }
