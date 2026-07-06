@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-06T01:43:39Z",
+  "updated": "2026-07-06T06:12:30Z",
   "groups": {
     "A": [
       {
@@ -688,6 +688,13 @@
       "assists": 0
     },
     {
+      "player": "Jude Bellingham",
+      "team": "Inglaterra",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "goals": 3,
+      "assists": 0
+    },
+    {
       "player": "Johan Manzambi",
       "team": "Suiza",
       "flag": "🇨🇭",
@@ -733,13 +740,6 @@
       "player": "Crysencio Summerville",
       "team": "Países Bajos",
       "flag": "🇳🇱",
-      "goals": 2,
-      "assists": 0
-    },
-    {
-      "player": "Amad Diallo",
-      "team": "Costa de Marfil",
-      "flag": "🇨🇮",
       "goals": 2,
       "assists": 0
     }
@@ -1419,9 +1419,13 @@
       "away_90": 2
     },
     "2026-07-06_03:00_México_vs_Inglaterra": {
-      "home": 1,
-      "away": 2,
-      "status": "live"
+      "home": 2,
+      "away": 3,
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "away",
+      "home_90": 2,
+      "away_90": 3
     }
   }
 }
