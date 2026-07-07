@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T18:52:27Z",
+  "updated": "2026-07-07T20:42:08Z",
   "groups": {
     "A": [
       {
@@ -604,13 +604,6 @@
   },
   "topScorers": [
     {
-      "player": "Lionel Messi",
-      "team": "Argentina",
-      "flag": "🇦🇷",
-      "goals": 7,
-      "assists": 0
-    },
-    {
       "player": "Kylian Mbappé",
       "team": "Francia",
       "flag": "🇫🇷",
@@ -621,6 +614,13 @@
       "player": "Erling Haaland",
       "team": "Noruega",
       "flag": "🇳🇴",
+      "goals": 6,
+      "assists": 0
+    },
+    {
+      "player": "Lionel Messi",
+      "team": "Argentina",
+      "flag": "🇦🇷",
       "goals": 6,
       "assists": 0
     },
@@ -1453,6 +1453,11 @@
       "winner": "home",
       "home_90": 3,
       "away_90": 2
+    },
+    "2026-07-07_22:00_Suiza_vs_Colombia": {
+      "home": 0,
+      "away": 0,
+      "status": "live"
     }
   }
 }
