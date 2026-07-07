@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-06T23:54:00Z",
+  "updated": "2026-07-07T01:42:00Z",
   "groups": {
     "A": [
       {
@@ -1435,6 +1435,11 @@
       "winner": "away",
       "home_90": 0,
       "away_90": 1
+    },
+    "2026-07-07_02:00_EstadosUnidos_vs_Bélgica": {
+      "home": 1,
+      "away": 3,
+      "status": "live"
     }
   }
 }
