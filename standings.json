@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T22:02:23Z",
+  "updated": "2026-07-07T23:42:26Z",
   "groups": {
     "A": [
       {
@@ -1457,7 +1457,11 @@
     "2026-07-07_22:00_Suiza_vs_Colombia": {
       "home": 0,
       "away": 0,
-      "status": "live"
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "home",
+      "home_90": 0,
+      "away_90": 0
     }
   }
 }
