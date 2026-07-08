@@ -197,7 +197,7 @@ function buildPMap() {
   for (const m of MATCHES) {
     const c = m[2].match(/\(P(\d+)\)$/);
     if (c) { map['P'+c[1]] = m; continue; }
-    if (m[7]==='sf')    { m[2].includes('1') ? map['SF1']=m : map['SF2']=m; }
+    if (m[7]==='sf')    { m[2].includes('Semifinal 1') ? map['SF1']=m : map['SF2']=m; }
     if (m[7]==='final') map['FIN']=m;
     if (m[7]==='3p')    map['3P']=m;
   }
