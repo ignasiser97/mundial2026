@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-09T20:30:07Z",
+  "updated": "2026-07-09T22:09:59Z",
   "groups": {
     "A": [
       {
@@ -604,6 +604,13 @@
   },
   "topScorers": [
     {
+      "player": "Kylian Mbappé",
+      "team": "Francia",
+      "flag": "🇫🇷",
+      "goals": 7,
+      "assists": 0
+    },
+    {
       "player": "Lionel Messi",
       "team": "Argentina",
       "flag": "🇦🇷",
@@ -611,17 +618,17 @@
       "assists": 0
     },
     {
-      "player": "Kylian Mbappé",
-      "team": "Francia",
-      "flag": "🇫🇷",
-      "goals": 6,
-      "assists": 0
-    },
-    {
       "player": "Erling Haaland",
       "team": "Noruega",
       "flag": "🇳🇴",
       "goals": 6,
+      "assists": 0
+    },
+    {
+      "player": "Ousmane Dembélé",
+      "team": "Francia",
+      "flag": "🇫🇷",
+      "goals": 5,
       "assists": 0
     },
     {
@@ -635,13 +642,6 @@
       "player": "Mikel Oyarzabal",
       "team": "España",
       "flag": "🇪🇸",
-      "goals": 4,
-      "assists": 0
-    },
-    {
-      "player": "Ousmane Dembélé",
-      "team": "Francia",
-      "flag": "🇫🇷",
       "goals": 4,
       "assists": 0
     },
@@ -774,6 +774,13 @@
       "assists": 3
     },
     {
+      "player": "Kylian Mbappé",
+      "team": "Francia",
+      "flag": "🇫🇷",
+      "goals": 0,
+      "assists": 3
+    },
+    {
       "player": "Julio Enciso",
       "team": "Paraguay",
       "flag": "🇵🇾",
@@ -875,13 +882,6 @@
       "player": "Johan Manzambi",
       "team": "Suiza",
       "flag": "🇨🇭",
-      "goals": 0,
-      "assists": 2
-    },
-    {
-      "player": "Achraf Hakimi",
-      "team": "Marruecos",
-      "flag": "🇲🇦",
       "goals": 0,
       "assists": 2
     }
@@ -1464,9 +1464,13 @@
       "away_90": 0
     },
     "2026-07-09_22:00_Francia_vs_Marruecos": {
-      "home": 0,
+      "home": 2,
       "away": 0,
-      "status": "live"
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "home",
+      "home_90": 2,
+      "away_90": 0
     }
   }
 }
