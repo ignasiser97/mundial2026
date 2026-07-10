@@ -103,7 +103,7 @@ const MATCHES = [
   ['2026-07-07','22:00','P85 vs P87 · Octavos (P96)',             'BC Place, Vancouver',                  'CAN','dl',0,'r16'],
   // ── CUARTOS ────────────────────────────────────────────────────
   ['2026-07-09','22:00','P89 vs P90 · Cuartos (P97)',             'Gillette Stadium, Boston',              'USA','dl',0,'qf'],
-  ['2026-07-10','21:00','P93 vs P94 · Cuartos (P98)',             'SoFi Stadium, Los Ángeles',             'USA','dl',2,'qf'],
+  ['2026-07-10','21:00','P93 vs P94 · Cuartos (P98)',             'SoFi Stadium, Los Ángeles',             'USA','dl',1,'qf'],
   ['2026-07-11','23:00','P91 vs P92 · Cuartos (P99)',             'Hard Rock Stadium, Miami',              'USA','dl',0,'qf'],
   ['2026-07-12','03:00','P95 vs P96 · Cuartos (P100)',            'Arrowhead Stadium, Kansas City',        'USA','dl',0,'qf'],
   // ── SEMIFINALES ────────────────────────────────────────────────
