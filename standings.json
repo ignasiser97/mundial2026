@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-10T20:09:49Z",
+  "updated": "2026-07-10T21:46:19Z",
   "groups": {
     "A": [
       {
@@ -1473,9 +1473,13 @@
       "away_90": 0
     },
     "2026-07-10_21:00_España_vs_Bélgica": {
-      "home": 1,
+      "home": 2,
       "away": 1,
-      "status": "live"
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "home",
+      "home_90": 2,
+      "away_90": 1
     }
   }
 }
