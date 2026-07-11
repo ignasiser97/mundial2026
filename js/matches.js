@@ -110,8 +110,8 @@ const MATCHES = [
   ['2026-07-14','21:00','P97 vs P98 · Semifinal 1',               'AT&T Stadium, Dallas',                  'USA','dl',1,'sf'],
   ['2026-07-15','21:00','P99 vs P100 · Semifinal 2',              'Mercedes-Benz Stadium, Atlanta',        'USA','dl',0,'sf'],
   // ── TERCER PUESTO + FINAL ──────────────────────────────────────
-  ['2026-07-18','23:00','3er y 4º puesto',                         'Hard Rock Stadium, Miami',              'USA','dl',2,'3p'],
-  ['2026-07-19','21:00','Gran Final del Mundial 2026',             'MetLife Stadium, Nueva Jersey',         'USA','dl',2,'final'],
+  ['2026-07-18','23:00','3er y 4º puesto',                         'Hard Rock Stadium, Miami',              'USA','dl',1,'3p'],
+  ['2026-07-19','21:00','Gran Final del Mundial 2026',             'MetLife Stadium, Nueva Jersey',         'USA','dl',1,'final'],
 ];
 MATCHES.sort((a, b) => (a[0] + a[1]).localeCompare(b[0] + b[1]));
 
