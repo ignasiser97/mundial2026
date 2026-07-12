@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-12T01:16:46Z",
+  "updated": "2026-07-12T05:00:32Z",
   "groups": {
     "A": [
       {
@@ -1491,9 +1491,13 @@
       "away_90": 1
     },
     "2026-07-12_03:00_Argentina_vs_Suiza": {
-      "home": 1,
-      "away": 0,
-      "status": "live"
+      "home": 3,
+      "away": 1,
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "home",
+      "home_90": 1,
+      "away_90": 1
     }
   }
 }
