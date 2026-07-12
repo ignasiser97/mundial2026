@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-11T23:39:43Z",
+  "updated": "2026-07-12T01:16:46Z",
   "groups": {
     "A": [
       {
@@ -625,6 +625,13 @@
       "assists": 0
     },
     {
+      "player": "Jude Bellingham",
+      "team": "Inglaterra",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "goals": 5,
+      "assists": 0
+    },
+    {
       "player": "Ousmane Dembélé",
       "team": "Francia",
       "flag": "🇫🇷",
@@ -684,13 +691,6 @@
       "player": "Elijah Just",
       "team": "Nueva Zelanda",
       "flag": "🇳🇿",
-      "goals": 3,
-      "assists": 0
-    },
-    {
-      "player": "Jude Bellingham",
-      "team": "Inglaterra",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
       "goals": 3,
       "assists": 0
     },
@@ -770,6 +770,13 @@
       "player": "Alexander Isak",
       "team": "Suecia",
       "flag": "🇸🇪",
+      "goals": 0,
+      "assists": 3
+    },
+    {
+      "player": "Martin Ødegaard",
+      "team": "Noruega",
+      "flag": "🇳🇴",
       "goals": 0,
       "assists": 3
     },
@@ -861,13 +868,6 @@
       "player": "Ousmane Dembélé",
       "team": "Francia",
       "flag": "🇫🇷",
-      "goals": 0,
-      "assists": 2
-    },
-    {
-      "player": "Martin Ødegaard",
-      "team": "Noruega",
-      "flag": "🇳🇴",
       "goals": 0,
       "assists": 2
     },
@@ -1482,7 +1482,16 @@
       "away_90": 1
     },
     "2026-07-11_23:00_Noruega_vs_Inglaterra": {
-      "home": 0,
+      "home": 1,
+      "away": 2,
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "away",
+      "home_90": 1,
+      "away_90": 1
+    },
+    "2026-07-12_03:00_Argentina_vs_Suiza": {
+      "home": 1,
       "away": 0,
       "status": "live"
     }
