@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-14T20:46:55Z",
+  "updated": "2026-07-14T21:43:11Z",
   "groups": {
     "A": [
       {
@@ -865,6 +865,13 @@
       "assists": 2
     },
     {
+      "player": "Dani Olmo",
+      "team": "España",
+      "flag": "🇪🇸",
+      "goals": 0,
+      "assists": 2
+    },
+    {
       "player": "Ousmane Dembélé",
       "team": "Francia",
       "flag": "🇫🇷",
@@ -875,13 +882,6 @@
       "player": "Patrick Berg",
       "team": "Noruega",
       "flag": "🇳🇴",
-      "goals": 0,
-      "assists": 2
-    },
-    {
-      "player": "Johan Manzambi",
-      "team": "Suiza",
-      "flag": "🇨🇭",
       "goals": 0,
       "assists": 2
     }
@@ -1501,8 +1501,12 @@
     },
     "2026-07-14_21:00_Francia_vs_España": {
       "home": 0,
-      "away": 0,
-      "status": "live"
+      "away": 2,
+      "status": "ft",
+      "phase": "knockout",
+      "winner": "away",
+      "home_90": 0,
+      "away_90": 2
     }
   }
 }
