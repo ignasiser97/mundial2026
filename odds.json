@@ -1,15 +1,15 @@
 {
-  "updated": "2026-07-16T16:13:59.144987+00:00",
+  "updated": "2026-07-17T16:11:20.061561+00:00",
   "odds": {
     "2026-07-18_23:00_Francia_vs_Inglaterra": {
-      "home": 1.98,
+      "home": 1.97,
       "draw": 4.0,
       "away": 4.0,
       "bookmaker": "Betfair"
     },
     "2026-07-19_21:00_España_vs_Argentina": {
-      "home": 2.38,
-      "draw": 3.1,
+      "home": 2.36,
+      "draw": 3.15,
       "away": 3.8,
       "bookmaker": "Betfair"
     }
