@@ -37,6 +37,10 @@
 ## Pendiente
 
 ### Quiniela
+- [x] tournament_results.json: resultados oficiales de torneo como fichero editable (sustituye tabla Supabase); aliases por campo para cubrir variantes ortográficas (Mbappé/Mbappe/etc.)
+- [x] Popup final: "DÍA PARA LA HISTORIA" (2 páginas) — aparece el 19 jul, se guarda en localStorage
+- [x] Fix fase home: muestra fase de los partidos de hoy (no del último iniciado), evita "3ER Y 4º PUESTO" el día de la final
+- [x] Final y 3er puesto actualizados: España vs Argentina (final), Francia vs Inglaterra (3er/4º)
 - [ ] Desarrollar más funcionalidad según avance el torneo
 
 ### Otros

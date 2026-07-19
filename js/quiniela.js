@@ -615,16 +615,23 @@ async function saveTorneoBet() {
 }
 
 // Calcula puntos de torneo: campeón +5, finalista +3, España +2, goleador +3, portero +2, sorpresa +2
+// res[field] puede ser string o array de aliases (para cubrir variantes ortográficas)
+function matchesTorneoField(betVal, resVal) {
+  if (!betVal || !resVal) return false;
+  const norm = s => (s||'').toLowerCase().trim();
+  const aliases = Array.isArray(resVal) ? resVal : [resVal];
+  return aliases.some(a => a && norm(a) === norm(betVal));
+}
+
 function calcTorneoPoints(bet, res) {
   if (!res || !bet) return null;
   const pts = {};
-  const norm = s => (s||'').toLowerCase().trim();
-  if (bet.winner   && res.winner   && bet.winner === res.winner)           pts.winner   = 5;
-  if (bet.finalist && res.finalist && bet.finalist === res.finalist)       pts.finalist = 3;
-  if (bet.spain_round && res.spain_round && bet.spain_round === res.spain_round) pts.spain_round = 2;
-  if (bet.top_scorer  && res.top_scorer  && norm(bet.top_scorer)  === norm(res.top_scorer))  pts.top_scorer  = 3;
-  if (bet.best_keeper && res.best_keeper && norm(bet.best_keeper) === norm(res.best_keeper)) pts.best_keeper = 2;
-  if (bet.surprise && res.surprise && bet.surprise === res.surprise)       pts.surprise = 2;
+  if (matchesTorneoField(bet.winner,      res.winner))      pts.winner      = 5;
+  if (matchesTorneoField(bet.finalist,    res.finalist))    pts.finalist    = 3;
+  if (matchesTorneoField(bet.spain_round, res.spain_round)) pts.spain_round = 2;
+  if (matchesTorneoField(bet.top_scorer,  res.top_scorer))  pts.top_scorer  = 3;
+  if (matchesTorneoField(bet.best_keeper, res.best_keeper)) pts.best_keeper = 2;
+  if (matchesTorneoField(bet.surprise,    res.surprise))    pts.surprise    = 2;
   return pts;
 }
 
@@ -632,11 +639,18 @@ function torneoTotal(pts) {
   return pts ? Object.values(pts).reduce((a, b) => a + b, 0) : 0;
 }
 
+async function getTournamentResults() {
+  try {
+    const res = await fetch('./tournament_results.json?t=' + Date.now());
+    return res.ok ? res.json() : null;
+  } catch { return null; }
+}
+
 async function renderTorneoClasificacion(el) {
-  const [{ data: users }, { data: bets }, { data: results }] = await Promise.all([
+  const [{ data: users }, { data: bets }, results] = await Promise.all([
     db.from('users').select('id, name, group_id'),
     db.from('tournament_bets').select('*'),
-    db.from('tournament_results').select('*').eq('id', 1).maybeSingle(),
+    getTournamentResults(),
   ]);
 
   const toggle = `
@@ -654,7 +668,10 @@ async function renderTorneoClasificacion(el) {
   bets.forEach(b => { betByUser[b.user_id] = b; });
 
   const torneoStarted = Date.now() >= MUNDIAL_START_MS;
-  const hasResults    = results && Object.values(results).some(v => v && v !== '' && typeof v === 'string');
+  const hasResults    = results && Object.values(results).some(v => {
+    const aliases = Array.isArray(v) ? v : [v];
+    return aliases.some(a => a && a !== '');
+  });
 
   const FIELDS = [
     { key:'winner',      label:'🏆 Campeón',  pts:5 },

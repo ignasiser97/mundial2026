@@ -324,6 +324,43 @@ function showMemeJorge() {
   document.body.appendChild(overlay);
 }
 
+// ── Popup Final ────────────────────────────────────────────────
+
+function showFinalPopup() {
+  const KEY   = 'final-popup-v1';
+  const today = new Intl.DateTimeFormat('sv', { timeZone:'Europe/Madrid' }).format(new Date());
+  if (today !== '2026-07-19' || localStorage.getItem(KEY)) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'final-popup-overlay';
+  overlay.innerHTML = `
+    <div class="fp-card">
+      <div id="fp-page1">
+        <div class="fp-flag">🇪🇸</div>
+        <div class="fp-title">DÍA PARA<br>LA HISTORIA</div>
+        <div class="fp-sub">Hoy somos rojos,<br>pero sólo hoy eh..</div>
+        <button class="spain-day-btn" onclick="
+          document.getElementById('fp-page1').style.display='none';
+          document.getElementById('fp-page2').style.display='block';
+        ">Siguiente →</button>
+      </div>
+      <div id="fp-page2" style="display:none">
+        <div class="fp-page2-title">GRACIAS POR SEGUIR<br>EL MUNDIAL<br>CON LA APP</div>
+        <div class="fp-stats">
+          <div class="fp-stat"><span class="fp-stat-num">136</span><span class="fp-stat-label">versiones publicadas</span></div>
+          <div class="fp-stat"><span class="fp-stat-num">5.803</span><span class="fp-stat-label">líneas de código</span></div>
+          <div class="fp-stat"><span class="fp-stat-num">412</span><span class="fp-stat-label">commits en git</span></div>
+        </div>
+        <div class="fp-thanks">especial agradecimiento a Claude,<br>sin ti nada hubiera sido posible<br><br>(bueno y a mí que cojones)</div>
+        <button class="sq-btn" onclick="
+          localStorage.setItem('${KEY}','1');
+          document.getElementById('final-popup-overlay').remove();
+        ">Cerrar</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
 // ── Init ───────────────────────────────────────────────────────
 tsInit();
 cpRender();
@@ -333,3 +370,4 @@ showSpainDayBanner();
 showSabiasQueBanner();
 showMemeSergio();
 showMemeJorge();
+showFinalPopup();

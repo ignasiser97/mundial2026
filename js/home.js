@@ -95,10 +95,11 @@ async function renderHomeLive(el) {
     const todayUTC = new Date(today + 'T00:00:00Z');
     const dayNum   = Math.floor((todayUTC - startDay) / 86400000) + 1;
 
-    // Fase actual: la del último partido ya iniciado
+    // Fase actual: primero mira partidos de hoy, luego el último iniciado
     const startedMatches = MATCHES.filter(m => spainToUTC(m[0], m[1]) <= now);
-    const currentPhase   = startedMatches.length
-      ? (PHASES[startedMatches[startedMatches.length - 1][7]] || 'Fase de grupos')
+    const phaseSource    = todayMatches.length ? todayMatches : startedMatches;
+    const currentPhase   = phaseSource.length
+      ? (PHASES[phaseSource[phaseSource.length - 1][7]] || 'Fase de grupos')
       : 'Fase de grupos';
 
     const header = `
