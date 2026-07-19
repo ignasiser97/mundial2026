@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-18T23:39:15Z",
+  "updated": "2026-07-19T01:14:20Z",
   "groups": {
     "A": [
       {
@@ -639,6 +639,13 @@
       "assists": 0
     },
     {
+      "player": "Julián Quiñones",
+      "team": "México",
+      "flag": "🇲🇽",
+      "goals": 4,
+      "assists": 0
+    },
+    {
       "player": "Mikel Oyarzabal",
       "team": "España",
       "flag": "🇪🇸",
@@ -726,13 +733,6 @@
       "player": "Cody Gakpo",
       "team": "Países Bajos",
       "flag": "🇳🇱",
-      "goals": 3,
-      "assists": 0
-    },
-    {
-      "player": "Julián Quiñones",
-      "team": "México",
-      "flag": "🇲🇽",
       "goals": 3,
       "assists": 0
     },
