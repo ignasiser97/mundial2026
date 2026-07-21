@@ -8,6 +8,96 @@ let _homeInterval  = null;
 let _liveInterval  = null;
 let _liveRendering = false;
 
+let homeLbScope = 'group';
+
+function setHomeLbScope(scope) {
+  homeLbScope = scope;
+  renderHomeCombinedLb(document.getElementById('home-lb'));
+}
+
+async function renderHomeCombinedLb(el) {
+  if (!el) return;
+  el.innerHTML = '<div class="empty">Cargando…</div>';
+
+  const activeGroup = qnlGroup || (() => {
+    try { const gid = localStorage.getItem('qnl_group'); return gid ? GROUPS.find(g => g.id === gid) : null; }
+    catch { return null; }
+  })();
+
+  const [{ data: allUsers }, raw, bets, { data: tBets }, tResults] = await Promise.all([
+    db.from('users').select('id, name, group_id'),
+    getMatchResults(),
+    fetchAllBets(),
+    db.from('tournament_bets').select('*'),
+    getTournamentResults(),
+  ]);
+
+  if (!allUsers?.length) { el.innerHTML = '<div class="empty">Sin datos.</div>'; return; }
+
+  const users = homeLbScope === 'group' && activeGroup
+    ? allUsers.filter(u => u.group_id === activeGroup.id)
+    : allUsers;
+
+  const resultMap = {};
+  Object.entries(raw || {}).forEach(([id, r]) => {
+    resultMap[id] = { home_score: r.home_90 ?? r.home, away_score: r.away_90 ?? r.away, status: r.status };
+  });
+
+  const stats = {};
+  users.forEach(u => { stats[u.id] = { id: u.id, name: u.name, group_id: u.group_id, matchPts: 0, torneoPts: 0 }; });
+
+  const seenBets = new Set();
+  (bets || []).forEach(b => {
+    if (!stats[b.user_id]) return;
+    const normalMid = OLD_THIRD_PLACE_BET_IDS[b.match_id] ?? b.match_id;
+    const dedupeKey = `${b.user_id}|${normalMid}`;
+    if (seenBets.has(dedupeKey)) return;
+    seenBets.add(dedupeKey);
+    const r = resultMap[b.match_id];
+    if (r) stats[b.user_id].matchPts += calcPoints(b, r, isSpainMatch(normalMid));
+  });
+
+  (tBets || []).forEach(tb => {
+    if (!stats[tb.user_id]) return;
+    const pts = calcTorneoPoints(tb, tResults);
+    stats[tb.user_id].torneoPts = pts ? torneoTotal(pts) : 0;
+  });
+
+  const board = Object.values(stats)
+    .map(u => ({ ...u, total: u.matchPts + u.torneoPts }))
+    .sort((a, b) => b.total - a.total || a.name.localeCompare(b.name));
+
+  const showBadge = homeLbScope === 'all';
+  const rows = board.map((u, i) => {
+    const isMe = u.id === qnlUser?.id;
+    const badge = showBadge ? `<span class="lb-group-badge">${GROUPS.find(g => g.id === u.group_id)?.id || '?'}</span>` : '';
+    return `<tr${isMe ? ' class="me"' : ''}>
+      <td class="lb-rank">${i + 1}</td>
+      <td class="lb-name">${escHtml(u.name)}${isMe ? ' 👈' : ''}${badge}</td>
+      <td>${u.matchPts}</td>
+      <td>${u.torneoPts > 0 ? '+' + u.torneoPts : '—'}</td>
+      <td class="lb-pts">${u.total}</td>
+    </tr>`;
+  }).join('');
+
+  const toggle = activeGroup ? `
+    <div class="lb-scope-bar">
+      <button class="lb-scope-btn${homeLbScope === 'group' ? ' active' : ''}" onclick="setHomeLbScope('group')">Mi grupo</button>
+      <button class="lb-scope-btn${homeLbScope === 'all' ? ' active' : ''}" onclick="setHomeLbScope('all')">Todos</button>
+    </div>` : '';
+
+  el.innerHTML = `${toggle}
+    <table class="lb-table">
+      <thead><tr>
+        <th>#</th><th class="lb-name">Nombre</th>
+        <th title="Puntos de partidos">Partidos</th>
+        <th title="Puntos de torneo">Torneo</th>
+        <th>Total</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
 const BALL_SVG = `<svg class="ball-svg" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
   <defs><clipPath id="bc"><circle cx="30" cy="30" r="26.5"/></clipPath></defs>
   <circle cx="30" cy="30" r="27" fill="#f0f0f0" stroke="#111" stroke-width="1.5"/>
@@ -135,7 +225,12 @@ async function renderHomeLive(el) {
           <div class="home-next-when">${fmtDate(nextMatch[0])} · ${nextMatch[1]}</div>
         </div>`;
     } else {
-      matchSection = `<div class="empty" style="margin:40px 0">El torneo ha finalizado. ¡Hasta 2030! ⚽</div>`;
+      matchSection = `
+        <div style="text-align:center;padding:32px 16px 16px">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--accent);letter-spacing:2px">🇪🇸 ESPAÑA 🇪🇸</div>
+          <div style="font-size:14px;color:var(--text);margin:10px 0 6px;opacity:.85;line-height:1.5">ha ganado en grande, con un estilo bonito.</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--pos);letter-spacing:1px">SOMOS CAMPEONES DEL MUNDO</div>
+        </div>`;
     }
 
     const links = `
@@ -145,7 +240,12 @@ async function renderHomeLive(el) {
         <button class="home-ql-btn" onclick="switchTab('cal')">📅<span>Calendario</span></button>
       </div>`;
 
-    el.innerHTML = header + matchSection + links;
+    el.innerHTML = header + matchSection + links + `
+      <div style="margin-top:8px;padding-bottom:24px">
+        <div class="home-section-label" style="margin-bottom:8px">Clasificación final</div>
+        <div id="home-lb"><div class="empty">Cargando…</div></div>
+      </div>`;
+    renderHomeCombinedLb(document.getElementById('home-lb'));
   } finally {
     _liveRendering = false;
   }

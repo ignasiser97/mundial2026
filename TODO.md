@@ -2,6 +2,7 @@
 
 ## Completado
 - [x] Ajuste puntuación apuestas de torneo — nueva escala: campeón 10, finalista 6, España 3, goleador 4, portero 3, sorpresa 3
+- [x] Home post-torneo: mensaje campeón España + clasificación combinada (partidos + torneo) con filtro grupo/todos
 - [x] Pestaña Inicio — cuenta atrás para el Mundial (primera pestaña, primera en cargarse)
 - [x] Filtro rápido "Solo España" en el calendario
 - [x] Puntuación apuestas de torneo — tabla `tournament_results` en Supabase, cálculo automático de puntos por predicción
