@@ -541,35 +541,35 @@ async function renderTorneoApuesta(el) {
     ${savedMsg}
     <div class="torneo-form">
       <div class="torneo-field">
-        <label class="torneo-label">🏆 Campeón <span class="torneo-pts">5 pts</span></label>
+        <label class="torneo-label">🏆 Campeón <span class="torneo-pts">10 pts</span></label>
         <select class="qnl-input" id="tb-winner" ${!open?'disabled':''}>
           <option value="">-- Elige un equipo --</option>${teamOptions(b.winner)}
         </select>
       </div>
       <div class="torneo-field">
-        <label class="torneo-label">🥈 Finalista <span class="torneo-pts">3 pts</span></label>
+        <label class="torneo-label">🥈 Finalista <span class="torneo-pts">6 pts</span></label>
         <select class="qnl-input" id="tb-finalist" ${!open?'disabled':''}>
           <option value="">-- Elige un equipo --</option>${teamOptions(b.finalist)}
         </select>
       </div>
       <div class="torneo-field">
-        <label class="torneo-label">🇪🇸 España llega hasta… <span class="torneo-pts">2 pts</span></label>
+        <label class="torneo-label">🇪🇸 España llega hasta… <span class="torneo-pts">3 pts</span></label>
         <select class="qnl-input" id="tb-spain" ${!open?'disabled':''}>
           <option value="">-- Elige fase --</option>${roundOpts}
         </select>
       </div>
       <div class="torneo-field">
-        <label class="torneo-label">👟 Máximo goleador <span class="torneo-pts">3 pts</span></label>
+        <label class="torneo-label">👟 Máximo goleador <span class="torneo-pts">4 pts</span></label>
         <input class="qnl-input" id="tb-scorer" type="text" placeholder="Nombre del jugador"
           value="${escHtml(b.top_scorer||'')}" maxlength="40" ${!open?'disabled':''}>
       </div>
       <div class="torneo-field">
-        <label class="torneo-label">🧤 Mejor portero (Guante de Oro) <span class="torneo-pts">2 pts</span></label>
+        <label class="torneo-label">🧤 Mejor portero (Guante de Oro) <span class="torneo-pts">3 pts</span></label>
         <input class="qnl-input" id="tb-keeper" type="text" placeholder="Nombre del portero"
           value="${escHtml(b.best_keeper||'')}" maxlength="40" ${!open?'disabled':''}>
       </div>
       <div class="torneo-field">
-        <label class="torneo-label">⭐ Sorpresa del torneo <span class="torneo-pts">2 pts</span></label>
+        <label class="torneo-label">⭐ Sorpresa del torneo <span class="torneo-pts">3 pts</span></label>
         <select class="qnl-input" id="tb-surprise" ${!open?'disabled':''}>
           <option value="">-- Elige un equipo --</option>${teamOptions(b.surprise)}
         </select>
@@ -614,7 +614,7 @@ async function saveTorneoBet() {
   if (el) await renderTorneoApuesta(el);
 }
 
-// Calcula puntos de torneo: campeón +5, finalista +3, España +2, goleador +3, portero +2, sorpresa +2
+// Calcula puntos de torneo: campeón +10, finalista +6, España +3, goleador +4, portero +3, sorpresa +3
 // res[field] puede ser string o array de aliases (para cubrir variantes ortográficas)
 function matchesTorneoField(betVal, resVal) {
   if (!betVal || !resVal) return false;
@@ -626,12 +626,12 @@ function matchesTorneoField(betVal, resVal) {
 function calcTorneoPoints(bet, res) {
   if (!res || !bet) return null;
   const pts = {};
-  if (matchesTorneoField(bet.winner,      res.winner))      pts.winner      = 5;
-  if (matchesTorneoField(bet.finalist,    res.finalist))    pts.finalist    = 3;
-  if (matchesTorneoField(bet.spain_round, res.spain_round)) pts.spain_round = 2;
-  if (matchesTorneoField(bet.top_scorer,  res.top_scorer))  pts.top_scorer  = 3;
-  if (matchesTorneoField(bet.best_keeper, res.best_keeper)) pts.best_keeper = 2;
-  if (matchesTorneoField(bet.surprise,    res.surprise))    pts.surprise    = 2;
+  if (matchesTorneoField(bet.winner,      res.winner))      pts.winner      = 10;
+  if (matchesTorneoField(bet.finalist,    res.finalist))    pts.finalist    = 6;
+  if (matchesTorneoField(bet.spain_round, res.spain_round)) pts.spain_round = 3;
+  if (matchesTorneoField(bet.top_scorer,  res.top_scorer))  pts.top_scorer  = 4;
+  if (matchesTorneoField(bet.best_keeper, res.best_keeper)) pts.best_keeper = 3;
+  if (matchesTorneoField(bet.surprise,    res.surprise))    pts.surprise    = 3;
   return pts;
 }
 
