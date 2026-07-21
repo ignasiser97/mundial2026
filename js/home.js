@@ -8,7 +8,7 @@ let _homeInterval  = null;
 let _liveInterval  = null;
 let _liveRendering = false;
 
-let homeLbScope = 'group';
+let homeLbScope = 'all';
 
 function setHomeLbScope(scope) {
   homeLbScope = scope;
@@ -18,11 +18,6 @@ function setHomeLbScope(scope) {
 async function renderHomeCombinedLb(el) {
   if (!el) return;
   el.innerHTML = '<div class="empty">Cargando…</div>';
-
-  const activeGroup = qnlGroup || (() => {
-    try { const gid = localStorage.getItem('qnl_group'); return gid ? GROUPS.find(g => g.id === gid) : null; }
-    catch { return null; }
-  })();
 
   const [{ data: allUsers }, raw, bets, { data: tBets }, tResults] = await Promise.all([
     db.from('users').select('id, name, group_id'),
@@ -34,9 +29,9 @@ async function renderHomeCombinedLb(el) {
 
   if (!allUsers?.length) { el.innerHTML = '<div class="empty">Sin datos.</div>'; return; }
 
-  const users = homeLbScope === 'group' && activeGroup
-    ? allUsers.filter(u => u.group_id === activeGroup.id)
-    : allUsers;
+  const users = homeLbScope === 'all'
+    ? allUsers
+    : allUsers.filter(u => u.group_id === homeLbScope);
 
   const resultMap = {};
   Object.entries(raw || {}).forEach(([id, r]) => {
@@ -73,24 +68,22 @@ async function renderHomeCombinedLb(el) {
     .map(u => ({ ...u, total: u.matchPts + u.torneoPts }))
     .sort((a, b) => b.total - a.total || a.name.localeCompare(b.name));
 
-  const showBadge = homeLbScope === 'all';
   const rows = board.map((u, i) => {
     const isMe = u.id === qnlUser?.id;
-    const badge = showBadge ? `<span class="lb-group-badge">${GROUPS.find(g => g.id === u.group_id)?.id || '?'}</span>` : '';
     return `<tr${isMe ? ' class="me"' : ''}>
       <td class="lb-rank">${i + 1}</td>
-      <td class="lb-name">${escHtml(u.name)}${isMe ? ' 👈' : ''}${badge}</td>
+      <td class="lb-name">${escHtml(u.name)}${isMe ? ' 👈' : ''}</td>
       <td>${u.matchPts}</td>
       <td>${u.torneoPts > 0 ? '+' + u.torneoPts : '—'}</td>
       <td class="lb-pts">${u.total}</td>
     </tr>`;
   }).join('');
 
-  const toggle = activeGroup ? `
+  const toggle = `
     <div class="lb-scope-bar">
-      <button class="lb-scope-btn${homeLbScope === 'group' ? ' active' : ''}" onclick="setHomeLbScope('group')">Mi grupo</button>
-      <button class="lb-scope-btn${homeLbScope === 'all' ? ' active' : ''}" onclick="setHomeLbScope('all')">Todos</button>
-    </div>` : '';
+      <button class="lb-scope-btn${homeLbScope==='all'?' active':''}" onclick="setHomeLbScope('all')">Todos</button>
+      ${GROUPS.map(g => `<button class="lb-scope-btn${homeLbScope===g.id?' active':''}" onclick="setHomeLbScope('${g.id}')">${g.id.charAt(0).toUpperCase()+g.id.slice(1)}</button>`).join('')}
+    </div>`;
 
   el.innerHTML = `${toggle}
     <table class="lb-table">
