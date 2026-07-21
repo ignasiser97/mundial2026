@@ -40,7 +40,13 @@ async function renderHomeCombinedLb(el) {
 
   const resultMap = {};
   Object.entries(raw || {}).forEach(([id, r]) => {
-    resultMap[id] = { home_score: r.home_90 ?? r.home, away_score: r.away_90 ?? r.away, status: r.status };
+    resultMap[id] = {
+      home_score: r.home_90 ?? r.home,
+      away_score: r.away_90 ?? r.away,
+      status: r.status,
+      phase: r.phase,
+      winner: r.winner,
+    };
   });
 
   const stats = {};

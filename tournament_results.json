@@ -1,8 +1,8 @@
 {
-  "winner":      [""],
-  "finalist":    [""],
-  "spain_round": [""],
-  "top_scorer":  [""],
-  "best_keeper": [""],
-  "surprise":    [""]
+  "winner":      ["España"],
+  "finalist":    ["Argentina"],
+  "spain_round": ["Campeón 🏆"],
+  "top_scorer":  ["Mbappe", "Mbappé", "Kilian mbappe", "Kylian Mbappe", "Kylian Mbappé", "Quique Mbappe"],
+  "best_keeper": ["Unai Simon", "Unai Simón"],
+  "surprise":    ["Cabo Verde"]
 }
